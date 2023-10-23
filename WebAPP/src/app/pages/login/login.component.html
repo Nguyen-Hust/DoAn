@@ -1,0 +1,31 @@
+<div style="background-color: #080710; height: 100vh; width: 100vw">
+  <div class="background">
+    <div class="shape"></div>
+    <div class="shape"></div>
+  </div>
+  <form class="form-signin" #loginForm="ngForm" (ngSubmit)="login(loginForm)">
+    <h3>Login Here</h3>
+
+    <label for="email">Username</label>
+    <input
+      type="email"
+      placeholder="Email"
+      id="email"
+      name="email"
+      required
+      autofocus
+      ngModel
+    />
+
+    <label for="password">Password</label>
+    <input
+      type="password"
+      placeholder="Password"
+      id="password"
+      ngModel
+      name="password"
+    />
+
+    <button>Log In</button>
+  </form>
+</div>

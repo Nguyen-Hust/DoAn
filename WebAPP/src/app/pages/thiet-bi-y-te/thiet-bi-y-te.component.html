@@ -1,0 +1,147 @@
+<h2>Quản lý thiết bị y tế</h2>
+<div class="table-responsive">
+  <div class="filter-area">
+    <div nz-row [nzGutter]="16">
+      <div nz-col class="gutter-row" [nzSpan]="9">
+        <div class="form-group">
+          <label class="control-label" class="filter-label"
+            >Từ khóa tìm kiếm</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="filter"
+            placeholder="Nhập tên sản phẩm"
+          />
+        </div>
+      </div>
+      <div nz-col class="gutter-row" [nzSpan]="2" style="margin-top: 22px">
+        <button
+          type="button"
+          class="btn btn-info text-white"
+          (click)="getList()"
+        >
+          Tìm kiếm
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="d-flex justify-content-between mb-1 align-items-center">
+    <h3 style="font-weight: 500; font-size: 16px">Danh sách thiết bị y tế</h3>
+    <button type="button" class="btn btn-primary" (click)="openModalCreate()">
+      Thêm mới
+    </button>
+  </div>
+  <nz-table
+    #basicTable
+    [nzData]="danhSach"
+    #borderedTable
+    nzBordered
+    [nzPageIndex]="pageIndex"
+    [nzPageSize]="pageSize"
+    [nzTotal]="total"
+    (nzPageIndexChange)="getList($event)"
+  >
+    <thead>
+      <tr>
+        <th class="text-center">#</th>
+        <th class="text-center">Mã</th>
+        <th class="text-center">Tên</th>
+        <th class="text-center">Mức độ rủi ro</th>
+        <th class="text-center">Loại trang thiết bị y tế</th>
+        <th class="text-center">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of basicTable.data; index as i">
+        <td class="text-center">{{ i + 1 }}</td>
+        <td>{{ data.ma }}</td>
+        <td>{{ data.ten }}</td>
+        <td class="text-center">{{ data.mdrr }}</td>
+        <td class="text-center">{{ data.loaiTTBYT }}</td>
+        <td class="text-center">
+          <button
+            type="button"
+            class="btn btn-info text-white me-2"
+            nzTooltipTitle="Sửa"
+            (click)="openModalUpdate(data)"
+          >
+            <span nz-icon nzType="edit" nzTheme="outline"></span>
+          </button>
+          <button
+            type="button"
+            class="btn btn-danger text-white"
+            nzTooltipTitle="Xóa"
+            (click)="delete(data.id, data.ten)"
+          >
+            <span nz-icon nzType="delete" nzTheme="outline"></span>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>
+<nz-modal
+  [nzVisible]="isShowModal"
+  [nzTitle]="title"
+  (nzOnCancel)="isShowModal = false"
+  [nzFooter]="modalFooter"
+>
+  <ng-container *nzModalContent>
+    <form [formGroup]="form">
+      <div class="form-group mt-3">
+        <label class="control-label me-3 label-form" for="ma"> Mã: </label>
+        <input
+          id="ma"
+          formControlName="ma"
+          placeholder="Nhập mã thiết bị y tế"
+          class="form-control"
+        />
+      </div>
+      <div class="form-group mt-3">
+        <label class="control-label me-3 label-form" for="ten"> Tên: </label>
+        <input
+          id="ten"
+          formControlName="ten"
+          placeholder="Nhập tên thiết bị y tế"
+          class="form-control"
+        />
+      </div>
+      <div class="form-group mt-3">
+        <label class="control-label me-3 label-form" for="mdrr">
+          Mức độ rủi ro:
+        </label>
+        <input
+          id="mdrr"
+          formControlName="mdrr"
+          placeholder="Nhập mức độ rùi ro của thiết bị y tế"
+          class="form-control"
+        />
+      </div>
+      <div class="form-group mt-3">
+        <label class="control-label me-3 label-form" for="loaiTTBYT">
+          Loại trang thiết bị y tế:</label
+        >
+        <input
+          id="loaiTTBYT"
+          formControlName="loaiTTBYT"
+          placeholder="Nhập loại trang thiết bị y tế"
+          class="form-control"
+        />
+      </div>
+    </form>
+  </ng-container>
+  <ng-template #modalFooter>
+    <button nz-button nzType="default" (click)="isShowModal = false">
+      Đóng
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      (click)="save()"
+      [nzLoading]="isConfirmLoading"
+    >
+      Lưu
+    </button>
+  </ng-template>
+</nz-modal>

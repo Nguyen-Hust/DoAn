@@ -1,0 +1,48 @@
+<nz-layout class="layout">
+  <nz-sider nzCollapsible nzWidth="200px">
+    <div class="logo">THIẾT BỊ Y TẾ</div>
+    <ul nz-menu nzTheme="dark" nzMode="inline">
+      <li nz-menu-item routerLink="">
+        <span nz-icon nzType="home" nzTheme="outline"></span>
+        <span>Home</span>
+      </li>
+      <li nz-menu-item routerLink="/thiet-bi-y-te">
+        <span nz-icon nzType="user"></span>
+        <span>Thiết bị y tế</span>
+      </li>
+    </ul>
+  </nz-sider>
+  <nz-layout>
+    <nz-header>
+      <div class="dropdown" style="text-align: right; padding-right: 30px">
+        <button
+          class="btn btn-secondary dropdown-toggle"
+          type="button"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          Tài khoản
+        </button>
+        <ul class="dropdown-menu">
+          <li>
+            <a class="dropdown-item" href="javascript:void(0)"
+              >Thông tin tài khoản</a
+            >
+          </li>
+          <li>
+            <a
+              class="dropdown-item"
+              href="javascript:void(0)"
+              (click)="logOut()"
+              >Log out</a
+            >
+          </li>
+        </ul>
+      </div>
+    </nz-header>
+    <nz-content>
+      <router-outlet></router-outlet>
+    </nz-content>
+    <nz-footer>Ant Design ©2020 Implement By Angular</nz-footer>
+  </nz-layout>
+</nz-layout>
