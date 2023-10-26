@@ -3,16 +3,15 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { finalize } from "rxjs";
 import { ToastrService } from "ngx-toastr";
 import { ThietBiYTeDto } from "src/app/models/ThietBiYTeDto";
-import { ThietBiYTeService } from "./thiet-bi-y-te.service";
+import { LoaiThietBiService } from "./loai-thiet-bi.service";
 import { NzModalService } from "ng-zorro-antd/modal";
-import { LoaiThietBiService } from "../loai-thiet-bi/loai-thiet-bi.service";
 
 @Component({
-  selector: "app-thiet-bi-y-te",
-  templateUrl: "./thiet-bi-y-te.component.html",
-  styleUrls: ["./thiet-bi-y-te.component.css"],
+  selector: "app-loai-thiet-bi",
+  templateUrl: "./loai-thiet-bi.component.html",
+  styleUrls: ["./loai-thiet-bi.component.css"],
 })
-export class ThietBiYTeComponent implements OnInit {
+export class LoaiThietBiComponent implements OnInit {
   danhSach: ThietBiYTeDto[];
   form: FormGroup;
 
@@ -25,12 +24,9 @@ export class ThietBiYTeComponent implements OnInit {
   pageSize = 10;
   total = 0;
 
-  dsLoaiThietBi: any[] = [];
-
   constructor(
     private formbulider: FormBuilder,
-    private service: ThietBiYTeService,
-    private loaiThietBiService: LoaiThietBiService,
+    private service: LoaiThietBiService,
     private toastr: ToastrService,
     private modal: NzModalService
   ) {}
@@ -40,14 +36,7 @@ export class ThietBiYTeComponent implements OnInit {
       id: [0, [Validators.required]],
       ma: ["", [Validators.required]],
       ten: ["", [Validators.required]],
-      mdrr: ["", [Validators.required]],
-      loaiTTBYT: ["", [Validators.required]],
     });
-
-    this.loaiThietBiService.getList({ filter: "" }).subscribe((val) => {
-      this.dsLoaiThietBi = val.items;
-    });
-
     this.getList();
   }
 
@@ -64,10 +53,6 @@ export class ThietBiYTeComponent implements OnInit {
     });
   }
 
-  getTenLoaiThietBi(ma) {
-    return this.dsLoaiThietBi.find((_) => _.ma == ma).ten;
-  }
-
   openModalCreate() {
     this.isShowModal = true;
     this.title = "Thêm mới";
@@ -78,7 +63,7 @@ export class ThietBiYTeComponent implements OnInit {
   openModalUpdate(data) {
     this.getById(data.id);
     this.isShowModal = true;
-    this.title = `Sửa: ${data.ten}`;
+    this.title = `Sửa: ${data.name}`;
   }
 
   save() {
@@ -131,7 +116,7 @@ export class ThietBiYTeComponent implements OnInit {
   delete(id: number, ten) {
     this.modal.confirm({
       nzTitle: "Xác nhận xóa",
-      nzContent: `Bạn có muốn xóa thiết bị: <b>${ten}</b> không`,
+      nzContent: `Bạn có muốn xóa loại thiết bị: <b>${ten}</b> không`,
       nzOnOk: () =>
         this.service.delete(id).subscribe(() => {
           this.toastr.success("Data Deleted Successfully");

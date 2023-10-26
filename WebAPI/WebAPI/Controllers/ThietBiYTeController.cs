@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Data;
+using WebAPI.Entities;
 using WebAPI.Models.Shared;
 using WebAPI.Models.ThietBiYTe;
 
@@ -25,7 +26,7 @@ namespace WebAPI.Controllers
             {
                 var totalCount = thietBiYTe.Count;
                 var items = thietBiYTe.Where(_ => string.IsNullOrEmpty(input.Filter) || _.Ma.Contains(input.Filter) || _.Ten.Contains(input.Filter))
-                    .Skip(input.SkipCount).Take(input.MaxResultCount).Select(_ => new ThietBiYTeDto
+                    .Skip(input.SkipCount??0).Take(input.MaxResultCount??1000).Select(_ => new ThietBiYTeDto
                     {
                         Id = _.Id,
                         Ten = _.Ten,
@@ -51,7 +52,15 @@ namespace WebAPI.Controllers
         [Route("create")]
         public async Task<ThietBiYTeDto> CreateAsync(ThietBiYTeDto product)
         {
-            _context.ThietBiYTe.Add(product);
+            var entity = new ThietBiYTeEntity
+            {
+                Id = product.Id,
+                LoaiTTBYT = product.LoaiTTBYT,
+                Ma = product.Ma,
+                MDRR = product.MDRR,
+                Ten = product.Ten,
+            };
+            _context.ThietBiYTe.Add(entity);
             await _context.SaveChangesAsync();
             return product;
         }
@@ -102,6 +111,7 @@ namespace WebAPI.Controllers
             thietBiYTeEntity.Ma = thietBiYTe.Ma;
             thietBiYTeEntity.MDRR = thietBiYTe.MDRR;
             thietBiYTeEntity.Ten = thietBiYTe.Ten;
+            _context.ThietBiYTe.Update(thietBiYTeEntity);
             await _context.SaveChangesAsync();
             return new CommonResultDto<ThietBiYTeDto>(thietBiYTe);
         }

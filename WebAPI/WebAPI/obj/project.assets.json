@@ -2826,11 +2826,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\PC\\OneDrive - Hanoi University of Science and Technology\\Desktop\\project\\WebAPI\\WebAPI\\WebAPI.csproj",
+      "projectUniqueName": "C:\\Users\\PC\\OneDrive - Hanoi University of Science and Technology\\Desktop\\project\\DoAn\\WebAPI\\WebAPI\\WebAPI.csproj",
       "projectName": "WebAPI",
-      "projectPath": "C:\\Users\\PC\\OneDrive - Hanoi University of Science and Technology\\Desktop\\project\\WebAPI\\WebAPI\\WebAPI.csproj",
+      "projectPath": "C:\\Users\\PC\\OneDrive - Hanoi University of Science and Technology\\Desktop\\project\\DoAn\\WebAPI\\WebAPI\\WebAPI.csproj",
       "packagesPath": "C:\\Users\\PC\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\PC\\OneDrive - Hanoi University of Science and Technology\\Desktop\\project\\WebAPI\\WebAPI\\obj\\",
+      "outputPath": "C:\\Users\\PC\\OneDrive - Hanoi University of Science and Technology\\Desktop\\project\\DoAn\\WebAPI\\WebAPI\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\PC\\AppData\\Roaming\\NuGet\\NuGet.Config",

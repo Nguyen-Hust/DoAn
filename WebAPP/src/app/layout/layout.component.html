@@ -6,9 +6,16 @@
         <span nz-icon nzType="home" nzTheme="outline"></span>
         <span>Home</span>
       </li>
-      <li nz-menu-item routerLink="/thiet-bi-y-te">
-        <span nz-icon nzType="user"></span>
-        <span>Thiết bị y tế</span>
+      <li nz-submenu nzOpen nzIcon="shop" nzTitle="Quản lý thiết bị">
+        <ul>
+          <li nz-menu-item routerLink="/thiet-bi-y-te">Thông tin thiết bị</li>
+          <li nz-menu-item routerLink="/loai-thiet-bi">Loại trang thiết bị</li>
+        </ul>
+      </li>
+      <li nz-submenu nzOpen nzIcon="setting" nzTitle="Quản trị viên">
+        <ul>
+          <li nz-menu-item routerLink="/tai-khoan">Tài khoản</li>
+        </ul>
       </li>
     </ul>
   </nz-sider>
