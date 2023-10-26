@@ -28,7 +28,7 @@ namespace WebAPI.Controllers
             if (nhanSu.Count > 0)
             {
                 var totalCount = nhanSu.Count;
-                var items = nhanSu.Where(_ => string.IsNullOrEmpty(input.Filter) || _.Ma.Contains(input.Filter) || _.Ten.Contains(input.Filter)).Skip(input.SkipCount).Take(input.MaxResultCount)
+                var items = nhanSu.Where(_ => string.IsNullOrEmpty(input.Filter) || _.Ma.Contains(input.Filter) || _.Ten.Contains(input.Filter)).Skip(input.SkipCount ?? 0).Take(input.MaxResultCount ?? 1000)
                     .Select(_ => new NhanSuDto
                     {
                         Id = _.Id,
