@@ -14,9 +14,11 @@ import {
   CaretLeftOutline,
   SettingOutline,
 } from "@ant-design/icons-angular/icons";
-import { IconDefinition } from "@ant-design/icons-angular";
-import { NzIconModule } from "ng-zorro-antd/icon";
-import { FormBuilderComponent } from "./form-builder.component";
+import { IconDefinition } from '@ant-design/icons-angular';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { FormBuilderComponent } from './form-builder.component';
+import { PhongBanComponent } from '../pages/phong-ban/phong-ban.component';
+import { NhanSuComponent } from '../pages/nhan-su/nhan-su.component';
 import { LoaiThietBiComponent } from "../pages/loai-thiet-bi/loai-thiet-bi.component";
 
 const icons: IconDefinition[] = [
@@ -32,6 +34,8 @@ const icons: IconDefinition[] = [
     ThietBiYTeComponent,
     FormBuilderComponent,
     LoaiThietBiComponent,
+    PhongBanComponent,
+    NhanSuComponent
   ],
   imports: [
     CommonModule,

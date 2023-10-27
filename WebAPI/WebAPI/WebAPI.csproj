@@ -24,4 +24,12 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Models\PhongBan\" />
+    <None Remove="Models\NhanVien\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\PhongBan\" />
+    <Folder Include="Models\NhanVien\" />
+  </ItemGroup>
 </Project>

@@ -1,0 +1,136 @@
+<h2>Nhân Viên</h2>
+<div class="table-responsive">
+    <div class="filter-area">
+        <div nz-row [nzGutter]="16">
+            <div nz-col class="gutter-row" [nzSpan]="9">
+                <div class="form-group">
+                    <label class="control-label" class="filter-label">Từ khóa tìm kiếm</label>
+                    <input type="text" class="form-control" [(ngModel)]="filter" placeholder="Nhập tên sản phẩm" />
+                </div>
+            </div>
+            <div nz-col class="gutter-row" [nzSpan]="2" style="margin-top: 22px">
+                <button type="button" class="btn btn-info text-white" (click)="getList()">
+                    Tìm kiếm
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex justify-content-between mb-1 align-items-center">
+        <h3 style="font-weight: 500; font-size: 16px">Danh sách thiết bị y tế</h3>
+        <button type="button" class="btn btn-primary" (click)="openModalCreate()">
+            Thêm mới
+        </button>
+    </div>
+    <nz-table #basicTable [nzData]="danhSach" #borderedTable nzBordered [nzPageIndex]="pageIndex"
+        [nzPageSize]="pageSize" [nzTotal]="total" (nzPageIndexChange)="getList($event)">
+        <thead>
+            <tr>
+                <th class="text-center">#</th>
+                <th class="text-center">Mã</th>
+                <th class="text-center">Tên</th>
+                <th class="text-center">Số điện thoại</th>
+                <th class="text-center">Email</th>
+                <th class="text-center">Khoa</th>
+                <th class="text-center">Địa chỉ</th>
+                <th class="text-center">Là trưởng khoa</th>
+                <th class="text-center">Là quản lý thiết bị</th>
+                <th class="text-center">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let data of basicTable.data; index as i">
+                <td class="text-center">{{ i + 1 }}</td>
+                <td>{{ data?.ma }}</td>
+                <td>{{ data?.ten }}</td>
+                <td class="text-center">{{ data?.sdt}}</td>
+                <td class="text-center">{{ data?.email }}</td>
+                <td class="text-center">{{ getTenKhoa(data?.khoaId) }}</td>
+                <td class="text-center">{{ data?.diaChi }}</td>
+                <td class="text-center">{{ data?.laTruongKhoa }}</td>
+                <td class="text-center">{{ data?.laQuanLyThietBi }}</td>
+                <td class="text-center">
+                    <button type="button" class="btn btn-info text-white me-2" nzTooltipTitle="Sửa"
+                        (click)="openModalUpdate(data)">
+                        <span nz-icon nzType="edit" nzTheme="outline"></span>
+                    </button>
+                    <button type="button" class="btn btn-danger text-white" nzTooltipTitle="Xóa"
+                        (click)="delete(data.id, data.ten)">
+                        <span nz-icon nzType="delete" nzTheme="outline"></span>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </nz-table>
+</div>
+
+
+<nz-modal [nzVisible]="isShowModal" [nzTitle]="title" (nzOnCancel)="isShowModal = false" [nzFooter]="modalFooter">
+    <ng-container *nzModalContent>
+        <form [formGroup]="form">
+            <div class="form-group mt-3">
+                <label class="control-label me-3 label-form" for="ma"> Mã: </label>
+                <input id="ma" formControlName="ma" placeholder="Nhập mã nhân viên" class="form-control" />
+            </div>
+            <div class="form-group mt-3">
+                <label class="control-label me-3 label-form" for="ten"> Tên: </label>
+                <input id="ten" formControlName="ten" placeholder="Nhập tên nhân viên" class="form-control" />
+            </div>
+            <div class="form-group mt-3">
+                <label class="control-label me-3 label-form" for="sdt">
+                    Số điện thoại
+                </label>
+                <input id="sdt" formControlName="sdt" placeholder="Nhập số điện thoại" class="form-control" />
+            </div>
+            <div class="form-group mt-3">
+                <label class="control-label me-3 label-form" for="email">
+                    Email:</label>
+                <input id="email" formControlName="email" placeholder="Nhập email" class="form-control" />
+            </div>
+            <div class="form-group mt-3">
+                <label class="control-label me-3 label-form" for="khoaId">
+                    Khoa:</label>
+                <select formControlName="khoaId" id="khoaId" class="form-select">
+                    <option value="">Chọn khoa</option>
+                    <option *ngFor="let item of listKhoa" [ngValue]="item.id">{{item.ten}}</option>
+                </select>
+            </div>
+            <div class="form-group mt-3">
+                <label class="control-label me-3 label-form" for="diaChi">
+                    Địa chỉ:</label>
+                <input id="diaChi" formControlName="diaChi" placeholder="Nhập địa chỉ" class="form-control" />
+            </div>
+            <div class="form-group mt-3">
+                <label class="control-label me-3 label-form" for="laTruongKhoa">
+                    Là trưởng khoa:</label>
+                <!-- <input
+          id="laTruongKhoa"
+          formControlName="laTruongKhoa"
+          placeholder="Nhập email"
+          class="form-control"
+        /> -->
+
+                <input class="form-check-input mt-0" id="laTruongKhoa" type="checkbox" formControlName="laTruongKhoa"/>
+            </div>
+            <div class="form-group mt-3">
+                <label class="control-label me-3 label-form" for="laQuanLyThietBi">
+                    Là quản lý thiết bị:</label>
+                <!-- <input
+          id="laQuanLyThietBi"
+          formControlName="laQuanLyThietBi"
+          placeholder="Nhập email"
+          class="form-control"
+        /> -->
+                <input id="laQuanLyThietBi" class="form-check-input mt-0" type="checkbox"
+                    formControlName="laQuanLyThietBi"/>
+            </div>
+        </form>
+    </ng-container>
+    <ng-template #modalFooter>
+        <button nz-button nzType="default" (click)="isShowModal = false">
+            Đóng
+        </button>
+        <button nz-button nzType="primary" (click)="save()" [nzLoading]="isConfirmLoading">
+            Lưu
+        </button>
+    </ng-template>
+</nz-modal>
