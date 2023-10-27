@@ -17,6 +17,8 @@ import {
 import { IconDefinition } from '@ant-design/icons-angular';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { FormBuilderComponent } from './form-builder.component';
+import { PhongBanComponent } from '../pages/phong-ban/phong-ban.component';
+import { NhanSuComponent } from '../pages/nhan-su/nhan-su.component';
 
 const icons: IconDefinition[] = [
   StepBackwardOutline,
@@ -30,6 +32,8 @@ const icons: IconDefinition[] = [
     HomepageComponent,
     ThietBiYTeComponent,
     FormBuilderComponent,
+    PhongBanComponent,
+    NhanSuComponent
   ],
   imports: [
     CommonModule,
