@@ -13,5 +13,6 @@ namespace WebAPI.Models.User
 
         [Required(ErrorMessage = "Password is required")]
         public string? Password { get; set; }
+        public int NhanVienId { get; set; }
     }
 }

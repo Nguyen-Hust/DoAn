@@ -4,7 +4,9 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using WebAPI.Data;
 using WebAPI.Models.Authentication;
+using WebAPI.Models.Shared;
 using WebAPI.Models.User;
 
 namespace WebAPI.Controllers
@@ -13,6 +15,7 @@ namespace WebAPI.Controllers
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
+        private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
@@ -20,17 +23,20 @@ namespace WebAPI.Controllers
         public AuthenticationController(
             UserManager<IdentityUser> userManager,
             RoleManager<IdentityRole> roleManager,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            ApplicationDbContext context
+            )
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _configuration = configuration;
+            _context = context;
         }
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
-            var user = await _userManager.FindByEmailAsync(model.Email);
+            var user = await _userManager.FindByNameAsync(model.Email);
             if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
             {
                 var userRoles = await _userManager.GetRolesAsync(user);
@@ -59,12 +65,20 @@ namespace WebAPI.Controllers
 
         [HttpPost]
         [Route("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterModel model)
+        public async Task<CommonResultDto<RegisterModel>> Register([FromBody] RegisterModel model)
         {
             var userExists = await _userManager.FindByNameAsync(model.Username);
             if (userExists != null)
-                return StatusCode(StatusCodes.Status500InternalServerError, new { Status = "Error", Message = "User already exists!" });
-
+                return new CommonResultDto<RegisterModel>( "User already exists!" );
+            var nhanSu = await _context.NhanSu.FindAsync(model.NhanVienId);
+            if(nhanSu == null)
+            {
+                return new CommonResultDto<RegisterModel>("Not found" );
+            }
+            if (!string.IsNullOrEmpty(nhanSu.AccountId))
+            {
+                return new CommonResultDto<RegisterModel>("Nhân sự đã có tài khoản" );
+            }
             IdentityUser user = new()
             {
                 Email = model.Email,
@@ -73,20 +87,31 @@ namespace WebAPI.Controllers
             };
             var result = await _userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
-                return StatusCode(StatusCodes.Status500InternalServerError, new { Status = "Error", Message = "User creation failed! Please check user details and try again." });
+                return new CommonResultDto<RegisterModel>("User creation failed! Please check user details and try again." );
+            nhanSu.AccountId = user.Id.ToString();
+            _context.NhanSu.Update(nhanSu);
+            await _context.SaveChangesAsync();
             await _userManager.AddToRoleAsync(user, UserRoles.User);
 
-            return Ok(new { Status = "Success", Message = "User created successfully!" });
+            return new CommonResultDto<RegisterModel>(model);
         }
 
         [HttpPost]
         [Route("register-admin")]
-        public async Task<IActionResult> RegisterAdmin([FromBody] RegisterModel model)
+        public async Task<CommonResultDto<RegisterModel>> RegisterAdmin([FromBody] RegisterModel model)
         {
             var userExists = await _userManager.FindByNameAsync(model.Username);
             if (userExists != null)
-                return StatusCode(StatusCodes.Status500InternalServerError, new { Status = "Error", Message = "User already exists!" });
-
+                return new CommonResultDto<RegisterModel>("User already exists!");
+            var nhanSu = await _context.NhanSu.FindAsync(model.NhanVienId);
+            if (nhanSu == null)
+            {
+                return new CommonResultDto<RegisterModel>("Not found");
+            }
+            if (!string.IsNullOrEmpty(nhanSu.AccountId))
+            {
+                return new CommonResultDto<RegisterModel>("Nhân sự đã có tài khoản");
+            }
             IdentityUser user = new()
             {
                 Email = model.Email,
@@ -95,10 +120,12 @@ namespace WebAPI.Controllers
             };
             var result = await _userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
-                return StatusCode(StatusCodes.Status500InternalServerError, new { Status = "Error", Message = "User creation failed! Please check user details and try again." });
-
-            await _userManager.AddToRoleAsync(user, UserRoles.Admin);
-            return Ok(new { Status = "Success", Message = "User created successfully!" });
+                return new CommonResultDto<RegisterModel>("User creation failed! Please check user details and try again.");
+            nhanSu.AccountId = user.Id.ToString();
+            _context.NhanSu.Update(nhanSu);
+            await _context.SaveChangesAsync();
+            await _userManager.AddToRoleAsync(user, UserRoles.Manager);
+            return new CommonResultDto<RegisterModel>(model);
         }
 
         private JwtSecurityToken GetToken(List<Claim> authClaims)

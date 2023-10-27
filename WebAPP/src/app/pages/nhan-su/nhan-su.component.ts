@@ -1,30 +1,33 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NhanSuDto } from 'src/app/models/NhanSuDto';
-import { NhanSuService } from './nhan-su.service';
-import { ToastrService } from 'ngx-toastr';
-import { NzModalService } from 'ng-zorro-antd/modal';
-import { finalize } from 'rxjs';
-import { KhoaDto } from 'src/app/models/KhoaDto';
+import { Component, OnInit } from "@angular/core";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { NhanSuDto } from "src/app/models/NhanSuDto";
+import { NhanSuService } from "./nhan-su.service";
+import { ToastrService } from "ngx-toastr";
+import { NzModalService } from "ng-zorro-antd/modal";
+import { finalize } from "rxjs";
+import { KhoaDto } from "src/app/models/KhoaDto";
 
 @Component({
-  selector: 'app-nhan-su',
-  templateUrl: './nhan-su.component.html',
-  styleUrls: ['./nhan-su.component.css']
+  selector: "app-nhan-su",
+  templateUrl: "./nhan-su.component.html",
+  styleUrls: ["./nhan-su.component.css"],
 })
-export class NhanSuComponent implements OnInit{
+export class NhanSuComponent implements OnInit {
   danhSach: NhanSuDto[];
   listKhoa: KhoaDto[];
   form: FormGroup;
+  formAccount: FormGroup;
 
   id = 0;
-  title = '';
+  title = "";
   isShowModal = false;
   isConfirmLoading = false;
-  filter = '';
+  filter = "";
   pageIndex = 1;
   pageSize = 10;
   total = 0;
+
+  isShowModalAccount = false;
 
   constructor(
     private formbulider: FormBuilder,
@@ -36,24 +39,31 @@ export class NhanSuComponent implements OnInit{
   ngOnInit() {
     this.form = this.formbulider.group({
       id: [0, [Validators.required]],
-      ma: ['', [Validators.required]],
-      ten: ['', [Validators.required]],
-      sdt: ['', [Validators.required]],
-      email: ['', [Validators.required]],
+      ma: ["", [Validators.required]],
+      ten: ["", [Validators.required]],
+      sdt: ["", [Validators.required]],
+      email: ["", [Validators.required]],
       khoaId: [0, [Validators.required]],
-      diaChi: ['', [Validators.required]],
-      accountId: [''],
+      diaChi: ["", [Validators.required]],
+      accountId: [""],
       laTruongKhoa: [false],
       laQuanLyThietBi: [false],
+    });
+    this.formAccount = this.formbulider.group({
+      email: ["", [Validators.required]],
+      userName: ["", [Validators.required]],
+      password: ["", [Validators.required]],
+      nhanVienId: [null, [Validators.required]],
+      loaiAccount: ["user", [Validators.required]],
     });
     this.getListKhoa();
     this.getList();
   }
 
   getListKhoa() {
-    this.service.getAllKhoa().subscribe(data => {
+    this.service.getAllKhoa().subscribe((data) => {
       this.listKhoa = data;
-    })
+    });
   }
 
   getList(pageIndex = 1) {
@@ -71,11 +81,11 @@ export class NhanSuComponent implements OnInit{
 
   delete(id: number, ten) {
     this.modal.confirm({
-      nzTitle: 'Xác nhận xóa',
+      nzTitle: "Xác nhận xóa",
       nzContent: `Bạn có muốn xóa nhân viên: <b>${ten}</b> không`,
       nzOnOk: () =>
         this.service.delete(id).subscribe(() => {
-          this.toastr.success('Data Deleted Successfully');
+          this.toastr.success("Data Deleted Successfully");
           this.getList();
         }),
     });
@@ -90,9 +100,9 @@ export class NhanSuComponent implements OnInit{
 
   openModalCreate() {
     this.isShowModal = true;
-    this.title = 'Thêm mới';
+    this.title = "Thêm mới";
     this.form.reset();
-    this.form.get('id')?.setValue(0);
+    this.form.get("id")?.setValue(0);
   }
   openModalUpdate(data) {
     this.getById(data.id);
@@ -100,10 +110,44 @@ export class NhanSuComponent implements OnInit{
     this.title = `Sửa: ${data.name}`;
   }
 
+  openModalAccount(data) {
+    this.formAccount.get("email")?.setValue(data.email);
+    this.formAccount.get("nhanVienId")?.setValue(data.id);
+    this.formAccount.get("loaiAccount")?.setValue("user");
+    this.isShowModalAccount = true;
+  }
+
+  register() {
+    const input = this.formAccount.getRawValue();
+    if (input.loaiAccount == "user") {
+      this.service.registerUser(input).subscribe((val) => {
+        if (val.isSuccessful) {
+          this.toastr.success("Cấp tài khoản thành công");
+          this.getList();
+          this.formAccount.reset();
+          this.isShowModalAccount = false;
+        } else {
+          this.toastr.error(val.errorMessage);
+        }
+      });
+    } else {
+      this.service.registerAdmin(input).subscribe((val) => {
+        if (val.isSuccessful) {
+          this.toastr.success("Cấp tài khoản thành công");
+          this.getList();
+          this.formAccount.reset();
+          this.isShowModalAccount = false;
+        } else {
+          this.toastr.error(val.errorMessage);
+        }
+      });
+    }
+  }
+
   save() {
     const input = this.form.value;
     if (this.form.invalid) {
-      this.toastr.error('Cần nhập đủ thông tin');
+      this.toastr.error("Cần nhập đủ thông tin");
       return;
     }
     this.isConfirmLoading = true;
@@ -124,7 +168,7 @@ export class NhanSuComponent implements OnInit{
         this.getList();
         this.form.reset();
         this.isShowModal = false;
-        this.toastr.success('Data Saved Successfully');
+        this.toastr.success("Data Saved Successfully");
       });
   }
 
@@ -134,7 +178,7 @@ export class NhanSuComponent implements OnInit{
       .update(input)
       .pipe(finalize(() => (this.isConfirmLoading = false)))
       .subscribe(() => {
-        this.toastr.success('Data Updated Successfully');
+        this.toastr.success("Data Updated Successfully");
         this.form.reset();
         this.isShowModal = false;
         this.getList();
@@ -142,7 +186,7 @@ export class NhanSuComponent implements OnInit{
   }
 
   getTenKhoa(id) {
-    var khoa = this.listKhoa.find(_ => _.id == id);
+    var khoa = this.listKhoa.find((_) => _.id == id);
     return khoa?.ten;
   }
 }

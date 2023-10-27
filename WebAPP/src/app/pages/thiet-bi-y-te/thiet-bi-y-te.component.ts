@@ -72,6 +72,7 @@ export class ThietBiYTeComponent implements OnInit {
     this.isShowModal = true;
     this.title = "Thêm mới";
     this.form.reset();
+    this.form.get("loaiTTBYT")?.setValue("");
     this.form.get("id")?.setValue(0);
   }
 

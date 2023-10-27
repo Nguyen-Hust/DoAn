@@ -39,7 +39,8 @@ namespace WebAPI.Controllers
                         KhoaId = _.KhoaId,
                         DiaChi = _.DiaChi,
                         LaTruongKhoa = _.LaTruongKhoa,
-                        LaQuanLyThietBi = _.LaQuanLyThietBi
+                        LaQuanLyThietBi = _.LaQuanLyThietBi,
+                        AccountId = _.AccountId,
                     }).ToList();
                 return new PagedResultDto<NhanSuDto>
                 {
