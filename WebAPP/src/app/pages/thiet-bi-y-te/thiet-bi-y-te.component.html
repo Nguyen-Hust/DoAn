@@ -48,7 +48,7 @@
         <th class="text-center">Tên</th>
         <th class="text-center">Mức độ rủi ro</th>
         <th class="text-center">Loại trang thiết bị y tế</th>
-        <th class="text-center">Action</th>
+        <th class="text-center">Thao tác</th>
       </tr>
     </thead>
     <tbody>
@@ -60,6 +60,7 @@
         <td class="text-center">{{ getTenLoaiThietBi(data.loaiTTBYT) }}</td>
         <td class="text-center">
           <button
+            nz-tooltip
             type="button"
             class="btn btn-info text-white me-2"
             nzTooltipTitle="Sửa"
@@ -68,6 +69,7 @@
             <span nz-icon nzType="edit" nzTheme="outline"></span>
           </button>
           <button
+            nz-tooltip
             type="button"
             class="btn btn-danger text-white"
             nzTooltipTitle="Xóa"

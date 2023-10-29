@@ -12,6 +12,12 @@
           <li nz-menu-item routerLink="/loai-thiet-bi">Loại trang thiết bị</li>
         </ul>
       </li>
+      <li nz-submenu nzOpen nzIcon="shop" nzTitle="Quản lý phiếu">
+        <ul>
+          <li nz-menu-item routerLink="/phieu-bao-duong">Phiếu bảo dưỡng</li>
+          <li nz-menu-item routerLink="/phieu-sua-chua">Phiếu sửa chữa</li>
+        </ul>
+      </li>
       <li nz-submenu nzOpen nzIcon="setting" nzTitle="Quản trị viên">
         <ul>
           <li nz-menu-item routerLink="/phong-ban">Phòng Ban</li>
@@ -33,7 +39,11 @@
         </button>
         <ul class="dropdown-menu">
           <li>
-            <a class="dropdown-item" href="javascript:void(0)"
+            <a
+              class="dropdown-item"
+              href="javascript:void(0)"
+              data-toggle="modal"
+              data-target="#exampleModal"
               >Thông tin tài khoản</a
             >
           </li>
@@ -46,6 +56,52 @@
             >
           </li>
         </ul>
+      </div>
+      <!-- Modal -->
+      <div
+        class="modal fade"
+        id="exampleModal"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">
+                Thông tin nhân viên
+              </h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <dl class="row">
+                <dt class="col-sm-3">Mã</dt>
+                <dd class="col-sm-9">{{ userInfo.ma }}</dd>
+                <dt class="col-sm-3">Tên</dt>
+                <dd class="col-sm-9">{{ userInfo.ten }}</dd>
+                <dt class="col-sm-3">Email</dt>
+                <dd class="col-sm-9">{{ userInfo.email }}</dd>
+                <dt class="col-sm-3">Số điện thoại</dt>
+                <dd class="col-sm-9">{{ userInfo.sdt }}</dd>
+              </dl>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-dismiss="modal"
+              >
+                Đóng
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </nz-header>
     <nz-content>

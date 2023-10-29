@@ -11,7 +11,7 @@ namespace WebAPI.Entities
         [Required]
         [MaxLength(255)]
         public string Ma { get; set; }
-        public int ThietBiId { get; set; }
+        public int ThietBiYTeId { get; set; }
         public DateTime NgayNhap { get; set; }
         [MaxLength(255)]
         public string XuatXu { get; set; }

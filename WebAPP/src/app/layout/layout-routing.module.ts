@@ -5,6 +5,8 @@ import { ThietBiYTeComponent } from "../pages/thiet-bi-y-te/thiet-bi-y-te.compon
 import { LoaiThietBiComponent } from "../pages/loai-thiet-bi/loai-thiet-bi.component";
 import { PhongBanComponent } from "../pages/phong-ban/phong-ban.component";
 import { NhanSuComponent } from "../pages/nhan-su/nhan-su.component";
+import { PhieuSuaChuaComponent } from "../pages/phieu-sua-chua/phieu-sua-chua.component";
+import { PhieuBaoDuongComponent } from "../pages/phieu-bao-duong/phieu-bao-duong.component";
 
 @NgModule({
   imports: [
@@ -20,13 +22,22 @@ import { NhanSuComponent } from "../pages/nhan-su/nhan-su.component";
       {
         path: "loai-thiet-bi",
         component: LoaiThietBiComponent,
-      },{
-        path: 'phong-ban',
+      },
+      {
+        path: "phong-ban",
         component: PhongBanComponent,
       },
       {
-        path: 'nhan-su',
+        path: "nhan-su",
         component: NhanSuComponent,
+      },
+      {
+        path: "phieu-sua-chua",
+        component: PhieuSuaChuaComponent,
+      },
+      {
+        path: "phieu-bao-duong",
+        component: PhieuBaoDuongComponent,
       },
     ]),
   ],

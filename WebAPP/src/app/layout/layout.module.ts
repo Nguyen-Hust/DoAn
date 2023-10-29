@@ -14,12 +14,16 @@ import {
   CaretLeftOutline,
   SettingOutline,
 } from "@ant-design/icons-angular/icons";
-import { IconDefinition } from '@ant-design/icons-angular';
-import { NzIconModule } from 'ng-zorro-antd/icon';
-import { FormBuilderComponent } from './form-builder.component';
-import { PhongBanComponent } from '../pages/phong-ban/phong-ban.component';
-import { NhanSuComponent } from '../pages/nhan-su/nhan-su.component';
+import { IconDefinition } from "@ant-design/icons-angular";
+import { NzIconModule } from "ng-zorro-antd/icon";
+import { FormBuilderComponent } from "./form-builder.component";
+import { PhongBanComponent } from "../pages/phong-ban/phong-ban.component";
+import { NhanSuComponent } from "../pages/nhan-su/nhan-su.component";
 import { LoaiThietBiComponent } from "../pages/loai-thiet-bi/loai-thiet-bi.component";
+import { PhieuSuaChuaComponent } from "../pages/phieu-sua-chua/phieu-sua-chua.component";
+import { NzToolTipModule } from "ng-zorro-antd/tooltip";
+import { PhieuBaoDuongComponent } from "../pages/phieu-bao-duong/phieu-bao-duong.component";
+import { HttpClientModule } from "@angular/common/http";
 
 const icons: IconDefinition[] = [
   StepBackwardOutline,
@@ -35,7 +39,9 @@ const icons: IconDefinition[] = [
     FormBuilderComponent,
     LoaiThietBiComponent,
     PhongBanComponent,
-    NhanSuComponent
+    NhanSuComponent,
+    PhieuSuaChuaComponent,
+    PhieuBaoDuongComponent,
   ],
   imports: [
     CommonModule,
@@ -45,6 +51,7 @@ const icons: IconDefinition[] = [
     NgZorroAntdModule,
     RouterModule,
     NzIconModule.forChild(icons),
+    HttpClientModule,
   ],
   providers: [],
 })

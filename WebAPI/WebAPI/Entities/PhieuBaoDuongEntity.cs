@@ -9,9 +9,9 @@ namespace WebAPI.Entities
         [Key]
         public int Id { get; set; }
         public int NhanVienId { get; set; }
-        public int ChiTietThietBiId { get; set; }
         public int? TrangThai { get; set; }
+        public DateTime? CreateTime { get; set; }
         public NhanSuEntity NhanVien { get; set; }
-        public ThongTinChiTietThietBiEntity ChiTietThietBi { get; set; }
+        public List<ChiTietPhieuBaoDuongEntity> ChiTietPhieuBaoDuong { get; set; }
     }
 }

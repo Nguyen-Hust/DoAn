@@ -43,6 +43,7 @@ namespace WebAPI.Controllers
 
                 var authClaims = new List<Claim>
                 {
+                    new Claim(ClaimTypes.NameIdentifier, user.Id),
                     new Claim(ClaimTypes.Name, user.UserName),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 };
@@ -61,6 +62,23 @@ namespace WebAPI.Controllers
                 });
             }
             return Unauthorized();
+        }
+
+        [HttpGet]
+        [Route("get-user-info")]
+        public async Task<UserInfoDto> GetUserInfo()
+        {
+
+            string userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            var nhanVien = _context.NhanSu.First(_ => _.AccountId == userId);
+            return new UserInfoDto
+            {
+                Email = nhanVien.Email,
+                KhoaId = nhanVien.KhoaId,
+                Ma = nhanVien.Ma,
+                SDT = nhanVien.SDT,
+                Ten = nhanVien.Ten,
+            };
         }
 
         [HttpPost]
