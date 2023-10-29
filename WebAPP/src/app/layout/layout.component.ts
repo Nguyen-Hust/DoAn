@@ -14,19 +14,19 @@ export class LayoutComponent {
   isVisible = false;
 
   constructor(private router: Router, private http: HttpClient) {
-    if (localStorage.getItem("jwt")) {
-      this.http
-        .get(this.url + "get-user-info", {
-          headers: new HttpHeaders({
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-          }),
-        })
-        .subscribe((response) => {
-          this.isVisible = true;
-          this.userInfo = response;
-        });
-    }
+    // if (localStorage.getItem("jwt")) {
+    //   this.http
+    //     .get(this.url + "get-user-info", {
+    //       headers: new HttpHeaders({
+    //         "Content-Type": "application/json",
+    //         Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+    //       }),
+    //     })
+    //     .subscribe((response) => {
+    //       this.isVisible = true;
+    //       this.userInfo = response;
+    //     });
+    // }
   }
   public logOut = () => {
     localStorage.removeItem("jwt");
