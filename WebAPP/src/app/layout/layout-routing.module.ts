@@ -7,6 +7,7 @@ import { PhongBanComponent } from "../pages/phong-ban/phong-ban.component";
 import { NhanSuComponent } from "../pages/nhan-su/nhan-su.component";
 import { PhieuSuaChuaComponent } from "../pages/phieu-sua-chua/phieu-sua-chua.component";
 import { PhieuBaoDuongComponent } from "../pages/phieu-bao-duong/phieu-bao-duong.component";
+import { PhieuNhapXuatComponent } from "../pages/phieu-nhap-xuat/phieu-nhap-xuat.component";
 
 @NgModule({
   imports: [
@@ -39,6 +40,10 @@ import { PhieuBaoDuongComponent } from "../pages/phieu-bao-duong/phieu-bao-duong
         path: "phieu-bao-duong",
         component: PhieuBaoDuongComponent,
       },
+      {
+        path: "phieu-nhap-xuat",
+        component: PhieuNhapXuatComponent,
+      }
     ]),
   ],
 })

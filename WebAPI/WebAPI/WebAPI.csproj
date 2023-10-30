@@ -27,9 +27,11 @@
   <ItemGroup>
     <None Remove="Models\PhongBan\" />
     <None Remove="Models\NhanVien\" />
+    <None Remove="Models\PhieuNhapXuat\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\PhongBan\" />
     <Folder Include="Models\NhanVien\" />
+    <Folder Include="Models\PhieuNhapXuat\" />
   </ItemGroup>
 </Project>
