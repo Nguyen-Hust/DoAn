@@ -42,6 +42,7 @@ namespace WebAPI.Controllers
                         NhanVienId = _.NhanVienId,
                         NgayNhapXuat = _.NgayNhapXuat,
                         NguoiDaiDien = _.NguoiDaiDien,
+                        NhaCungCap = _.NhaCungCap,
                         SoLuong = _.SoLuong,
                         TongTien = _.TongTien,
                         GhiChu = _.GhiChu,
