@@ -41,5 +41,7 @@ namespace WebAPI.Data
         public DbSet<ThongTinChiTietThietBiEntity> ThongTinChiTietThietBi { get; set; }
         public DbSet<LoaiThietBiEntity> LoaiThietBi { get; set; }
         public DbSet<ChiTietPhieuBaoDuongEntity> ChiTietPhieuBaoDuong { get; set; }
+        public DbSet<PhieuBanGiaoEntity> PhieuBanGiao { get; set; }
+        public DbSet<ChiTietPhieuBanGiaoEntity> ChiTietPhieuBanGiao { get; set; }
     }
 }

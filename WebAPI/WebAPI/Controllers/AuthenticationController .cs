@@ -70,14 +70,14 @@ namespace WebAPI.Controllers
         {
 
             string userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
-            var nhanVien = _context.NhanSu.First(_ => _.AccountId == userId);
+            var nhanVien = _context.NhanSu.FirstOrDefault(_ => _.AccountId == userId);
             return new UserInfoDto
             {
-                Email = nhanVien.Email,
-                KhoaId = nhanVien.KhoaId,
-                Ma = nhanVien.Ma,
-                SDT = nhanVien.SDT,
-                Ten = nhanVien.Ten,
+                Email = nhanVien?.Email,
+                KhoaId = nhanVien?.KhoaId,
+                Ma = nhanVien?.Ma,
+                SDT = nhanVien?.SDT,
+                Ten = nhanVien?.Ten,
             };
         }
 

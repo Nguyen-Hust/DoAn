@@ -1,9 +1,9 @@
-﻿namespace WebAPI.Models.PhieuSuaChua
+﻿using WebAPI.Models.Shared;
+
+namespace WebAPI.Models.PhieuSuaChua
 {
-    public class PhieuSuaChuaInputDto
+    public class PhieuSuaChuaInputDto : SearchListDto
     {
         public DateTime? Date { get; set; }
-        public int? MaxResultCount { get; set; }
-        public int? SkipCount { get; set; }
     }
 }

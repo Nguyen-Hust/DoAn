@@ -33,6 +33,7 @@ export class PhieuBaoDuongComponent implements OnInit {
   checked = false;
   listOfCurrentPageData: readonly any[] = [];
   setOfCheckedId = new Set<number>();
+  disabled = false;
 
   constructor(
     private formbulider: FormBuilder,
@@ -76,6 +77,7 @@ export class PhieuBaoDuongComponent implements OnInit {
   }
 
   openModalCreate() {
+    this.disabled = false;
     this.isShowModal = true;
     this.title = "Thêm mới";
     this.setOfCheckedId = new Set<number>();
@@ -145,6 +147,15 @@ export class PhieuBaoDuongComponent implements OnInit {
     });
   }
 
+  xemChiTiet(id) {
+    this.service.getById(id).subscribe((val) => {
+      this.disabled = true;
+      this.isShowModal = true;
+      this.title = "Xem chi tiết";
+      this.setOfCheckedId = new Set<number>(val.danhSachThietBi);
+    });
+  }
+
   updateCheckedSet(id: number, checked: boolean): void {
     if (checked) {
       this.setOfCheckedId.add(id);
@@ -159,10 +170,7 @@ export class PhieuBaoDuongComponent implements OnInit {
   }
 
   refreshCheckedStatus(): void {
-    const listOfEnabledData = this.listOfCurrentPageData.filter(
-      ({ disabled }) => !disabled
-    );
-    this.checked = listOfEnabledData.every(({ id }) =>
+    this.checked = this.listOfCurrentPageData.every(({ id }) =>
       this.setOfCheckedId.has(id)
     );
   }

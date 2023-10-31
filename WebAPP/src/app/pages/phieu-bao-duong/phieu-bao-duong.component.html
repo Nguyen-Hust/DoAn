@@ -75,6 +75,15 @@
           <button
             nz-tooltip
             type="button"
+            class="btn btn-light me-2"
+            nzTooltipTitle="Xem chi tiết"
+            (click)="xemChiTiet(data.id)"
+          >
+            <span nz-icon nzType="eye" nzTheme="outline"></span>
+          </button>
+          <button
+            nz-tooltip
+            type="button"
             class="btn btn-success text-white me-2"
             nzTooltipTitle="Xác nhận sửa xong"
             (click)="completed(data.id)"
@@ -126,6 +135,7 @@
         <tr>
           <th
             [nzChecked]="checked"
+            [nzDisabled]="disabled"
             (nzCheckedChange)="onAllChecked($event)"
           ></th>
           <th>Mã</th>
@@ -135,6 +145,7 @@
       <tbody>
         <tr *ngFor="let data of rowSelectionTable.data">
           <td
+            [nzDisabled]="disabled"
             [nzChecked]="setOfCheckedId.has(data.id)"
             (nzCheckedChange)="onItemChecked(data.id, $event)"
           ></td>
@@ -149,6 +160,7 @@
       Đóng
     </button>
     <button
+      *ngIf="!disabled"
       nz-button
       nzType="primary"
       (click)="save()"

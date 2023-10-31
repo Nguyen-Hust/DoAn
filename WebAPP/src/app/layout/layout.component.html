@@ -58,7 +58,7 @@
         </ul>
       </div>
       <!-- Modal -->
-      <!-- <div
+      <div
         class="modal fade"
         id="exampleModal"
         tabindex="-1"
@@ -82,13 +82,13 @@
             <div class="modal-body">
               <dl class="row">
                 <dt class="col-sm-3">Mã</dt>
-                <dd class="col-sm-9">{{ userInfo.ma }}</dd>
+                <dd class="col-sm-9">{{ userInfo?.ma }}</dd>
                 <dt class="col-sm-3">Tên</dt>
-                <dd class="col-sm-9">{{ userInfo.ten }}</dd>
+                <dd class="col-sm-9">{{ userInfo?.ten }}</dd>
                 <dt class="col-sm-3">Email</dt>
-                <dd class="col-sm-9">{{ userInfo.email }}</dd>
+                <dd class="col-sm-9">{{ userInfo?.email }}</dd>
                 <dt class="col-sm-3">Số điện thoại</dt>
-                <dd class="col-sm-9">{{ userInfo.sdt }}</dd>
+                <dd class="col-sm-9">{{ userInfo?.sdt }}</dd>
               </dl>
             </div>
             <div class="modal-footer">
@@ -102,7 +102,7 @@
             </div>
           </div>
         </div>
-      </div> -->
+      </div>
     </nz-header>
     <nz-content>
       <router-outlet></router-outlet>
