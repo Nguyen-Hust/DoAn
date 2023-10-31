@@ -7,6 +7,9 @@ import { PhongBanComponent } from "../pages/phong-ban/phong-ban.component";
 import { NhanSuComponent } from "../pages/nhan-su/nhan-su.component";
 import { PhieuSuaChuaComponent } from "../pages/phieu-sua-chua/phieu-sua-chua.component";
 import { PhieuBaoDuongComponent } from "../pages/phieu-bao-duong/phieu-bao-duong.component";
+import { PhieuNhapXuatComponent } from "../pages/phieu-nhap-xuat/phieu-nhap-xuat.component";
+import { PhieuXuatComponent } from "../pages/phieu-xuat/phieu-xuat.component";
+import { DanhSachThietBiComponent } from "../pages/danh-sach-thiet-bi/danh-sach-thiet-bi.component";
 
 @NgModule({
   imports: [
@@ -39,6 +42,19 @@ import { PhieuBaoDuongComponent } from "../pages/phieu-bao-duong/phieu-bao-duong
         path: "phieu-bao-duong",
         component: PhieuBaoDuongComponent,
       },
+      {
+        path: "phieu-nhap",
+        component: PhieuNhapXuatComponent,
+      },
+      {
+        path: "phieu-xuat",
+        component: PhieuXuatComponent,
+      },
+      {
+        path: "danh-sach-thiet-bi",
+        component: DanhSachThietBiComponent,
+      },
+      
     ]),
   ],
 })

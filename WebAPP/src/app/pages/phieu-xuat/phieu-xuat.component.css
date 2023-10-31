@@ -1,0 +1,30 @@
+.filter-area {
+    padding: 15px;
+    background: white;
+    margin-bottom: 30px;
+}
+
+.filter-area .filter-label {
+    font-size: 14px;
+    color: #000;
+    font-weight: bold;
+}
+
+.label-form {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.add-btn {
+    border-radius: 6px;
+    border: 1px solid #ff7d01;
+    padding: 6px 12px;
+    background: #ffffff;
+    color: #ff7d01;
+    font-weight: 600;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    float: right;
+    margin-bottom: 12px !important;
+  }
