@@ -11,12 +11,22 @@ export class PhieuNhapXuatDto
     tongTien: number| null;
     ghiChu: string;
     loaiPhieu: number;
-    chiTietPhieuNhapXuatDtos: ChiTietPhieuNhapXuatDto[] | null;
+    thongTinChiTietThietBiDtos: ThongTinChiTietThietBiDto[] | null;
 }
 
-export class ChiTietPhieuNhapXuatDto {
+export class ThongTinChiTietThietBiDto {
     id: number;
-    phieuNhapXuatId?: number;
-    chiTietThietBiId?: number;
-    giaTien?: number | null;
+    ma: string;
+    thietBiYTeId: number;
+    ngayNhap: Date | null;
+    xuatXu: string;
+    namSX: number | null;
+    hangSanXuat: string;
+    tinhTrang: number | null;
+    khoaId: number | null;
+    nhanVienId: number | null;
+    serial: string;
+    model: string;
+    giaTien: number| null;
+    thoiGianBaoDuong: number | null;
 }

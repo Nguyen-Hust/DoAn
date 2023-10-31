@@ -28,10 +28,12 @@
     <None Remove="Models\PhongBan\" />
     <None Remove="Models\NhanVien\" />
     <None Remove="Models\PhieuNhapXuat\" />
+    <None Remove="Models\ThongTinChiTietThietBi\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\PhongBan\" />
     <Folder Include="Models\NhanVien\" />
     <Folder Include="Models\PhieuNhapXuat\" />
+    <Folder Include="Models\ThongTinChiTietThietBi\" />
   </ItemGroup>
 </Project>

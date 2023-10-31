@@ -1,6 +1,6 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
-import { CommonModule } from "@angular/common";
+import { CommonModule, DatePipe } from "@angular/common";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { LayoutComponent } from "./layout.component";
 import { HomepageComponent } from "../pages/homepage/homepage.component";
@@ -25,7 +25,6 @@ import { NzToolTipModule } from "ng-zorro-antd/tooltip";
 import { PhieuBaoDuongComponent } from "../pages/phieu-bao-duong/phieu-bao-duong.component";
 import { HttpClientModule } from "@angular/common/http";
 import { PhieuNhapXuatComponent } from "../pages/phieu-nhap-xuat/phieu-nhap-xuat.component";
-import { PhieuNhapXuatThietBiComponent } from "../pages/phieu-nhap-xuat/phieu-nhap-xuat-thiet-bi/phieu-nhap-xuat-thiet-bi.component";
 
 const icons: IconDefinition[] = [
   StepBackwardOutline,
@@ -44,8 +43,7 @@ const icons: IconDefinition[] = [
     NhanSuComponent,
     PhieuSuaChuaComponent,
     PhieuBaoDuongComponent,
-    PhieuNhapXuatComponent,
-    PhieuNhapXuatThietBiComponent
+    PhieuNhapXuatComponent
   ],
   imports: [
     CommonModule,
@@ -57,6 +55,6 @@ const icons: IconDefinition[] = [
     NzIconModule.forChild(icons),
     HttpClientModule,
   ],
-  providers: [],
+  providers: [DatePipe],
 })
 export class LayOutModule {}

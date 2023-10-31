@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using WebAPI.Models.ThongTinChiTietThietBi;
 
 namespace WebAPI.Models.PhieuNhapXuat
 {
@@ -18,7 +19,7 @@ namespace WebAPI.Models.PhieuNhapXuat
         [MaxLength(255)]
         public string GhiChu { get; set; }
         public int LoaiPhieu { get; set; }
-        public List<ChiTietPhieuNhapXuatDto> ChiTietPhieuNhapXuatDtos { get; set; }
+        public List<ThongTinChiTietThietBiDto> ThongTinChiTietThietBiDtos { get; set; }
     }
 }
 

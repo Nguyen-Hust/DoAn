@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { ThietBiYTeDto } from "src/app/models/ThietBiYTeDto";
 import { NhanSuDto } from "src/app/models/NhanSuDto";
+import { PhieuNhapXuatDto } from "src/app/models/PhieuNhapXuatDto";
 
 @Injectable({
     providedIn: "root",
@@ -19,6 +20,57 @@ import { NhanSuDto } from "src/app/models/NhanSuDto";
           }),
         };
         return this.http.post<any>(this.url + "get-list", body, httpHeaders);
+    }
+
+    create(productData: any): Observable<PhieuNhapXuatDto> {
+      const httpHeaders = {
+        headers: new HttpHeaders({
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+        }),
+      };
+      return this.http.post<PhieuNhapXuatDto>(
+        this.url + "create",
+        productData,
+        httpHeaders
+      );
+    }
+
+    update(product: any): Observable<PhieuNhapXuatDto> {
+      const httpHeaders = {
+        headers: new HttpHeaders({
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+        }),
+      };
+      return this.http.post<PhieuNhapXuatDto>(
+        this.url + "update?id=" + product.id,
+        product,
+        httpHeaders
+      );
+    }
+    delete(id: number): Observable<number> {
+      const httpHeaders = {
+        headers: new HttpHeaders({
+          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+        }),
+      };
+      return this.http.post<number>(
+        this.url + "delete?id=" + id,
+        null,
+        httpHeaders
+      );
+    }
+    getById(id: number): Observable<PhieuNhapXuatDto> {
+      const httpHeaders = {
+        headers: new HttpHeaders({
+          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+        }),
+      };
+      return this.http.get<PhieuNhapXuatDto>(
+        this.url + "get-by-id?id=" + id,
+        httpHeaders
+      );
     }
 
     getDanhSachThietBi(): Observable<ThietBiYTeDto[]> {
