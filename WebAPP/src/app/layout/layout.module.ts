@@ -25,6 +25,8 @@ import { NzToolTipModule } from "ng-zorro-antd/tooltip";
 import { PhieuBaoDuongComponent } from "../pages/phieu-bao-duong/phieu-bao-duong.component";
 import { HttpClientModule } from "@angular/common/http";
 import { PhieuNhapXuatComponent } from "../pages/phieu-nhap-xuat/phieu-nhap-xuat.component";
+import { PhieuXuatComponent } from "../pages/phieu-xuat/phieu-xuat.component";
+import { DanhSachThietBiComponent } from "../pages/danh-sach-thiet-bi/danh-sach-thiet-bi.component";
 
 const icons: IconDefinition[] = [
   StepBackwardOutline,
@@ -43,7 +45,9 @@ const icons: IconDefinition[] = [
     NhanSuComponent,
     PhieuSuaChuaComponent,
     PhieuBaoDuongComponent,
-    PhieuNhapXuatComponent
+    PhieuNhapXuatComponent,
+    PhieuXuatComponent,
+    DanhSachThietBiComponent
   ],
   imports: [
     CommonModule,
