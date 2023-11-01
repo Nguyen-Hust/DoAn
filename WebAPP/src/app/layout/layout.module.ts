@@ -27,6 +27,8 @@ import { HttpClientModule } from "@angular/common/http";
 import { PhieuNhapXuatComponent } from "../pages/phieu-nhap-xuat/phieu-nhap-xuat.component";
 import { PhieuXuatComponent } from "../pages/phieu-xuat/phieu-xuat.component";
 import { DanhSachThietBiComponent } from "../pages/danh-sach-thiet-bi/danh-sach-thiet-bi.component";
+import { PhieuBanGiaoComponent } from "../pages/phieu-ban-giao/phieu-ban-giao.component";
+import { PhieuThuHoiComponent } from "../pages/phieu-thu-hoi/phieu-thu-hoi.component";
 
 const icons: IconDefinition[] = [
   StepBackwardOutline,
@@ -47,7 +49,9 @@ const icons: IconDefinition[] = [
     PhieuBaoDuongComponent,
     PhieuNhapXuatComponent,
     PhieuXuatComponent,
-    DanhSachThietBiComponent
+    DanhSachThietBiComponent,
+    PhieuBanGiaoComponent,
+    PhieuThuHoiComponent,
   ],
   imports: [
     CommonModule,

@@ -1,8 +1,8 @@
-export class PhieuBaoDuongDto {
+export class PhieuBanGiaoDto {
   id: number;
   ma: string;
   nhanVienId: number;
-  trangThai: number | null;
+  nhanVienNhan: number | null;
   createTime: Date | null;
   tongThietBi: number | null;
   danhSachThietBi: number[];

@@ -3,26 +3,27 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { finalize } from "rxjs";
 import { ToastrService } from "ngx-toastr";
 import { ThietBiYTeDto } from "src/app/models/ThietBiYTeDto";
-import { PhieuBaoDuongService } from "./phieu-bao-duong.service";
+import { PhieuThuHoiService } from "./phieu-thu-hoi.service";
 import { NzModalService } from "ng-zorro-antd/modal";
 import { LoaiThietBiService } from "../loai-thiet-bi/loai-thiet-bi.service";
 import { PhieuSuaChuaDto } from "src/app/models/PhieuSuaChuaDto";
 import { NhanSuService } from "../nhan-su/nhan-su.service";
-import { PhieuBaoDuongDto } from "src/app/models/PhieuBaoDuongDto";
+import { PhieuThuHoiDto } from "src/app/models/PhieuThuHoiDto";
 
 @Component({
-  selector: "app-phieu-bao-duong",
-  templateUrl: "./phieu-bao-duong.component.html",
-  styleUrls: ["./phieu-bao-duong.component.css"],
+  selector: "app-phieu-thu-hoi",
+  templateUrl: "./phieu-thu-hoi.component.html",
+  styleUrls: ["./phieu-thu-hoi.component.css"],
 })
-export class PhieuBaoDuongComponent implements OnInit {
-  danhSach: PhieuBaoDuongDto[];
+export class PhieuThuHoiComponent implements OnInit {
+  danhSach: PhieuThuHoiDto[];
+  form: FormGroup;
 
   id = 0;
   title = "";
   isShowModal = false;
   isConfirmLoading = false;
-  date = null;
+  filter = "";
   pageIndex = 1;
   pageSize = 10;
   total = 0;
@@ -37,13 +38,17 @@ export class PhieuBaoDuongComponent implements OnInit {
 
   constructor(
     private formbulider: FormBuilder,
-    private service: PhieuBaoDuongService,
+    private service: PhieuThuHoiService,
     private nhanSuService: NhanSuService,
     private toastr: ToastrService,
     private modal: NzModalService
   ) {}
 
   ngOnInit() {
+    this.form = this.formbulider.group({
+      id: [0, [Validators.required]],
+      ma: ["", [Validators.required]],
+    });
     this.service.getDanhSachThietBi().subscribe((val) => {
       this.dsThietBi = val;
     });
@@ -58,7 +63,7 @@ export class PhieuBaoDuongComponent implements OnInit {
   getList(pageIndex = 1) {
     this.pageIndex = pageIndex;
     var body = {
-      date: this.date,
+      filter: this.filter,
       maxResultCount: this.pageSize,
       skipCount: (this.pageIndex - 1) * this.pageSize,
     };
@@ -81,6 +86,9 @@ export class PhieuBaoDuongComponent implements OnInit {
     this.isShowModal = true;
     this.title = "Thêm mới";
     this.setOfCheckedId = new Set<number>();
+    this.form.reset();
+    this.form.get("nhanVienNhan")?.setValue("");
+    this.form.get("id")?.setValue(0);
   }
 
   save() {
@@ -88,13 +96,18 @@ export class PhieuBaoDuongComponent implements OnInit {
       this.toastr.error("Phải chọn thiết bị cần bảo dưỡng");
       return;
     }
+    if (this.form.invalid) {
+      this.toastr.error("Cần nhập đủ thông tin");
+      return;
+    }
     this.isConfirmLoading = true;
     this.create();
   }
 
   create() {
+    const input = this.form.value;
     this.service
-      .create({ id: 0, danhSachThietBi: Array.from(this.setOfCheckedId) })
+      .create({ ...input, danhSachThietBi: Array.from(this.setOfCheckedId) })
       .pipe(finalize(() => (this.isConfirmLoading = false)))
       .subscribe(() => {
         this.getList();
@@ -103,56 +116,15 @@ export class PhieuBaoDuongComponent implements OnInit {
       });
   }
 
-  delete(id: number) {
-    this.modal.confirm({
-      nzTitle: "Xác nhận xóa",
-      nzContent: `Bạn có muốn xóa phiếu không`,
-      nzOnOk: () =>
-        this.service.delete(id).subscribe(() => {
-          this.toastr.success("Data Deleted Successfully");
-          this.getList();
-        }),
-    });
-  }
-
-  approve(id) {
-    this.modal.confirm({
-      nzTitle: "Xác nhận duyệt",
-      nzContent: `Bạn có muốn duyệt phiếu không`,
-      nzOnOk: () =>
-        this.service.approve(id).subscribe((val) => {
-          if (val.isSuccessful) {
-            this.toastr.success("Duyệt phiếu thành công");
-            this.getList();
-          } else {
-            this.toastr.error(val.errorMessage);
-          }
-        }),
-    });
-  }
-
-  completed(id) {
-    this.modal.confirm({
-      nzTitle: "Xác nhận hoàn thành",
-      nzContent: `Bạn muốn xác nhận thiết bị sửa xong không`,
-      nzOnOk: () =>
-        this.service.completed(id).subscribe((val) => {
-          if (val.isSuccessful) {
-            this.toastr.success("Xác nhận phiếu thành công");
-            this.getList();
-          } else {
-            this.toastr.error(val.errorMessage);
-          }
-        }),
-    });
-  }
-
   xemChiTiet(id) {
     this.service.getById(id).subscribe((val) => {
       this.disabled = true;
       this.isShowModal = true;
       this.title = "Xem chi tiết";
       this.setOfCheckedId = new Set<number>(val.danhSachThietBi);
+      this.form.get("ma")?.disable();
+      this.form.get("nhanVienNhan")?.disable();
+      this.form.patchValue(val);
     });
   }
 

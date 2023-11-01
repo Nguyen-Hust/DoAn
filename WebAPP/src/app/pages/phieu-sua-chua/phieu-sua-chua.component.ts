@@ -70,11 +70,11 @@ export class PhieuSuaChuaComponent implements OnInit {
   }
 
   getTenThietBi(id) {
-    return this.dsThietBi.find((_) => _.id == id).ma;
+    return this.dsThietBi.find((_) => _.id == id)?.ma;
   }
 
   getTenNhanSu(id) {
-    return this.dsNhanSu.find((_) => _.id == id).ten;
+    return this.dsNhanSu.find((_) => _.id == id)?.ten;
   }
 
   openModalCreate() {

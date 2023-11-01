@@ -1,0 +1,158 @@
+<h2>Quản lý phiếu bàn giao</h2>
+<div class="table-responsive">
+  <div class="filter-area">
+    <div nz-row [nzGutter]="16">
+      <div nz-col class="gutter-row" [nzSpan]="9">
+        <div class="form-group">
+          <label class="control-label" class="filter-label"
+            >Từ khóa tìm kiếm</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="filter"
+            placeholder="Nhập mã phiếu"
+          />
+        </div>
+      </div>
+      <div nz-col class="gutter-row" [nzSpan]="2" style="margin-top: 22px">
+        <button
+          type="button"
+          class="btn btn-info text-white"
+          (click)="getList()"
+        >
+          Tìm kiếm
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="d-flex justify-content-between mb-1 align-items-center">
+    <h3 style="font-weight: 500; font-size: 16px">Danh sách phiếu bàn giao</h3>
+    <button type="button" class="btn btn-primary" (click)="openModalCreate()">
+      Thêm mới
+    </button>
+  </div>
+  <nz-table
+    #basicTable
+    [nzData]="danhSach"
+    nzBordered
+    [nzPageIndex]="pageIndex"
+    [nzPageSize]="pageSize"
+    [nzTotal]="total"
+    (nzPageIndexChange)="getList($event)"
+  >
+    <thead>
+      <tr>
+        <th class="text-center">#</th>
+        <th class="text-center">Mã</th>
+        <th class="text-center">Người tạo phiếu</th>
+        <th class="text-center">Người người nhận phiếu</th>
+        <th class="text-center">Ngày tạo phiếu</th>
+        <th class="text-center">Tổng thiết bị</th>
+        <th class="text-center">Thao tác</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of basicTable.data; index as i">
+        <td class="text-center">{{ i + 1 }}</td>
+        <td>{{ data.ma }}</td>
+        <td>{{ getTenNhanSu(data.nhanVienId) }}</td>
+        <td>{{ getTenNhanSu(data.nhanVienNhan) }}</td>
+        <td class="text-center">{{ data.createTime | date }}</td>
+        <td class="text-center">{{ data.tongThietBi }}</td>
+        <td class="text-center">
+          <button
+            nz-tooltip
+            type="button"
+            class="btn btn-light me-2"
+            nzTooltipTitle="Xem chi tiết"
+            (click)="xemChiTiet(data.id)"
+          >
+            <span nz-icon nzType="eye" nzTheme="outline"></span>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>
+<nz-modal
+  [nzVisible]="isShowModal"
+  [nzTitle]="title"
+  (nzOnCancel)="isShowModal = false"
+  [nzFooter]="modalFooter"
+  [nzWidth]="600"
+>
+  <ng-container *nzModalContent>
+    <form [formGroup]="form">
+      <div class="form-group mt-3">
+        <label class="control-label me-3 label-form" for="ma"> Mã: </label>
+        <input
+          id="ma"
+          formControlName="ma"
+          placeholder="Nhập mã phiếu"
+          class="form-control"
+        />
+      </div>
+      <div class="form-group mt-3">
+        <label class="control-label me-3 label-form" for="nhanVienNhan">
+          Nhân viên nhận:</label
+        >
+        <select
+          id="nhanVienNhan"
+          formControlName="nhanVienNhan"
+          class="form-control"
+        >
+          <option value="" disabled selected hidden>Chọn nhân viên nhận</option>
+          <option *ngFor="let option of dsNhanSu" [value]="option.id">
+            {{ option.ten }}
+          </option>
+        </select>
+      </div>
+    </form>
+    <nz-table
+      class="mt-2"
+      #rowSelectionTable
+      nzShowPagination
+      nzShowSizeChanger
+      [nzData]="dsThietBi"
+      (nzCurrentPageDataChange)="onCurrentPageDataChange($event)"
+    >
+      <thead>
+        <tr>
+          <th
+            [nzChecked]="checked"
+            [nzDisabled]="disabled"
+            (nzCheckedChange)="onAllChecked($event)"
+          ></th>
+          <th>Mã</th>
+          <th>Nhân viên</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of rowSelectionTable.data">
+          <td
+            [nzDisabled]="disabled"
+            [nzChecked]="setOfCheckedId.has(data.id)"
+            (nzCheckedChange)="onItemChecked(data.id, $event)"
+          ></td>
+          <td>{{ data.ma }}</td>
+          <td>{{ getTenNhanSu(data.nhanVienId) }}</td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </ng-container>
+  <ng-template #modalFooter>
+    <button nz-button nzType="default" (click)="isShowModal = false">
+      Đóng
+    </button>
+    <button
+      *ngIf="!disabled"
+      nz-button
+      nzType="primary"
+      (click)="save()"
+      [nzLoading]="isConfirmLoading"
+    >
+      Lưu
+    </button>
+  </ng-template>
+</nz-modal>
