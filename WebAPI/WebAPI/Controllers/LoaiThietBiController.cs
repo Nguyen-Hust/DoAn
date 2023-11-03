@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using WebAPI.Data;
 using WebAPI.Entities;
 using WebAPI.Models.LoaiThietBi;
+using WebAPI.Models.PhongBan;
 using WebAPI.Models.Shared;
 using WebAPI.Models.ThietBiYTe;
 
@@ -48,8 +49,10 @@ namespace WebAPI.Controllers
 
         [HttpPost]
         [Route("create")]
-        public async Task<LoaiThietBiDto> CreateAsync(LoaiThietBiDto product)
+        public async Task<CommonResultDto<LoaiThietBiDto>> CreateAsync(LoaiThietBiDto product)
         {
+            var temp = _context.LoaiThietBi.FirstOrDefault(_ => _.Ma == product.Ma);
+            if (temp != null) return new CommonResultDto<LoaiThietBiDto>("Mã bị trùng");
             var entity = new LoaiThietBiEntity
             {
                 Id = product.Id,
@@ -58,7 +61,7 @@ namespace WebAPI.Controllers
             };
             _context.LoaiThietBi.Add(entity);
             await _context.SaveChangesAsync();
-            return product;
+            return new CommonResultDto<LoaiThietBiDto>(product);
         }
 
         [HttpGet]
@@ -100,6 +103,8 @@ namespace WebAPI.Controllers
             {
                 return new CommonResultDto<LoaiThietBiDto>("Not found");
             }
+            var temp = _context.LoaiThietBi.FirstOrDefault(_ => _.Ma == loaiThietBi.Ma);
+            if (temp != null && temp?.Id != id) return new CommonResultDto<LoaiThietBiDto>("Mã bị trùng");
             entity.Ma = loaiThietBi.Ma;
             entity.Ten = loaiThietBi.Ten;
             _context.LoaiThietBi.Update(entity);

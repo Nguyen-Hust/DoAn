@@ -6,6 +6,7 @@ import { ThietBiYTeDto } from "src/app/models/ThietBiYTeDto";
 import { ThietBiYTeService } from "./thiet-bi-y-te.service";
 import { NzModalService } from "ng-zorro-antd/modal";
 import { LoaiThietBiService } from "../loai-thiet-bi/loai-thiet-bi.service";
+import { LoaderService } from "src/app/services/loader.service";
 
 @Component({
   selector: "app-thiet-bi-y-te",
@@ -32,7 +33,8 @@ export class ThietBiYTeComponent implements OnInit {
     private service: ThietBiYTeService,
     private loaiThietBiService: LoaiThietBiService,
     private toastr: ToastrService,
-    private modal: NzModalService
+    private modal: NzModalService,
+    private loadingService: LoaderService
   ) {}
 
   ngOnInit() {
@@ -58,10 +60,14 @@ export class ThietBiYTeComponent implements OnInit {
       maxResultCount: this.pageSize,
       skipCount: (this.pageIndex - 1) * this.pageSize,
     };
-    this.service.getList(body).subscribe((val) => {
-      this.danhSach = val.items;
-      this.total = val.totalCount;
-    });
+    this.loadingService.setLoading(true);
+    this.service
+      .getList(body)
+      .pipe(finalize(() => this.loadingService.setLoading(false)))
+      .subscribe((val) => {
+        this.danhSach = val.items;
+        this.total = val.totalCount;
+      });
   }
 
   getTenLoaiThietBi(ma) {
@@ -97,35 +103,64 @@ export class ThietBiYTeComponent implements OnInit {
   }
 
   getById(id: number) {
-    this.service.getById(id).subscribe((result) => {
-      this.id = result.id;
-      this.form.patchValue(result);
-    });
+    this.loadingService.setLoading(true);
+    this.service
+      .getById(id)
+      .pipe(
+        finalize(() => {
+          this.loadingService.setLoading(false);
+          this.isConfirmLoading = false;
+        })
+      )
+      .subscribe((result) => {
+        this.id = result.id;
+        this.form.patchValue(result);
+      });
   }
 
   create() {
     const input = this.form.value;
+    this.loadingService.setLoading(true);
     this.service
       .create(input)
-      .pipe(finalize(() => (this.isConfirmLoading = false)))
-      .subscribe(() => {
-        this.getList();
-        this.form.reset();
-        this.isShowModal = false;
-        this.toastr.success("Data Saved Successfully");
+      .pipe(
+        finalize(() => {
+          this.loadingService.setLoading(false);
+          this.isConfirmLoading = false;
+        })
+      )
+      .subscribe((val) => {
+        if (val.isSuccessful) {
+          this.getList();
+          this.form.reset();
+          this.isShowModal = false;
+          this.toastr.success("Data Saved Successfully");
+        } else {
+          this.toastr.error(val.errorMessage);
+        }
       });
   }
 
   update() {
     const input = this.form.value;
+    this.loadingService.setLoading(true);
     this.service
       .update(input)
-      .pipe(finalize(() => (this.isConfirmLoading = false)))
-      .subscribe(() => {
-        this.toastr.success("Data Updated Successfully");
-        this.form.reset();
-        this.isShowModal = false;
-        this.getList();
+      .pipe(
+        finalize(() => {
+          this.loadingService.setLoading(false);
+          this.isConfirmLoading = false;
+        })
+      )
+      .subscribe((val) => {
+        if (val.isSuccessful) {
+          this.toastr.success("Data Updated Successfully");
+          this.form.reset();
+          this.isShowModal = false;
+          this.getList();
+        } else {
+          this.toastr.error(val.errorMessage);
+        }
       });
   }
 
@@ -133,11 +168,16 @@ export class ThietBiYTeComponent implements OnInit {
     this.modal.confirm({
       nzTitle: "Xác nhận xóa",
       nzContent: `Bạn có muốn xóa thiết bị: <b>${ten}</b> không`,
-      nzOnOk: () =>
-        this.service.delete(id).subscribe(() => {
-          this.toastr.success("Data Deleted Successfully");
-          this.getList();
-        }),
+      nzOnOk: () => {
+        this.loadingService.setLoading(true);
+        this.service
+          .delete(id)
+          .pipe(finalize(() => this.loadingService.setLoading(false)))
+          .subscribe(() => {
+            this.toastr.success("Data Deleted Successfully");
+            this.getList();
+          });
+      },
     });
   }
 }

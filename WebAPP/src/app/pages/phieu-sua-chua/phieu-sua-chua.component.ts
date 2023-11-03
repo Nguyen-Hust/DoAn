@@ -8,6 +8,7 @@ import { NzModalService } from "ng-zorro-antd/modal";
 import { LoaiThietBiService } from "../loai-thiet-bi/loai-thiet-bi.service";
 import { PhieuSuaChuaDto } from "src/app/models/PhieuSuaChuaDto";
 import { NhanSuService } from "../nhan-su/nhan-su.service";
+import { LoaderService } from "src/app/services/loader.service";
 
 @Component({
   selector: "app-phieu-sua-chua",
@@ -36,7 +37,8 @@ export class PhieuSuaChuaComponent implements OnInit {
     private service: PhieuSuaChuaService,
     private nhanSuService: NhanSuService,
     private toastr: ToastrService,
-    private modal: NzModalService
+    private modal: NzModalService,
+    private loadingService: LoaderService
   ) {}
 
   ngOnInit() {
@@ -65,10 +67,14 @@ export class PhieuSuaChuaComponent implements OnInit {
       skipCount: (this.pageIndex - 1) * this.pageSize,
       filter: this.filter,
     };
-    this.service.getList(body).subscribe((val) => {
-      this.danhSach = val.items;
-      this.total = val.totalCount;
-    });
+    this.loadingService.setLoading(true);
+    this.service
+      .getList(body)
+      .pipe(finalize(() => this.loadingService.setLoading(false)))
+      .subscribe((val) => {
+        this.danhSach = val.items;
+        this.total = val.totalCount;
+      });
   }
 
   getTenThietBi(id) {
@@ -101,9 +107,15 @@ export class PhieuSuaChuaComponent implements OnInit {
     const nhanVienId = this.dsThietBi.find(
       (_) => _.id == input.chiTietThietBiId
     )?.nhanVienId;
+    this.loadingService.setLoading(true);
     this.service
       .create({ ...input, nhanVienId, ma: "" })
-      .pipe(finalize(() => (this.isConfirmLoading = false)))
+      .pipe(
+        finalize(() => {
+          this.isConfirmLoading = false;
+          this.loadingService.setLoading(false);
+        })
+      )
       .subscribe(() => {
         this.getList();
         this.form.reset();
@@ -116,11 +128,16 @@ export class PhieuSuaChuaComponent implements OnInit {
     this.modal.confirm({
       nzTitle: "Xác nhận xóa",
       nzContent: `Bạn có muốn xóa phiếu <b>'${data.ma}'</b> không`,
-      nzOnOk: () =>
-        this.service.delete(data.id).subscribe(() => {
-          this.toastr.success("Data Deleted Successfully");
-          this.getList();
-        }),
+      nzOnOk: () => {
+        this.loadingService.setLoading(true);
+        this.service
+          .delete(data.id)
+          .pipe(finalize(() => this.loadingService.setLoading(false)))
+          .subscribe(() => {
+            this.toastr.success("Data Deleted Successfully");
+            this.getList();
+          });
+      },
     });
   }
 
@@ -128,15 +145,20 @@ export class PhieuSuaChuaComponent implements OnInit {
     this.modal.confirm({
       nzTitle: "Xác nhận duyệt",
       nzContent: `Bạn có muốn duyệt phiếu không`,
-      nzOnOk: () =>
-        this.service.approve(id).subscribe((val) => {
-          if (val.isSuccessful) {
-            this.toastr.success("Duyệt phiếu thành công");
-            this.getList();
-          } else {
-            this.toastr.error(val.errorMessage);
-          }
-        }),
+      nzOnOk: () => {
+        this.loadingService.setLoading(true);
+        this.service
+          .approve(id)
+          .pipe(finalize(() => this.loadingService.setLoading(false)))
+          .subscribe((val) => {
+            if (val.isSuccessful) {
+              this.toastr.success("Duyệt phiếu thành công");
+              this.getList();
+            } else {
+              this.toastr.error(val.errorMessage);
+            }
+          });
+      },
     });
   }
 
@@ -144,15 +166,20 @@ export class PhieuSuaChuaComponent implements OnInit {
     this.modal.confirm({
       nzTitle: "Xác nhận từ chối",
       nzContent: `Bạn có muốn từ chối phiếu không`,
-      nzOnOk: () =>
-        this.service.deny(id).subscribe((val) => {
-          if (val.isSuccessful) {
-            this.toastr.success("Từ chối phiếu thành công");
-            this.getList();
-          } else {
-            this.toastr.error(val.errorMessage);
-          }
-        }),
+      nzOnOk: () => {
+        this.loadingService.setLoading(true);
+        this.service
+          .deny(id)
+          .pipe(finalize(() => this.loadingService.setLoading(false)))
+          .subscribe((val) => {
+            if (val.isSuccessful) {
+              this.toastr.success("Từ chối phiếu thành công");
+              this.getList();
+            } else {
+              this.toastr.error(val.errorMessage);
+            }
+          });
+      },
     });
   }
 
@@ -160,15 +187,20 @@ export class PhieuSuaChuaComponent implements OnInit {
     this.modal.confirm({
       nzTitle: "Xác nhận hoàn thành",
       nzContent: `Bạn muốn xác nhận thiết bị sửa xong không`,
-      nzOnOk: () =>
-        this.service.completed(id).subscribe((val) => {
-          if (val.isSuccessful) {
-            this.toastr.success("Xác nhận phiếu thành công");
-            this.getList();
-          } else {
-            this.toastr.error(val.errorMessage);
-          }
-        }),
+      nzOnOk: () => {
+        this.loadingService.setLoading(true);
+        this.service
+          .completed(id)
+          .pipe(finalize(() => this.loadingService.setLoading(false)))
+          .subscribe((val) => {
+            if (val.isSuccessful) {
+              this.toastr.success("Xác nhận phiếu thành công");
+              this.getList();
+            } else {
+              this.toastr.error(val.errorMessage);
+            }
+          });
+      },
     });
   }
 }

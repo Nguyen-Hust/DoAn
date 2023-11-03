@@ -18,27 +18,23 @@ export class ThietBiYTeService {
     };
     return this.http.post<any>(this.url + "get-list", body, httpHeaders);
   }
-  create(input: any): Observable<ThietBiYTeDto> {
+  create(input: any): Observable<any> {
     const httpHeaders = {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("jwt")}`,
       }),
     };
-    return this.http.post<ThietBiYTeDto>(
-      this.url + "create",
-      input,
-      httpHeaders
-    );
+    return this.http.post<any>(this.url + "create", input, httpHeaders);
   }
-  update(input: any): Observable<ThietBiYTeDto> {
+  update(input: any): Observable<any> {
     const httpHeaders = {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("jwt")}`,
       }),
     };
-    return this.http.post<ThietBiYTeDto>(
+    return this.http.post<any>(
       this.url + "update?id=" + input.id,
       input,
       httpHeaders

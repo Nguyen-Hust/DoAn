@@ -9,6 +9,7 @@ import { LoaiThietBiService } from "../loai-thiet-bi/loai-thiet-bi.service";
 import { PhieuSuaChuaDto } from "src/app/models/PhieuSuaChuaDto";
 import { NhanSuService } from "../nhan-su/nhan-su.service";
 import { PhieuThuHoiDto } from "src/app/models/PhieuThuHoiDto";
+import { LoaderService } from "src/app/services/loader.service";
 
 @Component({
   selector: "app-phieu-thu-hoi",
@@ -40,7 +41,8 @@ export class PhieuThuHoiComponent implements OnInit {
     private service: PhieuThuHoiService,
     private nhanSuService: NhanSuService,
     private toastr: ToastrService,
-    private modal: NzModalService
+    private modal: NzModalService,
+    private loadingService: LoaderService
   ) {}
 
   ngOnInit() {
@@ -62,10 +64,14 @@ export class PhieuThuHoiComponent implements OnInit {
       maxResultCount: this.pageSize,
       skipCount: (this.pageIndex - 1) * this.pageSize,
     };
-    this.service.getList(body).subscribe((val) => {
-      this.danhSach = val.items;
-      this.total = val.totalCount;
-    });
+    this.loadingService.setLoading(true);
+    this.service
+      .getList(body)
+      .pipe(finalize(() => this.loadingService.setLoading(false)))
+      .subscribe((val) => {
+        this.danhSach = val.items;
+        this.total = val.totalCount;
+      });
   }
 
   getTenThietBi(id) {
@@ -93,13 +99,19 @@ export class PhieuThuHoiComponent implements OnInit {
   }
 
   create() {
+    this.loadingService.setLoading(true);
     this.service
       .create({
         id: 0,
         ma: "",
         danhSachThietBi: Array.from(this.setOfCheckedId),
       })
-      .pipe(finalize(() => (this.isConfirmLoading = false)))
+      .pipe(
+        finalize(() => {
+          this.isConfirmLoading = false;
+          this.loadingService.setLoading(false);
+        })
+      )
       .subscribe(() => {
         this.getList();
         this.isShowModal = false;
@@ -108,12 +120,16 @@ export class PhieuThuHoiComponent implements OnInit {
   }
 
   xemChiTiet(id) {
-    this.service.getById(id).subscribe((val) => {
-      this.disabled = true;
-      this.isShowModal = true;
-      this.title = "Xem chi tiết";
-      this.setOfCheckedId = new Set<number>(val.danhSachThietBi);
-    });
+    this.loadingService.setLoading(true);
+    this.service
+      .getById(id)
+      .pipe(finalize(() => this.loadingService.setLoading(false)))
+      .subscribe((val) => {
+        this.disabled = true;
+        this.isShowModal = true;
+        this.title = "Xem chi tiết";
+        this.setOfCheckedId = new Set<number>(val.danhSachThietBi);
+      });
   }
 
   updateCheckedSet(id: number, checked: boolean): void {

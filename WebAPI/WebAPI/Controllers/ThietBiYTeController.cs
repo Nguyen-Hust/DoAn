@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Data;
 using WebAPI.Entities;
+using WebAPI.Models.LoaiThietBi;
 using WebAPI.Models.Shared;
 using WebAPI.Models.ThietBiYTe;
 
@@ -50,8 +51,10 @@ namespace WebAPI.Controllers
 
         [HttpPost]
         [Route("create")]
-        public async Task<ThietBiYTeDto> CreateAsync(ThietBiYTeDto product)
+        public async Task<CommonResultDto<ThietBiYTeDto>> CreateAsync(ThietBiYTeDto product)
         {
+            var temp = _context.ThietBiYTe.FirstOrDefault(_ => _.Ma == product.Ma);
+            if (temp != null) return new CommonResultDto<ThietBiYTeDto>("Mã bị trùng");
             var entity = new ThietBiYTeEntity
             {
                 Id = product.Id,
@@ -62,7 +65,7 @@ namespace WebAPI.Controllers
             };
             _context.ThietBiYTe.Add(entity);
             await _context.SaveChangesAsync();
-            return product;
+            return new CommonResultDto<ThietBiYTeDto>(product);
         }
 
         [HttpGet]
@@ -107,6 +110,8 @@ namespace WebAPI.Controllers
             {
                 return new CommonResultDto<ThietBiYTeDto>("Not found");
             }
+            var temp = _context.ThietBiYTe.FirstOrDefault(_ => _.Ma == thietBiYTe.Ma);
+            if (temp != null && temp?.Id != id) return new CommonResultDto<ThietBiYTeDto>("Mã bị trùng");
             thietBiYTeEntity.LoaiTTBYT = thietBiYTe.LoaiTTBYT;
             thietBiYTeEntity.Ma = thietBiYTe.Ma;
             thietBiYTeEntity.MDRR = thietBiYTe.MDRR;

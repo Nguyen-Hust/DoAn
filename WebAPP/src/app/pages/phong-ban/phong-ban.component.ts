@@ -5,6 +5,7 @@ import { ToastrService } from "ngx-toastr";
 import { NzModalService } from "ng-zorro-antd/modal";
 import { KhoaDto } from "src/app/models/KhoaDto";
 import { finalize } from "rxjs";
+import { LoaderService } from "src/app/services/loader.service";
 
 @Component({
   selector: "app-phong-ban",
@@ -27,7 +28,8 @@ export class PhongBanComponent implements OnInit {
     private formbulider: FormBuilder,
     private service: PhongBanService,
     private toastr: ToastrService,
-    private modal: NzModalService
+    private modal: NzModalService,
+    private loadingService: LoaderService
   ) {}
 
   ngOnInit() {
@@ -48,10 +50,14 @@ export class PhongBanComponent implements OnInit {
       maxResultCount: this.pageSize,
       skipCount: (this.pageIndex - 1) * this.pageSize,
     };
-    this.service.getList(body).subscribe((val) => {
-      this.danhSach = val.items;
-      this.total = val.totalCount;
-    });
+    this.loadingService.setLoading(true);
+    this.service
+      .getList(body)
+      .pipe(finalize(() => this.loadingService.setLoading(false)))
+      .subscribe((val) => {
+        this.danhSach = val.items;
+        this.total = val.totalCount;
+      });
   }
 
   openModalCreate() {
@@ -84,9 +90,15 @@ export class PhongBanComponent implements OnInit {
   create() {
     const input = this.form.value;
     input.truongKhoaId = 0;
+    this.loadingService.setLoading(true);
     this.service
       .create(input)
-      .pipe(finalize(() => (this.isConfirmLoading = false)))
+      .pipe(
+        finalize(() => {
+          this.isConfirmLoading = false;
+          this.loadingService.setLoading(false);
+        })
+      )
       .subscribe((val) => {
         if (val.isSuccessful) {
           this.getList();
@@ -101,9 +113,15 @@ export class PhongBanComponent implements OnInit {
 
   update() {
     const input = this.form.value;
+    this.loadingService.setLoading(true);
     this.service
       .update(input)
-      .pipe(finalize(() => (this.isConfirmLoading = false)))
+      .pipe(
+        finalize(() => {
+          this.isConfirmLoading = false;
+          this.loadingService.setLoading(false);
+        })
+      )
       .subscribe((val) => {
         if (val.isSuccessful) {
           this.toastr.success("Data Updated Successfully");
@@ -120,18 +138,27 @@ export class PhongBanComponent implements OnInit {
     this.modal.confirm({
       nzTitle: "Xác nhận xóa",
       nzContent: `Bạn có muốn xóa khoa: <b>${ten}</b> không`,
-      nzOnOk: () =>
-        this.service.delete(id).subscribe(() => {
-          this.toastr.success("Data Deleted Successfully");
-          this.getList();
-        }),
+      nzOnOk: () => {
+        this.loadingService.setLoading(true);
+        this.service
+          .delete(id)
+          .pipe(finalize(() => this.loadingService.setLoading(false)))
+          .subscribe(() => {
+            this.toastr.success("Data Deleted Successfully");
+            this.getList();
+          });
+      },
     });
   }
 
   getById(id: number) {
-    this.service.getById(id).subscribe((result) => {
-      this.id = result.id;
-      this.form.patchValue(result);
-    });
+    this.loadingService.setLoading(true);
+    this.service
+      .getById(id)
+      .pipe(finalize(() => this.loadingService.setLoading(false)))
+      .subscribe((result) => {
+        this.id = result.id;
+        this.form.patchValue(result);
+      });
   }
 }
