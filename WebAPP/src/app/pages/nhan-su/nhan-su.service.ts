@@ -18,29 +18,25 @@ export class NhanSuService {
     };
     return this.http.post<any>(this.url + "get-list", body, httpHeaders);
   }
-  create(productData: any): Observable<NhanSuDto> {
+  create(nhanSu: any): Observable<any> {
     const httpHeaders = {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("jwt")}`,
       }),
     };
-    return this.http.post<NhanSuDto>(
-      this.url + "create",
-      productData,
-      httpHeaders
-    );
+    return this.http.post<any>(this.url + "create", nhanSu, httpHeaders);
   }
-  update(product: any): Observable<NhanSuDto> {
+  update(nhanSu: any): Observable<any> {
     const httpHeaders = {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("jwt")}`,
       }),
     };
-    return this.http.post<NhanSuDto>(
-      this.url + "update?id=" + product.id,
-      product,
+    return this.http.post<any>(
+      this.url + "update?id=" + nhanSu.id,
+      nhanSu,
       httpHeaders
     );
   }

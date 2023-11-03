@@ -38,7 +38,6 @@ namespace WebAPI.Controllers
                         SDT = _.SDT,
                         KhoaId = _.KhoaId,
                         DiaChi = _.DiaChi,
-                        LaTruongKhoa = _.LaTruongKhoa,
                         LaQuanLyThietBi = _.LaQuanLyThietBi,
                         AccountId = _.AccountId,
                     }).ToList();
@@ -58,29 +57,32 @@ namespace WebAPI.Controllers
 
         [HttpPost]
         [Route("create")]
-        public async Task<NhanSuDto> CreateAsync(NhanSuDto product)
+        public async Task<CommonResultDto<NhanSuDto>> CreateAsync(NhanSuDto nhanSu)
         {
             try
             {
+                var temp = _context.NhanSu.FirstOrDefault(_ => _.Ma == nhanSu.Ma);
+                if (temp != null) return new CommonResultDto<NhanSuDto>("Mã bị trùng");
+                var temp2 = _context.NhanSu.FirstOrDefault(_ => _.Email == nhanSu.Email);
+                if (temp2 != null) return new CommonResultDto<NhanSuDto>("Email bị trùng");
                 var entity = new NhanSuEntity()
                 {
-                    Id = product.Id,
-                    Ma = product.Ma,
-                    Ten = product.Ten,
-                    Email = product.Email,
-                    SDT = product.SDT,
-                    KhoaId = product.KhoaId,
-                    DiaChi = product.DiaChi,
-                    AccountId = product.AccountId,
-                    LaTruongKhoa = product.LaTruongKhoa,
-                    LaQuanLyThietBi = product.LaQuanLyThietBi
+                    Id = nhanSu.Id,
+                    Ma = nhanSu.Ma,
+                    Ten = nhanSu.Ten,
+                    Email = nhanSu.Email,
+                    SDT = nhanSu.SDT,
+                    KhoaId = nhanSu.KhoaId,
+                    DiaChi = nhanSu.DiaChi,
+                    AccountId = nhanSu.AccountId,
+                    LaQuanLyThietBi = nhanSu.LaQuanLyThietBi
                 };
                 _context.NhanSu.Add(entity);
                 await _context.SaveChangesAsync();
-                return product;
+                return new CommonResultDto<NhanSuDto>(nhanSu);
             }catch(Exception e)
             {
-                return null;
+                return new CommonResultDto<NhanSuDto>(e.Message);
             }
         }
 
@@ -99,7 +101,6 @@ namespace WebAPI.Controllers
                 SDT = nhanSu.SDT,
                 KhoaId = nhanSu.KhoaId,
                 DiaChi = nhanSu.DiaChi,
-                LaTruongKhoa = nhanSu.LaTruongKhoa,
                 LaQuanLyThietBi = nhanSu.LaQuanLyThietBi
             };
         }
@@ -131,13 +132,17 @@ namespace WebAPI.Controllers
             {
                 return new CommonResultDto<NhanSuDto>("Not found");
             }
+            var temp = _context.NhanSu.FirstOrDefault(_ => _.Ma == nhanSu.Ma);
+            if(temp != null && temp?.Id != id) return new CommonResultDto<NhanSuDto>("Mã bị trùng");
+            var temp2 = _context.NhanSu.FirstOrDefault(_ => _.Email == nhanSu.Email);
+            if (temp2 != null && temp2?.Id != id) return new CommonResultDto<NhanSuDto>("Email bị trùng");
+
             nhanSuEntity.Email = nhanSu.Email;
             nhanSuEntity.Ma = nhanSu.Ma;
             nhanSuEntity.SDT = nhanSu.SDT;
             nhanSuEntity.Ten = nhanSu.Ten;
             nhanSuEntity.KhoaId = nhanSu.KhoaId;
             nhanSuEntity.DiaChi = nhanSu.DiaChi;
-            nhanSuEntity.LaTruongKhoa = nhanSu.LaTruongKhoa;
             nhanSuEntity.LaQuanLyThietBi = nhanSu.LaQuanLyThietBi;
             await _context.SaveChangesAsync();
             return new CommonResultDto<NhanSuDto>(nhanSu);

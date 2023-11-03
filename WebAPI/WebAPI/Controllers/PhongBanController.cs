@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Data;
 using WebAPI.Entities;
+using WebAPI.Models.NhanVien;
 using WebAPI.Models.PhongBan;
 using WebAPI.Models.Shared;
 using WebAPI.Models.ThietBiYTe;
@@ -35,7 +36,6 @@ namespace WebAPI.Controllers
                         Ten = _.Ten,
                         Email = _.Email,
                         SDT = _.SDT,
-                        TruongKhoaId = _.TruongKhoaId
                     }).ToList();
                 return new PagedResultDto<KhoaDto>
                 {
@@ -53,20 +53,23 @@ namespace WebAPI.Controllers
 
         [HttpPost]
         [Route("create")]
-        public async Task<KhoaDto> CreateAsync(KhoaDto product)
+        public async Task<CommonResultDto<KhoaDto>> CreateAsync(KhoaDto khoa)
         {
+            var temp = _context.Khoa.FirstOrDefault(_ => _.Ma == khoa.Ma);
+            if (temp != null ) return new CommonResultDto<KhoaDto>("Mã bị trùng");
+            var temp2 = _context.Khoa.FirstOrDefault(_ => _.Email == khoa.Email);
+            if (temp2 != null ) return new CommonResultDto<KhoaDto>("Email bị trùng");
             var entity = new KhoaEntity()
             {
-                Id = product.Id,
-                Ma = product.Ma,
-                Ten = product.Ten,
-                Email = product.Email,
-                SDT = product.SDT,
-                TruongKhoaId = product.TruongKhoaId
+                Id = khoa.Id,
+                Ma = khoa.Ma,
+                Ten = khoa.Ten,
+                Email = khoa.Email,
+                SDT = khoa.SDT,
             };
             _context.Khoa.Add(entity);
             await _context.SaveChangesAsync();
-            return product;
+            return new CommonResultDto<KhoaDto>(khoa);
         }
 
 
@@ -82,7 +85,6 @@ namespace WebAPI.Controllers
                 Ten = khoa.Ten,
                 Email = khoa.Email,
                 SDT = khoa.SDT,
-                TruongKhoaId = khoa.TruongKhoaId
             };
         }
 
@@ -113,11 +115,14 @@ namespace WebAPI.Controllers
             {
                 return new CommonResultDto<KhoaDto>("Not found");
             }
+            var temp = _context.Khoa.FirstOrDefault(_ => _.Ma == khoa.Ma);
+            if (temp != null && temp?.Id != id) return new CommonResultDto<KhoaDto>("Mã bị trùng");
+            var temp2 = _context.Khoa.FirstOrDefault(_ => _.Email == khoa.Email);
+            if (temp2 != null && temp2?.Id != id) return new CommonResultDto<KhoaDto>("Email bị trùng");
             khoaEntity.Email = khoa.Email;
             khoaEntity.Ma = khoa.Ma;
             khoaEntity.SDT = khoa.SDT;
             khoaEntity.Ten = khoa.Ten;
-            khoaEntity.TruongKhoaId = khoa?.TruongKhoaId;
             await _context.SaveChangesAsync();
             return new CommonResultDto<KhoaDto>(khoa);
         }

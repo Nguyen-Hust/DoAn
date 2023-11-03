@@ -1,25 +1,25 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { PhongBanService } from './phong-ban.service';
-import { ToastrService } from 'ngx-toastr';
-import { NzModalService } from 'ng-zorro-antd/modal';
-import { KhoaDto } from 'src/app/models/KhoaDto';
-import { finalize } from 'rxjs';
+import { Component, OnInit } from "@angular/core";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { PhongBanService } from "./phong-ban.service";
+import { ToastrService } from "ngx-toastr";
+import { NzModalService } from "ng-zorro-antd/modal";
+import { KhoaDto } from "src/app/models/KhoaDto";
+import { finalize } from "rxjs";
 
 @Component({
-  selector: 'app-phong-ban',
-  templateUrl: './phong-ban.component.html',
-  styleUrls: ['./phong-ban.component.css']
+  selector: "app-phong-ban",
+  templateUrl: "./phong-ban.component.html",
+  styleUrls: ["./phong-ban.component.css"],
 })
 export class PhongBanComponent implements OnInit {
   danhSach: KhoaDto[];
   form: FormGroup;
 
   id = 0;
-  title = '';
+  title = "";
   isShowModal = false;
   isConfirmLoading = false;
-  filter = '';
+  filter = "";
   pageIndex = 1;
   pageSize = 10;
   total = 0;
@@ -33,11 +33,10 @@ export class PhongBanComponent implements OnInit {
   ngOnInit() {
     this.form = this.formbulider.group({
       id: [0, [Validators.required]],
-      ma: ['', [Validators.required]],
-      ten: ['', [Validators.required]],
-      sdt: ['', [Validators.required]],
-      email: ['', [Validators.required]],
-      truongKhoaId: [0],
+      ma: ["", [Validators.required]],
+      ten: ["", [Validators.required]],
+      sdt: [""],
+      email: ["", [Validators.required]],
     });
     this.getList();
   }
@@ -57,9 +56,10 @@ export class PhongBanComponent implements OnInit {
 
   openModalCreate() {
     this.isShowModal = true;
-    this.title = 'Thêm mới';
+    this.title = "Thêm mới";
     this.form.reset();
-    this.form.get('id')?.setValue(0);
+    this.form.get("sdt")?.setValue("");
+    this.form.get("id")?.setValue(0);
   }
   openModalUpdate(data) {
     this.getById(data.id);
@@ -70,7 +70,7 @@ export class PhongBanComponent implements OnInit {
   save() {
     const input = this.form.value;
     if (this.form.invalid) {
-      this.toastr.error('Cần nhập đủ thông tin');
+      this.toastr.error("Cần nhập đủ thông tin");
       return;
     }
     this.isConfirmLoading = true;
@@ -87,11 +87,15 @@ export class PhongBanComponent implements OnInit {
     this.service
       .create(input)
       .pipe(finalize(() => (this.isConfirmLoading = false)))
-      .subscribe(() => {
-        this.getList();
-        this.form.reset();
-        this.isShowModal = false;
-        this.toastr.success('Data Saved Successfully');
+      .subscribe((val) => {
+        if (val.isSuccessful) {
+          this.getList();
+          this.form.reset();
+          this.isShowModal = false;
+          this.toastr.success("Data Saved Successfully");
+        } else {
+          this.toastr.error(val.errorMessage);
+        }
       });
   }
 
@@ -100,21 +104,25 @@ export class PhongBanComponent implements OnInit {
     this.service
       .update(input)
       .pipe(finalize(() => (this.isConfirmLoading = false)))
-      .subscribe(() => {
-        this.toastr.success('Data Updated Successfully');
-        this.form.reset();
-        this.isShowModal = false;
-        this.getList();
+      .subscribe((val) => {
+        if (val.isSuccessful) {
+          this.toastr.success("Data Updated Successfully");
+          this.form.reset();
+          this.isShowModal = false;
+          this.getList();
+        } else {
+          this.toastr.error(val.errorMessage);
+        }
       });
   }
 
   delete(id: number, ten) {
     this.modal.confirm({
-      nzTitle: 'Xác nhận xóa',
+      nzTitle: "Xác nhận xóa",
       nzContent: `Bạn có muốn xóa khoa: <b>${ten}</b> không`,
       nzOnOk: () =>
         this.service.delete(id).subscribe(() => {
-          this.toastr.success('Data Deleted Successfully');
+          this.toastr.success("Data Deleted Successfully");
           this.getList();
         }),
     });

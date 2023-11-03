@@ -51,7 +51,6 @@
         <th class="text-center">Email</th>
         <th class="text-center">Khoa</th>
         <th class="text-center">Địa chỉ</th>
-        <th class="text-center">Là trưởng khoa</th>
         <th class="text-center">Là quản lý thiết bị</th>
         <th class="text-center">Action</th>
       </tr>
@@ -65,7 +64,6 @@
         <td class="text-center">{{ data?.email }}</td>
         <td class="text-center">{{ getTenKhoa(data?.khoaId) }}</td>
         <td class="text-center">{{ data?.diaChi }}</td>
-        <td class="text-center">{{ data?.laTruongKhoa }}</td>
         <td class="text-center">{{ data?.laQuanLyThietBi }}</td>
         <td class="text-center">
           <button
@@ -163,18 +161,6 @@
           formControlName="diaChi"
           placeholder="Nhập địa chỉ"
           class="form-control"
-        />
-      </div>
-      <div class="form-group mt-3">
-        <label class="control-label me-3 label-form" for="laTruongKhoa">
-          Là trưởng khoa:</label
-        >
-
-        <input
-          class="form-check-input mt-0"
-          id="laTruongKhoa"
-          type="checkbox"
-          formControlName="laTruongKhoa"
         />
       </div>
       <div class="form-group mt-3">

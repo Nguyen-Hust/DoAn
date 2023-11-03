@@ -41,12 +41,11 @@ export class NhanSuComponent implements OnInit {
       id: [0, [Validators.required]],
       ma: ["", [Validators.required]],
       ten: ["", [Validators.required]],
-      sdt: ["", [Validators.required]],
+      sdt: [""],
       email: ["", [Validators.required]],
       khoaId: [0, [Validators.required]],
-      diaChi: ["", [Validators.required]],
+      diaChi: [""],
       accountId: [""],
-      laTruongKhoa: [false],
       laQuanLyThietBi: [false],
     });
     this.formAccount = this.formbulider.group({
@@ -95,6 +94,9 @@ export class NhanSuComponent implements OnInit {
     this.service.getById(id).subscribe((result) => {
       this.id = result.id;
       this.form.patchValue(result);
+      if (result.accountId == null) {
+        this.form.get("accountId")?.setValue("");
+      }
     });
   }
 
@@ -102,6 +104,8 @@ export class NhanSuComponent implements OnInit {
     this.isShowModal = true;
     this.title = "Thêm mới";
     this.form.reset();
+    this.form.get("sdt")?.setValue("");
+    this.form.get("diaChi")?.setValue("");
     this.form.get("id")?.setValue(0);
   }
   openModalUpdate(data) {
@@ -164,11 +168,15 @@ export class NhanSuComponent implements OnInit {
     this.service
       .create(input)
       .pipe(finalize(() => (this.isConfirmLoading = false)))
-      .subscribe(() => {
-        this.getList();
-        this.form.reset();
-        this.isShowModal = false;
-        this.toastr.success("Data Saved Successfully");
+      .subscribe((val) => {
+        if (val.isSuccessful) {
+          this.getList();
+          this.form.reset();
+          this.isShowModal = false;
+          this.toastr.success("Data Saved Successfully");
+        } else {
+          this.toastr.error(val.errorMessage);
+        }
       });
   }
 
@@ -177,11 +185,15 @@ export class NhanSuComponent implements OnInit {
     this.service
       .update(input)
       .pipe(finalize(() => (this.isConfirmLoading = false)))
-      .subscribe(() => {
-        this.toastr.success("Data Updated Successfully");
-        this.form.reset();
-        this.isShowModal = false;
-        this.getList();
+      .subscribe((val) => {
+        if (val.isSuccessful) {
+          this.toastr.success("Data Updated Successfully");
+          this.form.reset();
+          this.isShowModal = false;
+          this.getList();
+        } else {
+          this.toastr.error(val.errorMessage);
+        }
       });
   }
 

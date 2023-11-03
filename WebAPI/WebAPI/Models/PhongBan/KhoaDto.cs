@@ -16,7 +16,6 @@ namespace WebAPI.Models.PhongBan
         public string Email { get; set; }
         [MaxLength(255)]
         public string SDT { get; set; }
-        public int? TruongKhoaId { get; set; }
     }
 }
 

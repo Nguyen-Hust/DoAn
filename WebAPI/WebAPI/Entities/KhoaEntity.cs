@@ -18,7 +18,6 @@ namespace WebAPI.Entities
         public string Email { get; set; }
         [MaxLength(255)]
         public string SDT { get; set; }
-        public int? TruongKhoaId { get; set; }
         public List<NhanSuEntity> NhanSu { get; set; }
     }
 }

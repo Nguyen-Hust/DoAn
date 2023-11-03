@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebAPI.Data;
 
@@ -11,9 +12,10 @@ using WebAPI.Data;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231103002523_remove_la_truong_phong")]
+    partial class remove_la_truong_phong
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,22 +53,22 @@ namespace WebAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "88e71cbb-e8d9-4c14-8871-f33f38a79f0c",
-                            ConcurrencyStamp = "f29d109e-fc75-4f3c-857a-410e7efdac62",
+                            Id = "170b88af-a817-4276-a88f-fb94c46a8527",
+                            ConcurrencyStamp = "0df20b9c-9755-4e92-a1e0-f4efbdc83ee5",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "fe2a97ff-fbf9-4dbd-95cf-a07b271394aa",
-                            ConcurrencyStamp = "1f2eb35b-f8dc-4bdc-a4c8-0024ec5e74fe",
+                            Id = "df3be87d-4dae-4300-89ec-e88cffc493dd",
+                            ConcurrencyStamp = "440eeb81-e803-4bd6-bee4-92ae005c28db",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "f00a8ce2-5dea-476c-b210-1cf40f5bc4b2",
-                            ConcurrencyStamp = "814a5c13-9d9d-4e15-8d9c-35dea5ac5e1b",
+                            Id = "5b1f8545-9f77-4ec8-a8c8-535101b6b379",
+                            ConcurrencyStamp = "a2e7a8a5-8afb-4b29-87b7-1860881d9e4c",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         });
@@ -391,6 +393,9 @@ namespace WebAPI.Migrations
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
+
+                    b.Property<int?>("TruongKhoaId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

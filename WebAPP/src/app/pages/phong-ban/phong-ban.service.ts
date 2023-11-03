@@ -1,57 +1,53 @@
 import { Injectable } from "@angular/core";
-import configurl from '../../../assets/config/config.json';
+import configurl from "../../../assets/config/config.json";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { KhoaDto } from "src/app/models/KhoaDto";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class PhongBanService {
-  url = configurl.apiServer.url + '/api/PhongBan/';
-  constructor(private http: HttpClient) { }
+  url = configurl.apiServer.url + "/api/PhongBan/";
+  constructor(private http: HttpClient) {}
   getList(body): Observable<any> {
     const httpHeaders = {
       headers: new HttpHeaders({
-        Authorization: `Bearer ${localStorage.getItem('jwt')}`,
+        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
       }),
     };
-    return this.http.post<any>(this.url + 'get-list', body, httpHeaders);
+    return this.http.post<any>(this.url + "get-list", body, httpHeaders);
   }
-  create(productData: any): Observable<KhoaDto> {
+  create(khoa: any): Observable<any> {
     const httpHeaders = {
       headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('jwt')}`,
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
       }),
     };
-    return this.http.post<KhoaDto>(
-      this.url + 'create',
-      productData,
-      httpHeaders
-    );
+    return this.http.post<any>(this.url + "create", khoa, httpHeaders);
   }
-  update(product: any): Observable<KhoaDto> {
+  update(khoa: any): Observable<any> {
     const httpHeaders = {
       headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('jwt')}`,
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
       }),
     };
-    return this.http.post<KhoaDto>(
-      this.url + 'update?id=' + product.id,
-      product,
+    return this.http.post<any>(
+      this.url + "update?id=" + khoa.id,
+      khoa,
       httpHeaders
     );
   }
   delete(id: number): Observable<number> {
     const httpHeaders = {
       headers: new HttpHeaders({
-        Authorization: `Bearer ${localStorage.getItem('jwt')}`,
+        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
       }),
     };
     return this.http.post<number>(
-      this.url + 'delete?id=' + id,
+      this.url + "delete?id=" + id,
       null,
       httpHeaders
     );
@@ -59,12 +55,9 @@ export class PhongBanService {
   getById(id: number): Observable<KhoaDto> {
     const httpHeaders = {
       headers: new HttpHeaders({
-        Authorization: `Bearer ${localStorage.getItem('jwt')}`,
+        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
       }),
     };
-    return this.http.get<KhoaDto>(
-      this.url + 'get-by-id?id=' + id,
-      httpHeaders
-    );
+    return this.http.get<KhoaDto>(this.url + "get-by-id?id=" + id, httpHeaders);
   }
 }

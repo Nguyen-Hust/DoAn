@@ -21,7 +21,6 @@ namespace WebAPI.Models.NhanVien
         public string DiaChi { get; set; }
         [MaxLength(255)]
         public string AccountId { get; set; }
-        public bool? LaTruongKhoa { get; set; }
         public bool? LaQuanLyThietBi { get; set; }
     }
 }
