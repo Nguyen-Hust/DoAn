@@ -13,6 +13,14 @@ import { PhieuNhapXuatDto } from "src/app/models/PhieuNhapXuatDto";
   export class PhieuNhapXuatService {
     url = configurl.apiServer.url + "/api/PhieuNhapXuat/";
     constructor(private http: HttpClient) {}
+    getList(body): Observable<any> {
+      const httpHeaders = {
+        headers: new HttpHeaders({
+          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+        }),
+      };
+      return this.http.post<any>(this.url + "get-list", body, httpHeaders);
+  }
     getListPhieuNhap(body): Observable<any> {
         const httpHeaders = {
           headers: new HttpHeaders({

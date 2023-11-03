@@ -12,6 +12,8 @@ import { PhieuXuatComponent } from "../pages/phieu-xuat/phieu-xuat.component";
 import { DanhSachThietBiComponent } from "../pages/danh-sach-thiet-bi/danh-sach-thiet-bi.component";
 import { PhieuBanGiaoComponent } from "../pages/phieu-ban-giao/phieu-ban-giao.component";
 import { PhieuThuHoiComponent } from "../pages/phieu-thu-hoi/phieu-thu-hoi.component";
+import { BaoCaoNhapComponent } from "../pages/bao-cao-nhap/bao-cao-nhap.component";
+import { BaoCaoXuatComponent } from "../pages/bao-cao-xuat/bao-cao-xuat.component";
 
 @NgModule({
   imports: [
@@ -63,6 +65,14 @@ import { PhieuThuHoiComponent } from "../pages/phieu-thu-hoi/phieu-thu-hoi.compo
       {
         path: "danh-sach-thiet-bi",
         component: DanhSachThietBiComponent,
+      },
+      {
+        path: "bao-cao-nhap",
+        component: BaoCaoNhapComponent
+      },
+      {
+        path: "bao-cao-xuat",
+        component: BaoCaoXuatComponent
       },
     ]),
   ],

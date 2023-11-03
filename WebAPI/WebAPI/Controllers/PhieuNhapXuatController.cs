@@ -28,6 +28,41 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
+        [Route("get-list")]
+        public async Task<ActionResult<PagedResultDto<PhieuNhapXuatDto>>> GetList(SearchListDto input)
+        {
+            var entity = await _context.PhieuNhapXuat.ToListAsync();
+            if (entity.Count > 0)
+            {
+                var totalCount = entity.Count;
+                var items = entity.Where(_ => string.IsNullOrEmpty(input.Filter) || _.Ma.Contains(input.Filter))
+                    .Skip(input.SkipCount ?? 0).Take(input.MaxResultCount ?? 1000).Select(_ => new PhieuNhapXuatDto
+                    {
+                        Id = _.Id,
+                        Ma = _.Ma,
+                        NhanVienId = _.NhanVienId,
+                        NgayNhapXuat = _.NgayNhapXuat,
+                        NguoiDaiDien = _.NguoiDaiDien,
+                        NhaCungCap = _.NhaCungCap,
+                        SoLuong = _.SoLuong,
+                        TongTien = _.TongTien,
+                        GhiChu = _.GhiChu,
+                        LoaiPhieu = _.LoaiPhieu,
+                    }).ToList();
+                return new PagedResultDto<PhieuNhapXuatDto>
+                {
+                    Items = items,
+                    TotalCount = totalCount
+                };
+            }
+            return new PagedResultDto<PhieuNhapXuatDto>
+            {
+                Items = new List<PhieuNhapXuatDto>(),
+                TotalCount = 0
+            };
+        }
+
+        [HttpPost]
         [Route("get-list-phieu-nhap")]
         public async Task<ActionResult<PagedResultDto<PhieuNhapXuatDto>>> GetListPhieuNhap(SearchListDto input)
         {

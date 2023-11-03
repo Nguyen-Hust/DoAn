@@ -29,6 +29,8 @@ import { PhieuXuatComponent } from "../pages/phieu-xuat/phieu-xuat.component";
 import { DanhSachThietBiComponent } from "../pages/danh-sach-thiet-bi/danh-sach-thiet-bi.component";
 import { PhieuBanGiaoComponent } from "../pages/phieu-ban-giao/phieu-ban-giao.component";
 import { PhieuThuHoiComponent } from "../pages/phieu-thu-hoi/phieu-thu-hoi.component";
+import { BaoCaoNhapComponent } from "../pages/bao-cao-nhap/bao-cao-nhap.component";
+import { BaoCaoXuatComponent } from "../pages/bao-cao-xuat/bao-cao-xuat.component";
 
 const icons: IconDefinition[] = [
   StepBackwardOutline,
@@ -52,6 +54,8 @@ const icons: IconDefinition[] = [
     DanhSachThietBiComponent,
     PhieuBanGiaoComponent,
     PhieuThuHoiComponent,
+    BaoCaoNhapComponent,
+    BaoCaoXuatComponent
   ],
   imports: [
     CommonModule,
