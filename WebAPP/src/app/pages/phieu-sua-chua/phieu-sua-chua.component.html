@@ -2,7 +2,20 @@
 <div class="table-responsive">
   <div class="filter-area">
     <div nz-row [nzGutter]="16">
-      <div nz-col class="gutter-row" [nzSpan]="9">
+      <div nz-col class="gutter-row" [nzSpan]="6">
+        <div class="form-group">
+          <label class="control-label" class="filter-label"
+            >Từ khóa tìm kiếm</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="filter"
+            placeholder="Nhập mã phiếu"
+          />
+        </div>
+      </div>
+      <div nz-col class="gutter-row" [nzSpan]="4">
         <div class="form-group">
           <label class="control-label" class="filter-label"
             >Ngày tạo phiếu</label
@@ -44,6 +57,7 @@
     <thead>
       <tr>
         <th class="text-center">#</th>
+        <th class="text-center">Mã phiếu</th>
         <th class="text-center">Thiết bị</th>
         <th class="text-center">Nhân viên</th>
         <th class="text-center">Ngày tạo phiếu</th>
@@ -55,6 +69,7 @@
     <tbody>
       <tr *ngFor="let data of basicTable.data; index as i">
         <td class="text-center">{{ i + 1 }}</td>
+        <td>{{ data.ma }}</td>
         <td>{{ getTenThietBi(data.chiTietThietBiId) }}</td>
         <td>{{ getTenNhanSu(data.nhanVienId) }}</td>
         <td class="text-center">{{ data.createTime | date }}</td>
@@ -109,7 +124,7 @@
             type="button"
             class="btn btn-danger text-white"
             nzTooltipTitle="Xóa"
-            (click)="delete(data.id)"
+            (click)="delete(data)"
             *ngIf="data.trangThai == 0"
           >
             <span nz-icon nzType="delete" nzTheme="outline"></span>

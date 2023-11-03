@@ -47,7 +47,6 @@ export class PhieuBanGiaoComponent implements OnInit {
   ngOnInit() {
     this.form = this.formbulider.group({
       id: [0, [Validators.required]],
-      ma: ["", [Validators.required]],
       nhanVienNhan: ["", [Validators.required]],
     });
     this.service.getDanhSachThietBi().subscribe((val) => {
@@ -108,7 +107,11 @@ export class PhieuBanGiaoComponent implements OnInit {
   create() {
     const input = this.form.value;
     this.service
-      .create({ ...input, danhSachThietBi: Array.from(this.setOfCheckedId) })
+      .create({
+        ...input,
+        danhSachThietBi: Array.from(this.setOfCheckedId),
+        ma: "",
+      })
       .pipe(finalize(() => (this.isConfirmLoading = false)))
       .subscribe(() => {
         this.getList();
@@ -123,7 +126,6 @@ export class PhieuBanGiaoComponent implements OnInit {
       this.isShowModal = true;
       this.title = "Xem chi tiết";
       this.setOfCheckedId = new Set<number>(val.danhSachThietBi);
-      this.form.get("ma")?.disable();
       this.form.get("nhanVienNhan")?.disable();
       this.form.patchValue(val);
     });

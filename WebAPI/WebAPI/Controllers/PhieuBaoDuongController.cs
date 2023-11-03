@@ -29,14 +29,17 @@ namespace WebAPI.Controllers
             if (entity.Count > 0)
             {
                 var totalCount = entity.Count;
-                var items = entity.Where(_ => !input.Date.HasValue || input.Date.Value.Date == _.CreateTime.Value.Date)
+                var items = entity
+                    .Where(_ => string.IsNullOrEmpty(input.Filter) || _.Ma.Contains(input.Filter))
+                    .Where(_ => !input.Date.HasValue || input.Date.Value.Date == _.CreateTime.Value.Date)
                     .Skip(input.SkipCount ?? 0).Take(input.MaxResultCount ?? 1000).Select(_ => new PhieuBaoDuongDto
                     {
                         Id = _.Id,
                         CreateTime = _.CreateTime,
                         NhanVienId = _.NhanVienId,
                         TrangThai = _.TrangThai,
-                        TongThietBi = _.ChiTietPhieuBaoDuong.Count
+                        TongThietBi = _.ChiTietPhieuBaoDuong.Count,
+                        Ma = _.Ma
                     }).ToList();
                 return new PagedResultDto<PhieuBaoDuongDto>
                 {
@@ -62,10 +65,13 @@ namespace WebAPI.Controllers
                 Id = input.Id,
                 CreateTime = DateTime.Now,
                 NhanVienId = nhanVienId,
-                TrangThai = (int)TrangThaiPhieuBaoDuongEnum.Waiting
+                TrangThai = (int)TrangThaiPhieuBaoDuongEnum.Waiting,
+                Ma = input.Ma,
             }; 
             _context.PhieuBaoDuong.Add(entity);
             await _context.SaveChangesAsync();
+            entity.Ma = $"PBD_{entity.Id}";
+            _context.PhieuBaoDuong.Update(entity);
             foreach (var item in input.DanhSachThietBi)
             {
                 var chiTiet = new ChiTietPhieuBaoDuongEntity
@@ -120,7 +126,8 @@ namespace WebAPI.Controllers
                 DanhSachThietBi = entity.ChiTietPhieuBaoDuong.Select(_ => _.ChiTietThietBiId).ToList(),
                 CreateTime = entity.CreateTime,
                 NhanVienId = entity.NhanVienId,
-                TrangThai = entity.TrangThai
+                TrangThai = entity.TrangThai,
+                Ma = entity.Ma
             };
         }
 
@@ -194,6 +201,7 @@ namespace WebAPI.Controllers
         {
             var thietBiYTe = await _context.ThongTinChiTietThietBi.ToListAsync();
             var items = thietBiYTe
+                .Where(_ => _.NgayNhap.AddMonths(_.ThoiGianBaoDuong??0) < DateTime.Now)
                 .Select(_ => new ThongTinChiTietThietBiSelectDto
                 {
                     Id = _.Id,

@@ -17,7 +17,6 @@ import { PhieuThuHoiDto } from "src/app/models/PhieuThuHoiDto";
 })
 export class PhieuThuHoiComponent implements OnInit {
   danhSach: PhieuThuHoiDto[];
-  form: FormGroup;
 
   id = 0;
   title = "";
@@ -45,10 +44,6 @@ export class PhieuThuHoiComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.form = this.formbulider.group({
-      id: [0, [Validators.required]],
-      ma: ["", [Validators.required]],
-    });
     this.service.getDanhSachThietBi().subscribe((val) => {
       this.dsThietBi = val;
     });
@@ -86,9 +81,6 @@ export class PhieuThuHoiComponent implements OnInit {
     this.isShowModal = true;
     this.title = "Thêm mới";
     this.setOfCheckedId = new Set<number>();
-    this.form.reset();
-    this.form.get("nhanVienNhan")?.setValue("");
-    this.form.get("id")?.setValue(0);
   }
 
   save() {
@@ -96,18 +88,17 @@ export class PhieuThuHoiComponent implements OnInit {
       this.toastr.error("Phải chọn thiết bị cần bảo dưỡng");
       return;
     }
-    if (this.form.invalid) {
-      this.toastr.error("Cần nhập đủ thông tin");
-      return;
-    }
     this.isConfirmLoading = true;
     this.create();
   }
 
   create() {
-    const input = this.form.value;
     this.service
-      .create({ ...input, danhSachThietBi: Array.from(this.setOfCheckedId) })
+      .create({
+        id: 0,
+        ma: "",
+        danhSachThietBi: Array.from(this.setOfCheckedId),
+      })
       .pipe(finalize(() => (this.isConfirmLoading = false)))
       .subscribe(() => {
         this.getList();
@@ -122,9 +113,6 @@ export class PhieuThuHoiComponent implements OnInit {
       this.isShowModal = true;
       this.title = "Xem chi tiết";
       this.setOfCheckedId = new Set<number>(val.danhSachThietBi);
-      this.form.get("ma")?.disable();
-      this.form.get("nhanVienNhan")?.disable();
-      this.form.patchValue(val);
     });
   }
 

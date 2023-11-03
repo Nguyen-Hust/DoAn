@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using WebAPI.Data;
 using WebAPI.Entities;
 using WebAPI.Enums;
@@ -27,7 +28,9 @@ namespace WebAPI.Controllers
             if (phieuSuaChua.Count > 0)
             {
                 var totalCount = phieuSuaChua.Count;
-                var items = phieuSuaChua.Where(_ => !input.Date.HasValue || input.Date.Value.Date == _.CreateTime.Value.Date)
+                var items = phieuSuaChua
+                    .Where(_ => string.IsNullOrEmpty(input.Filter) || _.Ma.Contains(input.Filter))
+                    .Where(_ => !input.Date.HasValue || input.Date.Value.Date == _.CreateTime.Value.Date)
                     .Skip(input.SkipCount ?? 0).Take(input.MaxResultCount ?? 1000).Select(_ => new PhieuSuaChuaDto
                     {
                         Id = _.Id,
@@ -35,7 +38,8 @@ namespace WebAPI.Controllers
                         CreateTime = _.CreateTime,
                         LyDo = _.LyDo,
                         NhanVienId = _.NhanVienId,
-                        TrangThai = _.TrangThai
+                        TrangThai = _.TrangThai,
+                        Ma = _.Ma,
                     }).ToList();
                 return new PagedResultDto<PhieuSuaChuaDto>
                 {
@@ -61,9 +65,13 @@ namespace WebAPI.Controllers
                 CreateTime = DateTime.Now,
                 LyDo = input.LyDo,
                 NhanVienId = input.NhanVienId,
-                TrangThai = (int)TrangThaiPhieuSuaChuaEnum.Waiting
+                TrangThai = (int)TrangThaiPhieuSuaChuaEnum.Waiting,
+                Ma = input.Ma
             };
             _context.PhieuSuaChua.Add(entity);
+            await _context.SaveChangesAsync();
+            entity.Ma = $"PSC_{entity.Id}";
+            _context.PhieuSuaChua.Update(entity);
             await _context.SaveChangesAsync();
             return input;
         }
@@ -80,7 +88,8 @@ namespace WebAPI.Controllers
                 CreateTime = entity.CreateTime,
                 LyDo = entity.LyDo,
                 NhanVienId = entity.NhanVienId,
-                TrangThai = entity.TrangThai
+                TrangThai = entity.TrangThai,
+                Ma = entity.Ma
             };
         }
 
@@ -174,7 +183,9 @@ namespace WebAPI.Controllers
         public async Task<List<ThongTinChiTietThietBiSelectDto>> GetDanhSachThietBiAsync()
         {
             var thietBiYTe = await _context.ThongTinChiTietThietBi.ToListAsync();
-            var items = thietBiYTe
+            string userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            var nhanVienId = _context.NhanSu.FirstOrDefault(_ => _.AccountId == userId)?.Id;
+            var items = thietBiYTe.Where(_ => _.NhanVienId == nhanVienId)
                 .Select(_ => new ThongTinChiTietThietBiSelectDto
                 {
                     Id = _.Id,

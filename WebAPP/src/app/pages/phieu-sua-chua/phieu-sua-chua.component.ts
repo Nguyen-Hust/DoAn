@@ -23,6 +23,7 @@ export class PhieuSuaChuaComponent implements OnInit {
   isShowModal = false;
   isConfirmLoading = false;
   date = null;
+  filter = "";
   pageIndex = 1;
   pageSize = 10;
   total = 0;
@@ -62,6 +63,7 @@ export class PhieuSuaChuaComponent implements OnInit {
       date: this.date,
       maxResultCount: this.pageSize,
       skipCount: (this.pageIndex - 1) * this.pageSize,
+      filter: this.filter,
     };
     this.service.getList(body).subscribe((val) => {
       this.danhSach = val.items;
@@ -100,7 +102,7 @@ export class PhieuSuaChuaComponent implements OnInit {
       (_) => _.id == input.chiTietThietBiId
     )?.nhanVienId;
     this.service
-      .create({ ...input, nhanVienId })
+      .create({ ...input, nhanVienId, ma: "" })
       .pipe(finalize(() => (this.isConfirmLoading = false)))
       .subscribe(() => {
         this.getList();
@@ -110,12 +112,12 @@ export class PhieuSuaChuaComponent implements OnInit {
       });
   }
 
-  delete(id: number) {
+  delete(data) {
     this.modal.confirm({
       nzTitle: "Xác nhận xóa",
-      nzContent: `Bạn có muốn xóa phiếu không`,
+      nzContent: `Bạn có muốn xóa phiếu <b>'${data.ma}'</b> không`,
       nzOnOk: () =>
-        this.service.delete(id).subscribe(() => {
+        this.service.delete(data.id).subscribe(() => {
           this.toastr.success("Data Deleted Successfully");
           this.getList();
         }),

@@ -65,6 +65,7 @@ namespace WebAPI.Controllers
             };
             _context.PhieuThuHoi.Add(entity);
             await _context.SaveChangesAsync();
+            entity.Ma = $"PTH_{entity.Id}";
             var listThietBi = _context.ThongTinChiTietThietBi.Where(_ => input.DanhSachThietBi.Contains(_.Id)).ToList();
             foreach (var item in listThietBi)
             {
@@ -105,6 +106,7 @@ namespace WebAPI.Controllers
         {
             var thietBiYTe = await _context.ThongTinChiTietThietBi.ToListAsync();
             var items = thietBiYTe
+                .Where(_ => _.NhanVienId.HasValue)
                 .Select(_ => new ThongTinChiTietThietBiSelectDto
                 {
                     Id = _.Id,

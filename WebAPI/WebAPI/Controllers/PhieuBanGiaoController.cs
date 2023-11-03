@@ -68,6 +68,8 @@ namespace WebAPI.Controllers
             };
             _context.PhieuBanGiao.Add(entity);
             await _context.SaveChangesAsync();
+            entity.Ma = $"PBG_{entity.Id}";
+            _context.PhieuBanGiao.Update(entity);
             var listThietBi = _context.ThongTinChiTietThietBi.Where(_ => input.DanhSachThietBi.Contains(_.Id)).ToList();
             foreach (var item in listThietBi)
             {
