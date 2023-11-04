@@ -20,7 +20,7 @@ export class ThongTinChiTietThietBiDto {
     thietBiYTeId: number;
     ngayNhap: Date | null;
     xuatXu: string;
-    namSX: number | null;
+    namSX?: number | null;
     hangSanXuat: string;
     tinhTrang: number | null;
     khoaId: number | null;

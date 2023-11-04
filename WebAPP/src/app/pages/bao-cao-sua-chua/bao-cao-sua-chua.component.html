@@ -1,0 +1,95 @@
+<h2>Báo cáo sửa chữa</h2>
+
+<div class="table-responsive">
+    <div class="filter-area">
+      <div nz-row [nzGutter]="16">
+        <div nz-col class="gutter-row" [nzSpan]="6">
+          <div class="form-group">
+            <label class="control-label" class="filter-label"
+              >Từ khóa tìm kiếm</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="filter"
+              placeholder="Nhập mã phiếu"
+            />
+          </div>
+        </div>
+        <div nz-col class="gutter-row" [nzSpan]="4">
+          <div class="form-group">
+            <label class="control-label" class="filter-label"
+              >Ngày tạo phiếu</label
+            >
+            <input
+              type="date"
+              class="form-control"
+              [(ngModel)]="date"
+              placeholder="Chọn ngày tạo phiếu"
+            />
+          </div>
+        </div>
+        <div nz-col class="gutter-row" [nzSpan]="4" style="margin-top: 22px">
+          <button
+            type="button"
+            class="btn btn-info text-white"
+            (click)="getList()"
+          >
+            Tìm kiếm
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex justify-content-between mb-1 align-items-center">
+      <h3 style="font-weight: 500; font-size: 16px">Danh sách phiếu sửa chữa</h3>
+      <button nz-button nzType="default" style="display: flex; align-items: center;" (click)="exportExcel()">
+        <span nz-icon nzType="download" nzTheme="outline"></span>
+        Export excel
+    </button>
+    </div>
+    <nz-table
+      #basicTable
+      [nzData]="danhSach"
+      nzBordered
+      [nzPageIndex]="pageIndex"
+      [nzPageSize]="pageSize"
+      [nzTotal]="total"
+      (nzPageIndexChange)="getList($event)"
+    >
+      <thead>
+        <tr>
+          <th class="text-center">#</th>
+          <th class="text-center">Mã phiếu</th>
+          <th class="text-center">Thiết bị</th>
+          <th class="text-center">Nhân viên</th>
+          <th class="text-center">Ngày tạo phiếu</th>
+          <th class="text-center">Lý do</th>
+          <th class="text-center">Trạng thái</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of basicTable.data; index as i">
+          <td class="text-center">{{ i + 1 }}</td>
+          <td>{{ data.ma }}</td>
+          <td>{{ getTenThietBi(data.chiTietThietBiId) }}</td>
+          <td>{{ getTenNhanSu(data.nhanVienId) }}</td>
+          <td class="text-center">{{ data.createTime | date }}</td>
+          <td>{{ data.lyDo }}</td>
+          <td class="text-center">
+            <span class="badge bg-secondary" *ngIf="data.trangThai == 0"
+              >Chờ duyệt</span
+            >
+            <span class="badge bg-danger" *ngIf="data.trangThai == 2"
+              >Từ chối</span
+            >
+            <span class="badge bg-primary" *ngIf="data.trangThai == 1"
+              >Duyệt phiếu</span
+            >
+            <span class="badge bg-success" *ngIf="data.trangThai == 3"
+              >Đã sửa xong</span
+            >
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>

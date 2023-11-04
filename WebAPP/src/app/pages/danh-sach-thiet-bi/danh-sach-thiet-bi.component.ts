@@ -8,6 +8,7 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 import { PhieuNhapXuatService } from '../phieu-nhap-xuat/phieu-nhap-xuat.service';
 import { NhanSuService } from '../nhan-su/nhan-su.service';
 import { finalize } from 'rxjs';
+import { LoaderService } from 'src/app/services/loader.service';
 
 @Component({
   selector: 'app-danh-sach-thiet-bi',
@@ -36,7 +37,8 @@ export class DanhSachThietBiComponent implements OnInit {
     private nhapXuatService: PhieuNhapXuatService,
     private nhanSuService: NhanSuService,
     private toastr: ToastrService,
-    private modal: NzModalService
+    private modal: NzModalService,
+    private loadingService: LoaderService
   ) {}
   ngOnInit(): void {
     this.form = this.formbulider.group({
@@ -72,12 +74,13 @@ export class DanhSachThietBiComponent implements OnInit {
 
   getList(pageIndex = 1) {
     this.pageIndex = pageIndex;
+    this.loadingService.setLoading(true);
     var body = {
       filter: this.filter,
       maxResultCount: this.pageSize,
       skipCount: (this.pageIndex - 1) * this.pageSize,
     };
-    this.service.getList(body).subscribe((val) => {
+    this.service.getList(body).pipe(finalize(() => this.loadingService.setLoading(false))).subscribe((val) => {
       this.danhSach = val.items;
       this.total = val.totalCount;
     });
@@ -132,9 +135,11 @@ export class DanhSachThietBiComponent implements OnInit {
 
   update() {
     const input = this.form.value;
+    this.loadingService.setLoading(true)
     this.service
       .update(input)
-      .pipe(finalize(() => (this.isConfirmLoading = false)))
+      .pipe(finalize(() => (this.isConfirmLoading = false,
+        this.loadingService.setLoading(false))))
       .subscribe(() => {
         this.toastr.success("Data Updated Successfully");
         this.form.reset();

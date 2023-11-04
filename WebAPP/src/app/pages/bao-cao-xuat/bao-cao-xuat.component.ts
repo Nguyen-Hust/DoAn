@@ -7,6 +7,8 @@ import { ToastrService } from 'ngx-toastr';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
+import { finalize } from 'rxjs';
+import { LoaderService } from 'src/app/services/loader.service';
 
 @Component({
   selector: 'app-bao-cao-xuat',
@@ -38,7 +40,8 @@ export class BaoCaoXuatComponent implements OnInit {
     private service: PhieuNhapXuatService,
     private nhanSuService: NhanSuService,
     private baoCaoservice: BaoCaoService,
-    private modal: NzModalService
+    private modal: NzModalService,
+    private loadingService: LoaderService
   ) { }
   ngOnInit(): void {
     this.service.getDanhSachThietBi().subscribe((val) => {
@@ -69,12 +72,15 @@ export class BaoCaoXuatComponent implements OnInit {
 
   getList(pageIndex = 1) {
     this.pageIndex = pageIndex;
+    this.loadingService.setLoading(true);
     var body = {
       filter: this.filter,
       maxResultCount: this.pageSize,
       skipCount: (this.pageIndex - 1) * this.pageSize,
     };
-    this.service.getListPhieuXuat(body).subscribe((val) => {
+    this.service.getListPhieuXuat(body)
+    .pipe(finalize(() => this.loadingService.setLoading(false)))
+    .subscribe((val) => {
       this.danhSach = val.items;
       this.total = val.totalCount;
     });
@@ -86,10 +92,13 @@ export class BaoCaoXuatComponent implements OnInit {
 
 
   getById(id: number) {
+    this.loadingService.setLoading(true);
     this.isShowModal = true;
     this.title = `Xem chi tiết`;
     this.isDetail = true;
-    this.service.getById(id).subscribe((result) => {
+    this.service.getById(id)
+    .pipe(finalize(() => this.loadingService.setLoading(false)))
+    .subscribe((result) => {
       this.id = result.id;
       this.listChiTietThietBi  = [];
       if(result.thongTinChiTietThietBiDtos != null && result.thongTinChiTietThietBiDtos.length > 0) {
@@ -108,10 +117,13 @@ export class BaoCaoXuatComponent implements OnInit {
   }
 
   exportExcel() {
+    this.loadingService.setLoading(true);
     var body = {
       filter: this.filter
     };
-    this.baoCaoservice.BaoCaoXuat(body).subscribe((response: any) => {
+    this.baoCaoservice.BaoCaoXuat(body)
+    .pipe(finalize(() => this.loadingService.setLoading(false)))
+    .subscribe((response: any) => {
       const blob = new Blob([response], { type: response.type });
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
@@ -122,7 +134,18 @@ export class BaoCaoXuatComponent implements OnInit {
     })
   }
 
-  XuatPdf() {
-    console.log("test");
+  XuatPdf(id: number) {
+    this.loadingService.setLoading(true);
+    this.baoCaoservice.ExportPdfPhieuNhapXuat(id)
+    .pipe(finalize(() => this.loadingService.setLoading(false)))
+    .subscribe((response: any) => {
+      const blob = new Blob([response], { type: response.type });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'bao-cao-chi-tiet-xuat.xlsx';
+      link.click();
+      window.URL.revokeObjectURL(url);
+    })
   }
 }

@@ -7,6 +7,8 @@ import { ToastrService } from 'ngx-toastr';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { PhieuNhapXuatDto, ThongTinChiTietThietBiDto } from 'src/app/models/PhieuNhapXuatDto';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
+import { LoaderService } from 'src/app/services/loader.service';
+import { NzI18nService, en_US } from 'ng-zorro-antd/i18n';
 
 @Component({
   selector: 'app-phieu-xuat',
@@ -16,7 +18,7 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
 export class PhieuXuatComponent {
   danhSach: PhieuNhapXuatDto[];
   form: FormGroup;
-
+  dateFormat = 'dd/MM/yyyy';
   id = 0;
   title = "";
   isShowModal = false;
@@ -38,9 +40,12 @@ export class PhieuXuatComponent {
     private service: PhieuNhapXuatService,
     private nhanSuService: NhanSuService,
     private toastr: ToastrService,
-    private modal: NzModalService
+    private modal: NzModalService,
+    private loadingService: LoaderService,
+    private i18n: NzI18nService
   ) {}
   ngOnInit(): void {
+    this.i18n.setLocale(en_US);
     this.service.getDanhSachThietBi().subscribe((val) => {
       this.dsThietBi = val;
     });
@@ -54,27 +59,32 @@ export class PhieuXuatComponent {
       id: [0, [Validators.required]],
       ma: ['', [Validators.required]],
       ngayNhapXuat: new FormControl(new Date()), 
-      nhaCungCap: ['', [Validators.required]],
-      nguoiDaiDien: ['', [Validators.required]],
-      nhaVienId: [0, [Validators.required]],
+      nhaCungCap: ['' ],
+      nguoiDaiDien: [''],
+      nhaVienId: [0],
       soLuong: [0],
       tongTien: [0],
       ghiChu: [""],
       loaiPhieu: [0],
       thongTinChiTietThietBiDtos: this.formbulider.array([])
     });
+    this.form.controls["soLuong"].disable();
+    this.form.controls["tongTien"].disable();
     this.getList();
 
   }
 
   getList(pageIndex = 1) {
     this.pageIndex = pageIndex;
+    this.loadingService.setLoading(true);
     var body = {
       filter: this.filter,
       maxResultCount: this.pageSize,
       skipCount: (this.pageIndex - 1) * this.pageSize,
     };
-    this.service.getListPhieuXuat(body).subscribe((val) => {
+    this.service.getListPhieuXuat(body)
+    .pipe(finalize(() => this.loadingService.setLoading(false)))
+    .subscribe((val) => {
       this.danhSach = val.items;
       this.total = val.totalCount;
     });
@@ -88,7 +98,7 @@ export class PhieuXuatComponent {
   }
 
   getTenNhanSu(id) {
-    return this.dsNhanSu.find((_) => _.id == id).ten;
+    return this.dsNhanSu.find((_) => _.id == id)?.ten;
   }
 
   openModalUpdate(data) {
@@ -128,7 +138,7 @@ export class PhieuXuatComponent {
       thietBiYTeId: 0,
       ngayNhap: null,
       xuatXu: '',
-      namSX: null,
+      namSX: 0,
       hangSanXuat: '',
       tinhTrang: null,
       khoaId: null,
@@ -140,11 +150,13 @@ export class PhieuXuatComponent {
     };
     this.listChiTietThietBi.push(item);
     this.listChiTietThietBi = [...this.listChiTietThietBi];
+    this.form.controls["soLuong"].patchValue(this.listChiTietThietBi.length);
   }
 
   deleteDetail(i) {
     this.listChiTietThietBi.splice(i, 1);
     this.listChiTietThietBi = [...this.listChiTietThietBi];
+    this.form.controls["soLuong"].patchValue(this.listChiTietThietBi.length);
   }
 
   onQueryParamsChange(data: NzTableQueryParams) {
@@ -156,6 +168,7 @@ export class PhieuXuatComponent {
 
   reset() {
     this.isDetail = false;
+    // this.form.reset();
     this.listChiTietThietBi = [];
   }
 
@@ -176,6 +189,12 @@ export class PhieuXuatComponent {
 
   create() {
     const input = this.form.value;
+    input.soLuong = this.listChiTietThietBi.length;
+    input.tongTien = 0;
+    this.listChiTietThietBi.forEach(item => {
+      input.tongTien = input.tongTien + Number(item.giaTien);
+    })
+    input.nhaVienId = 0;
     this.service
       .create(input)
       .pipe(finalize(() => (this.isConfirmLoading = false)))
@@ -189,6 +208,12 @@ export class PhieuXuatComponent {
 
   update() {
     const input = this.form.value;
+    input.soLuong = this.listChiTietThietBi.length;
+    input.tongTien = 0;
+    this.listChiTietThietBi.forEach(item => {
+      input.tongTien = input.tongTien + Number(item.giaTien);
+    })
+    input.nhaVienId = 0;
     this.service
       .update(input)
       .pipe(finalize(() => (this.isConfirmLoading = false)))
@@ -198,5 +223,14 @@ export class PhieuXuatComponent {
         this.isShowModal = false;
         this.getList();
       });
+  }
+
+  onBlurMethod() {
+    var total = 0;
+    this.listChiTietThietBi.forEach(item => {
+      total = total + Number(item.giaTien);
+    })
+
+    this.form.controls["tongTien"].patchValue(total);
   }
 }

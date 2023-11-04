@@ -29,13 +29,33 @@ export class BaoCaoService {
       return this.http.post(this.url + "bao-cao-xuat", body, httpHeaders);
   }
 
-  ExportPdfPhieuNhap(id: number): Observable<any> {
+  ExportPdfPhieuNhapXuat(id: number): Observable<any> {
     const httpHeaders = {
       headers: new HttpHeaders({
         Authorization: `Bearer ${localStorage.getItem("jwt")}`,
       }),
       responseType: 'blob' as 'json',
     };
-    return this.http.get(this.url + "export-pdf-phieu-nhap?id=" + id, httpHeaders);
+    return this.http.get(this.url + "export-pdf-phieu-nhap-xuat?id=" + id, httpHeaders);
+  }
+
+  BaoCaoBaoDuong(body): Observable<any> {
+    const httpHeaders = {
+      headers: new HttpHeaders({
+        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+      }),
+      responseType: 'blob' as 'json',
+    };
+    return this.http.post(this.url + "bao-cao-bao-duong", body, httpHeaders);
+}
+
+BaoCaoSuaChua(body): Observable<any> {
+  const httpHeaders = {
+    headers: new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+    }),
+    responseType: 'blob' as 'json',
+  };
+  return this.http.post(this.url + "bao-cao-sua-chua", body, httpHeaders);
 }
 }

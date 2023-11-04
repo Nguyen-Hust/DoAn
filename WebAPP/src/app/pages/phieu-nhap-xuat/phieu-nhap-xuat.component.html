@@ -9,7 +9,7 @@
                     <input type="text" class="form-control" [(ngModel)]="filter" placeholder="Nhập tên sản phẩm" />
                 </div>
             </div>
-            <div nz-col class="gutter-row" [nzSpan]="2" style="margin-top: 22px">
+            <div nz-col class="gutter-row" [nzSpan]="4" style="margin-top: 22px">
                 <button type="button" class="btn btn-info text-white" (click)="getList()">
                     Tìm kiếm
                 </button>
@@ -104,7 +104,7 @@
                     class="form-control" />
             </div>
 
-            <div nz-col class="gutter-row form-group mt-3" [nzSpan]="6">
+            <!-- <div nz-col class="gutter-row form-group mt-3" [nzSpan]="6">
                 <label class="control-label me-3 label-form" for="nhanVienId"> Nhân viên: </label>
                 <select formControlName="nhanVienId" id="nhanVienId" class="form-control">
                     <option value="" selected>Chọn nhân viên</option>
@@ -112,7 +112,7 @@
                         {{ item.ten }}
                     </option>
                 </select>
-            </div>
+            </div> -->
             <div nz-col class="gutter-row form-group mt-3" [nzSpan]="6">
                 <label class="control-label me-3 label-form" for="soLuong">
                     Số lượng
@@ -124,10 +124,10 @@
                     Tổng tiền:</label>
                 <input id="tongTien" formControlName="tongTien" placeholder="Nhập tổng tiền" class="form-control" />
             </div>
-            <div nz-col class="gutter-row form-group mt-3" [nzSpan]="6">
+            <div nz-col class="gutter-row form-group mt-3 mb-3" [nzSpan]="24">
                 <label class="control-label me-3 label-form" for="ghiChu">
                     Ghi chú:</label>
-                <input id="ghiChu" formControlName="ghiChu" placeholder="Nhập ghi chú" class="form-control" />
+                <textarea id="ghiChu" formControlName="ghiChu" placeholder="Nhập ghi chú" class="form-control" rows="4" cols="50"></textarea>
             </div>
         </form>
         <button class="add-btn" (click)="add()" *ngIf="isDetail == false">
@@ -138,18 +138,22 @@
             <thead>
                 <tr>
                     <th nzWidth="200px">
+                        <span style="margin-right: 4px; color: #ff4d4f">*</span>
                         Mã thiết bị
                     </th>
                     <th nzWidth="200px">
+                        <span style="margin-right: 4px; color: #ff4d4f">*</span>
                         Thiết bị
                     </th>
                     <th nzWidth="200px">
+                        <span style="margin-right: 4px; color: #ff4d4f">*</span>
                         Ngày nhập xuất
                     </th>
                     <th nzWidth="200px">
                         Xuất sứ
                     </th>
                     <th nzWidth="200px">
+                        <span style="margin-right: 4px; color: #ff4d4f">*</span>
                         Năm sản xuất
                     </th>
                     <th nzWidth="200px">
@@ -157,12 +161,6 @@
                     </th>
                     <th nzWidth="200px">
                         Tình trạng
-                    </th>
-                    <th nzWidth="200px">
-                        Khoa
-                    </th>
-                    <th nzWidth="200px">
-                        Nhân viên
                     </th>
                     <th nzWidth="200px">
                         Serial
@@ -185,6 +183,7 @@
             <tbody>
                 <tr *ngFor="let data of assetTable.data; let i = index">
                     <td>
+
                         <input nz-input [(ngModel)]="data.ma" [disabled]="isDetail" nz-tooltip style="width: 100%" />
                     </td>
                     <td>
@@ -195,8 +194,10 @@
                     </td>
 
                     <td>
-                        <input type="date" class="form-control" [(ngModel)]="data.ngayNhap"
-                            placeholder="Chọn ngày tạo phiếu" />
+                        <!-- <input type="date" class="form-control" [(ngModel)]="data.ngayNhap"
+                            placeholder="Chọn ngày tạo phiếu" /> -->
+
+                        <nz-date-picker [(ngModel)]="data.ngayNhap" class="form-control" [nzFormat]="dateFormat"></nz-date-picker>
                     </td>
                     <td>
                         <input nz-input [(ngModel)]="data.xuatXu" [disabled]="isDetail" nz-tooltip
@@ -214,18 +215,6 @@
                             style="width: 100%" />
                     </td>
                     <td>
-                        <nz-select [(ngModel)]="data.khoaId" [disabled]="isDetail" nzPlaceHolder="Chọn khoa"
-                            style="width: 100%">
-                            <nz-option [nzValue]="tb.id" [nzLabel]="tb.ten" *ngFor="let tb of dsKhoa"></nz-option>
-                        </nz-select>
-                    </td>
-                    <td>
-                        <nz-select [(ngModel)]="data.nhanVienId" [disabled]="isDetail" nzPlaceHolder="Chọn nhân viên"
-                            style="width: 100%">
-                            <nz-option [nzValue]="tb.id" [nzLabel]="tb.ten" *ngFor="let tb of dsNhanSu"></nz-option>
-                        </nz-select>
-                    </td>
-                    <td>
                         <input nz-input [(ngModel)]="data.serial" [disabled]="isDetail" nz-tooltip
                             style="width: 100%" />
                     </td>
@@ -233,7 +222,7 @@
                         <input nz-input [(ngModel)]="data.model" [disabled]="isDetail" nz-tooltip style="width: 100%" />
                     </td>
                     <td>
-                        <input nz-input [(ngModel)]="data.giaTien" [disabled]="isDetail" nz-tooltip
+                        <input nz-input [(ngModel)]="data.giaTien" [disabled]="isDetail" nz-tooltip (blur)="onBlurMethod()"
                             style="width: 100%" />
                     </td>
                     <td>

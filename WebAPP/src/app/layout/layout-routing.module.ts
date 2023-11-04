@@ -14,6 +14,8 @@ import { PhieuBanGiaoComponent } from "../pages/phieu-ban-giao/phieu-ban-giao.co
 import { PhieuThuHoiComponent } from "../pages/phieu-thu-hoi/phieu-thu-hoi.component";
 import { BaoCaoNhapComponent } from "../pages/bao-cao-nhap/bao-cao-nhap.component";
 import { BaoCaoXuatComponent } from "../pages/bao-cao-xuat/bao-cao-xuat.component";
+import { BaoCaoBaoDuongComponent } from "../pages/bao-cao-bao-duong/bao-cao-bao-duong.component";
+import { BaoCaoSuaChuaComponent } from "../pages/bao-cao-sua-chua/bao-cao-sua-chua.component";
 
 @NgModule({
   imports: [
@@ -74,6 +76,14 @@ import { BaoCaoXuatComponent } from "../pages/bao-cao-xuat/bao-cao-xuat.componen
         path: "bao-cao-xuat",
         component: BaoCaoXuatComponent
       },
+      {
+        path: "bao-cao-bao-duong",
+        component: BaoCaoBaoDuongComponent
+      }, 
+      {
+        path: "bao-cao-sua-chua",
+        component: BaoCaoSuaChuaComponent
+      }
     ]),
   ],
 })

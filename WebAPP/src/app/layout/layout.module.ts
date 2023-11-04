@@ -32,6 +32,8 @@ import { PhieuThuHoiComponent } from "../pages/phieu-thu-hoi/phieu-thu-hoi.compo
 import { BaoCaoNhapComponent } from "../pages/bao-cao-nhap/bao-cao-nhap.component";
 import { BaoCaoXuatComponent } from "../pages/bao-cao-xuat/bao-cao-xuat.component";
 import { SpinnerComponent } from "./spinner/spinner.component";
+import { BaoCaoBaoDuongComponent } from "../pages/bao-cao-bao-duong/bao-cao-bao-duong.component";
+import { BaoCaoSuaChuaComponent } from "../pages/bao-cao-sua-chua/bao-cao-sua-chua.component";
 
 const icons: IconDefinition[] = [
   StepBackwardOutline,
@@ -57,6 +59,8 @@ const icons: IconDefinition[] = [
     PhieuThuHoiComponent,
     BaoCaoNhapComponent,
     BaoCaoXuatComponent,
+    BaoCaoBaoDuongComponent,
+    BaoCaoSuaChuaComponent
   ],
   imports: [
     CommonModule,
