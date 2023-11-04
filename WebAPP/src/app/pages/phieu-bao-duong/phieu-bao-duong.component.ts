@@ -88,7 +88,30 @@ export class PhieuBaoDuongComponent implements OnInit {
     this.disabled = false;
     this.isShowModal = true;
     this.title = "Thêm mới";
+    this.id = 0;
     this.setOfCheckedId = new Set<number>();
+  }
+
+  openModalUpdate(data) {
+    this.getById(data.id);
+    this.isShowModal = true;
+    this.title = `Sửa: ${data.ma}`;
+  }
+
+  getById(id: number) {
+    this.loadingService.setLoading(true);
+    this.service
+      .getById(id)
+      .pipe(
+        finalize(() => {
+          this.loadingService.setLoading(false);
+          this.isConfirmLoading = false;
+        })
+      )
+      .subscribe((result) => {
+        this.id = result.id;
+        this.setOfCheckedId = new Set<number>(result.danhSachThietBi);
+      });
   }
 
   save() {
@@ -97,7 +120,11 @@ export class PhieuBaoDuongComponent implements OnInit {
       return;
     }
     this.isConfirmLoading = true;
-    this.create();
+    if (this.id == 0) {
+      this.create();
+    } else {
+      this.update();
+    }
   }
 
   create() {
@@ -118,6 +145,31 @@ export class PhieuBaoDuongComponent implements OnInit {
         this.getList();
         this.isShowModal = false;
         this.toastr.success("Data Saved Successfully");
+      });
+  }
+
+  update() {
+    this.loadingService.setLoading(true);
+    this.service
+      .update({
+        id: this.id,
+        danhSachThietBi: Array.from(this.setOfCheckedId),
+        ma: "",
+      })
+      .pipe(
+        finalize(() => {
+          this.isConfirmLoading = false;
+          this.loadingService.setLoading(false);
+        })
+      )
+      .subscribe((val) => {
+        if (val.isSuccessful) {
+          this.toastr.success("Data Updated Successfully");
+          this.isShowModal = false;
+          this.getList();
+        } else {
+          this.toastr.error(val.errorMessage);
+        }
       });
   }
 
@@ -188,7 +240,7 @@ export class PhieuBaoDuongComponent implements OnInit {
       .subscribe((val) => {
         this.disabled = true;
         this.isShowModal = true;
-        this.title = "Xem chi tiết";
+        this.title = `Xem chi tiết: ${val.ma}`;
         this.setOfCheckedId = new Set<number>(val.danhSachThietBi);
       });
   }

@@ -34,6 +34,7 @@ import { BaoCaoXuatComponent } from "../pages/bao-cao-xuat/bao-cao-xuat.componen
 import { SpinnerComponent } from "./spinner/spinner.component";
 import { BaoCaoBaoDuongComponent } from "../pages/bao-cao-bao-duong/bao-cao-bao-duong.component";
 import { BaoCaoSuaChuaComponent } from "../pages/bao-cao-sua-chua/bao-cao-sua-chua.component";
+import { NavNotificationComponent } from "./nav-notification/nav-notification.component";
 
 const icons: IconDefinition[] = [
   StepBackwardOutline,
@@ -60,7 +61,8 @@ const icons: IconDefinition[] = [
     BaoCaoNhapComponent,
     BaoCaoXuatComponent,
     BaoCaoBaoDuongComponent,
-    BaoCaoSuaChuaComponent
+    BaoCaoSuaChuaComponent,
+    NavNotificationComponent,
   ],
   imports: [
     CommonModule,

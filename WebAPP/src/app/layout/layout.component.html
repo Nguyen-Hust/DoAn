@@ -29,7 +29,9 @@
         <ul>
           <li nz-menu-item routerLink="/bao-cao-nhap">Báo cáo nhập</li>
           <li nz-menu-item routerLink="/bao-cao-xuat">Báo cáo xuất</li>
-          <li nz-menu-item routerLink="/bao-cao-bao-duong">Báo cáo bảo dưỡng</li>
+          <li nz-menu-item routerLink="/bao-cao-bao-duong">
+            Báo cáo bảo dưỡng
+          </li>
           <li nz-menu-item routerLink="/bao-cao-sua-chua">Báo cáo sửa chữa</li>
         </ul>
       </li>
@@ -44,6 +46,7 @@
   <nz-layout>
     <nz-header>
       <div class="dropdown" style="text-align: right; padding-right: 30px">
+        <app-nav-notification></app-nav-notification>
         <button
           class="btn btn-secondary dropdown-toggle"
           type="button"

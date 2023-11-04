@@ -76,7 +76,7 @@ namespace WebAPI.Controllers
             {
                 var chiTiet = new ChiTietPhieuBaoDuongEntity
                 {
-                    Id = input.Id,
+                    Id = 0,
                     PhieuBaoDuongId = entity.Id,
                     ChiTietThietBiId = item 
                 };
@@ -94,18 +94,19 @@ namespace WebAPI.Controllers
             {
                 return new CommonResultDto<PhieuBaoDuongDto>("bad request");
             }
-            var entity = await _context.ThietBiYTe.FindAsync(id);
+            var entity = await _context.PhieuBaoDuong.FindAsync(id);
             if (entity == null)
             {
                 return new CommonResultDto<PhieuBaoDuongDto>("Not found");
             }
             var temp = _context.ChiTietPhieuBaoDuong.Where(_ => _.PhieuBaoDuongId == id);
             _context.ChiTietPhieuBaoDuong.RemoveRange(temp);
+            await _context.SaveChangesAsync();
             foreach (var item in input.DanhSachThietBi)
             {
                 var chiTiet = new ChiTietPhieuBaoDuongEntity
                 {
-                    Id = input.Id,
+                    Id = 0,
                     PhieuBaoDuongId = entity.Id,
                     ChiTietThietBiId = item
                 };
