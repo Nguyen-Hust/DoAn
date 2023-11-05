@@ -1,11 +1,16 @@
+﻿using Hangfire;
+using Hangfire.Common;
+using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using WebAPI.Business;
 using WebAPI.Data;
 using WebAPI.Models.Mail;
 using WebAPI.Service;
+using static iTextSharp.text.pdf.events.IndexEvents;
 using ConfigurationManager = WebAPI.ConfigurationManager;
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -68,6 +73,9 @@ builder.Services.AddAuthentication(options =>
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection(nameof(MailSettings)));
 builder.Services.AddTransient<ISendMailService, SendMailService>();
 
+builder.Services.AddHangfire(config => config.SetDataCompatibilityLevel(CompatibilityLevel.Version_170).UseSimpleAssemblyNameTypeSerializer().UseDefaultTypeSerializer().UseMemoryStorage());
+builder.Services.AddHangfireServer();
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
@@ -83,6 +91,16 @@ if (app.Environment.IsDevelopment())
     {
         options.SwaggerEndpoint("/swagger/V1/swagger.json", "ThietBiYTe WebAPI");
     });
+}
+app.UseHangfireDashboard("/dashboard");
+
+using (var scope = app.Services.CreateScope())
+{
+    var sendMailService = (ISendMailService)scope.ServiceProvider.GetService(typeof(ISendMailService));
+    var manager = new RecurringJobManager();
+    manager.AddOrUpdate("some-id", Job.FromExpression(() =>
+        sendMailService.SendMailThongBaoBaoDuong()), "15 0 * * 0");
+
 }
 app.UseHttpsRedirection();
 app.UseAuthentication();
