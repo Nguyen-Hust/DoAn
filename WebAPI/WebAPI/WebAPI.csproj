@@ -33,6 +33,7 @@
     <None Remove="Models\PhieuNhapXuat\" />
     <None Remove="Models\ThongTinChiTietThietBi\" />
     <None Remove="Models\ExportImport\" />
+    <None Remove="Models\DashBoard\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\PhongBan\" />
@@ -40,5 +41,6 @@
     <Folder Include="Models\PhieuNhapXuat\" />
     <Folder Include="Models\ThongTinChiTietThietBi\" />
     <Folder Include="Models\ExportImport\" />
+    <Folder Include="Models\DashBoard\" />
   </ItemGroup>
 </Project>

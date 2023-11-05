@@ -29,59 +29,70 @@
             </button>
         </div>
     </div>
-    <nz-table #basicTable [nzData]="danhSach" nzBordered [nzPageIndex]="pageIndex" [nzPageSize]="pageSize"
-        [nzTotal]="total" (nzPageIndexChange)="getList($event)">
-        <thead>
-            <tr>
-                <th class="text-center">#</th>
-                <th class="text-center">Mã</th>
-                <th class="text-center">Ngày nhập xuất</th>
-                <th class="text-center">Nhà cung cấp</th>
-                <th class="text-center">Người đại diện</th>
-                <th class="text-center" nzWidth="120px">Nhân viên</th>
-                <th class="text-center">Số lượng</th>
-                <th class="text-center">Tổng tiền</th>
-                <th class="text-center">Loại phiếu</th>
-                <th class="text-center">Ghi chú</th>
-                <th class="text-center">Thao tác</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let data of basicTable.data; index as i">
-                <td class="text-center">{{ i + 1 }}</td>
-                <td>{{ data.ma }}</td>
-                <td class="text-center">{{ data.ngayNhapXuat | date: 'dd/MM/yyyy' }}</td>
-                <td class="text-center">{{ data.nhaCungCap }}</td>
-                <td class="text-center">
-                    {{ data.nguoiDaiDien }}
-                </td>
-                <td class="text-center">
-                    {{ getTenNhanSu(data.nhanVienId) }}
-                </td>
-                <td class="text-center">
-                    {{ data.soLuong }}
-                </td>
-                <td class="text-center">
-                    {{ data.tongTien }}
-                </td>
-                <td class="text-center">
-                    <span *ngIf="data.loaiPhieu == 1">Phiếu nhập</span>
-                    <span *ngIf="data.loaiPhieu == 2">Phiếu xuất</span>
-                </td>
-                <td class="text-center">
-                    {{ data.ghiChu }}
-                </td>
-                <td class="text-center" style="display: flex; justify-content: center;">
-                    <button type="button" class="btn btn-info text-white me-2" nzTooltipTitle="xem" (click)="getById(data.id)" style="display: flex; align-items: center;">
-                        <span nz-icon nzType="eye" nzTheme="outline"></span>
-                    </button>
-                    <button type="button" class="btn btn-info text-white" nzTooltipTitle="Xuất pdf" (click)="XuatPdf(data.id)" style="display: flex; align-items: center;">
-                        <span nz-icon nzType="file-pdf" nzTheme="outline"></span>
-                    </button>
-                </td>
-            </tr>
-        </tbody>
-    </nz-table>
+
+    <div class="card" style="padding: 20px;">
+        <div class="font-16 p-b-10 color-text-title color-text-title mb-3">
+            Tổng Số lượng thiết bị: <b>{{thongKe.tongSoLuong || 0| number: '1.0-0' }}</b>.&nbsp; &nbsp;&nbsp; Tổng tiền
+            <b>{{thongKe.tongSoTien || 0| number: '1.0-0'}}</b>
+        </div>
+
+        <nz-table #basicTable [nzData]="danhSach" nzBordered [nzPageIndex]="pageIndex" [nzPageSize]="pageSize"
+            [nzTotal]="total" (nzPageIndexChange)="getList($event)">
+            <thead>
+                <tr>
+                    <th class="text-center">#</th>
+                    <th class="text-center">Mã</th>
+                    <th class="text-center">Ngày nhập xuất</th>
+                    <th class="text-center">Nhà cung cấp</th>
+                    <th class="text-center">Người đại diện</th>
+                    <th class="text-center" nzWidth="120px">Nhân viên</th>
+                    <th class="text-center">Số lượng</th>
+                    <th class="text-center">Tổng tiền</th>
+                    <th class="text-center" nzWidth="120px">Loại phiếu</th>
+                    <th class="text-center">Ghi chú</th>
+                    <th class="text-center">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of basicTable.data; index as i">
+                    <td class="text-center">{{ i + 1 }}</td>
+                    <td>{{ data.ma }}</td>
+                    <td class="text-center">{{ data.ngayNhapXuat | date: 'dd/MM/yyyy' }}</td>
+                    <td class="text-center">{{ data.nhaCungCap }}</td>
+                    <td class="text-center">
+                        {{ data.nguoiDaiDien }}
+                    </td>
+                    <td class="text-center">
+                        {{ getTenNhanSu(data.nhanVienId) }}
+                    </td>
+                    <td class="text-center">
+                        {{ data.soLuong }}
+                    </td>
+                    <td class="text-center">
+                        {{ data.tongTien }}
+                    </td>
+                    <td class="text-center">
+                        <span *ngIf="data.loaiPhieu == 1">Phiếu nhập</span>
+                        <span *ngIf="data.loaiPhieu == 2">Phiếu xuất</span>
+                    </td>
+                    <td class="text-center">
+                        {{ data.ghiChu }}
+                    </td>
+                    <td class="text-center" style="display: flex; justify-content: center;">
+                        <button type="button" class="btn btn-info text-white me-2" nzTooltipTitle="xem"
+                            (click)="getById(data.id)" style="display: flex; align-items: center;">
+                            <span nz-icon nzType="eye" nzTheme="outline"></span>
+                        </button>
+                        <button type="button" class="btn btn-info text-white" nzTooltipTitle="Xuất pdf"
+                            (click)="XuatPdf(data.id)" style="display: flex; align-items: center;">
+                            <span nz-icon nzType="file-pdf" nzTheme="outline"></span>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </nz-table>
+    </div>
+
 </div>
 
 <nz-modal [nzVisible]="isShowModal" [nzTitle]="title" (nzOnCancel)="isShowModal = false" [nzWidth]="1500"
@@ -90,25 +101,26 @@
         <form [formGroup]="form" nz-row [nzGutter]="16">
             <div nz-col class="gutter-row form-group mt-3" [nzSpan]="6">
                 <label class="control-label me-3 label-form" for="ma"> Mã: </label>
-                <input nz-input id="ma" formControlName="ma" placeholder="Nhập mã phiếu" class="form-control" [disabled]="isDetail"/>
+                <input nz-input id="ma" formControlName="ma" placeholder="Nhập mã phiếu" class="form-control"
+                    [disabled]="isDetail" />
             </div>
             <div nz-col class="gutter-row form-group mt-3" [nzSpan]="6">
                 <label class="control-label me-3 label-form" for="ngayNhapXuat"> Ngày nhập hoặc xuất: </label>
-                    <input nz-input type="date" class="form-control" formControlName="ngayNhapXuat" id="ngayNhapXuat" [disabled]="isDetail"
-                    placeholder="Chọn ngày tạo phiếu" />
+                <input nz-input type="date" class="form-control" formControlName="ngayNhapXuat" id="ngayNhapXuat"
+                    [disabled]="isDetail" placeholder="Chọn ngày tạo phiếu" />
             </div>
             <div nz-col class="gutter-row form-group mt-3" [nzSpan]="6">
                 <label class="control-label me-3 label-form" for="nhaCungCap"> Nhà cung cấp: </label>
-                <input nz-input id="nhaCungCap" formControlName="nhaCungCap" placeholder="Nhập nhà cung cấp" [disabled]="isDetail"
-                    class="form-control" />
+                <input nz-input id="nhaCungCap" formControlName="nhaCungCap" placeholder="Nhập nhà cung cấp"
+                    [disabled]="isDetail" class="form-control" />
             </div>
             <div nz-col class="gutter-row form-group mt-3" [nzSpan]="6">
                 <label class="control-label me-3 label-form" for="nguoiDaiDien"> Người đại diện: </label>
-                <input nz-input id="nguoiDaiDien" formControlName="nguoiDaiDien" placeholder="Nhập tên người đại diện" [disabled]="isDetail"
-                    class="form-control" />
+                <input nz-input id="nguoiDaiDien" formControlName="nguoiDaiDien" placeholder="Nhập tên người đại diện"
+                    [disabled]="isDetail" class="form-control" />
             </div>
 
-            <div nz-col class="gutter-row form-group mt-3" [nzSpan]="6">
+            <!-- <div nz-col class="gutter-row form-group mt-3" [nzSpan]="6">
                 <label class="control-label me-3 label-form" for="nhanVienId"> Nhân viên: </label>
                 <select formControlName="nhanVienId" id="nhanVienId" class="form-control" [disabled]="isDetail">
                     <option value="" selected>Chọn nhân viên</option>
@@ -116,22 +128,25 @@
                         {{ item.ten }}
                     </option>
                 </select>
-            </div>
+            </div> -->
             <div nz-col class="gutter-row form-group mt-3" [nzSpan]="6">
                 <label class="control-label me-3 label-form" for="soLuong">
                     Số lượng
                 </label>
-                <input nz-input id="soLuong" formControlName="soLuong" placeholder="Nhập số lượng" class="form-control" [disabled]="isDetail"/>
+                <input nz-input id="soLuong" formControlName="soLuong" placeholder="Nhập số lượng" class="form-control"
+                    [disabled]="isDetail" />
             </div>
             <div nz-col class="gutter-row form-group mt-3" [nzSpan]="6">
                 <label class="control-label me-3 label-form" for="tongTien">
                     Tổng tiền:</label>
-                <input nz-input id="tongTien" formControlName="tongTien" placeholder="Nhập tổng tiền" class="form-control" [disabled]="isDetail"/>
+                <input nz-input id="tongTien" formControlName="tongTien" placeholder="Nhập tổng tiền"
+                    class="form-control" [disabled]="isDetail" />
             </div>
-            <div nz-col class="gutter-row form-group mt-3" [nzSpan]="6">
+            <div nz-col class="gutter-row form-group mt-3 mb-3" [nzSpan]="24">
                 <label class="control-label me-3 label-form" for="ghiChu">
                     Ghi chú:</label>
-                <input nz-input id="ghiChu" formControlName="ghiChu" placeholder="Nhập ghi chú" class="form-control" [disabled]="isDetail"/>
+                <textarea id="ghiChu" formControlName="ghiChu" placeholder="Nhập ghi chú" class="form-control" rows="4"
+                    cols="50"></textarea>
             </div>
         </form>
         <nz-table #assetTable nzShowSizeChanger [nzPageSize]="pageSize" [nzPageIndex]="pageIndex"
@@ -159,12 +174,12 @@
                     <th nzWidth="200px">
                         Tình trạng
                     </th>
-                    <th nzWidth="200px">
+                    <!-- <th nzWidth="200px">
                         Khoa
                     </th>
                     <th nzWidth="200px">
                         Nhân viên
-                    </th>
+                    </th> -->
                     <th nzWidth="200px">
                         Serial
                     </th>
@@ -183,10 +198,10 @@
             <tbody>
                 <tr *ngFor="let data of assetTable.data; let i = index">
                     <td>
-                        <input nz-input [(ngModel)]="data.ma" [disabled]="isDetail" nz-tooltip style="width: 100%"/>
+                        <input nz-input [(ngModel)]="data.ma" [disabled]="isDetail" nz-tooltip style="width: 100%" />
                     </td>
                     <td>
-                        <nz-select [(ngModel)]="data.thietBiYTeId" [disabled]="isDetail" nzPlaceHolder="Chọn thiết bị" 
+                        <nz-select [(ngModel)]="data.thietBiYTeId" [disabled]="isDetail" nzPlaceHolder="Chọn thiết bị"
                             style="width: 100%">
                             <nz-option [nzValue]="tb.id" [nzLabel]="tb.ten" *ngFor="let tb of dsThietBi"></nz-option>
                         </nz-select>
@@ -211,7 +226,7 @@
                         <input nz-input [(ngModel)]="data.tinhTrang" [disabled]="isDetail" nz-tooltip
                             style="width: 100%" />
                     </td>
-                    <td>
+                    <!-- <td>
                         <nz-select [(ngModel)]="data.khoaId" [disabled]="isDetail" nzPlaceHolder="Chọn khoa"
                             style="width: 100%">
                             <nz-option [nzValue]="tb.id" [nzLabel]="tb.ten" *ngFor="let tb of dsKhoa"></nz-option>
@@ -222,7 +237,7 @@
                             style="width: 100%">
                             <nz-option [nzValue]="tb.id" [nzLabel]="tb.ten" *ngFor="let tb of dsNhanSu"></nz-option>
                         </nz-select>
-                    </td>
+                    </td> -->
                     <td>
                         <input nz-input [(ngModel)]="data.serial" [disabled]="isDetail" nz-tooltip
                             style="width: 100%" />

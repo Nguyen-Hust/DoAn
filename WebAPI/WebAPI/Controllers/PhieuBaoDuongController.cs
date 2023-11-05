@@ -6,6 +6,7 @@ using WebAPI.Data;
 using WebAPI.Entities;
 using WebAPI.Enums;
 using WebAPI.Models.PhieuBaoDuong;
+using WebAPI.Models.PhieuNhapXuat;
 using WebAPI.Models.PhieuSuaChua;
 using WebAPI.Models.Shared;
 using WebAPI.Models.ThietBiYTe;
@@ -210,6 +211,25 @@ namespace WebAPI.Controllers
                 }).ToList();
             return items;
 
+        }
+
+        [HttpGet]
+        [Route("get-total-phieu-bao-duong")]
+        public async Task<ThongKeDto> GetThongKePhieuBaoDuong()
+        {
+            var phieuBaoDuong = await _context.PhieuBaoDuong.Include(_ => _.ChiTietPhieuBaoDuong).ToListAsync();
+            var tongSo = 0;
+            var tongTien = 0;
+            foreach (var item in phieuBaoDuong)
+            {
+                tongSo = tongSo + item.ChiTietPhieuBaoDuong.Count;
+            }
+            var result = new ThongKeDto()
+            {
+                TongSoLuong = tongSo,
+                TongSoTien = tongTien
+            };
+            return result;
         }
     }
 }

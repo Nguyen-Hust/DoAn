@@ -4,6 +4,7 @@ import { Observable } from "rxjs";
 import configurl from "../../../assets/config/config.json";
 import { ThietBiYTeDto } from "src/app/models/ThietBiYTeDto";
 import { PhieuBaoDuongDto } from "src/app/models/PhieuBaoDuongDto";
+import { ThongKeDto } from "src/app/models/ThongKeDto";
 
 @Injectable({
   providedIn: "root",
@@ -92,6 +93,18 @@ export class PhieuBaoDuongService {
     };
     return this.http.get<ThietBiYTeDto[]>(
       this.url + "get-danh-sach-thiet-bi",
+      httpHeaders
+    );
+  }
+
+  getThongKeBaoDuong(): Observable<ThongKeDto> {
+    const httpHeaders = {
+      headers: new HttpHeaders({
+        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+      }),
+    };
+    return this.http.get<ThongKeDto>(
+      this.url + "get-total-phieu-bao-duong",
       httpHeaders
     );
   }

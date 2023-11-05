@@ -1,14 +1,7 @@
-<nav class="navbar navbar-expand-lg navbar navbar-dark bg-dark">
-  <a class="navbar-brand" href="#">Product Application</a>
-  <button
-    class="navbar-toggler"
-    type="button"
-    data-toggle="collapse"
-    data-target="#navbarText"
-    aria-controls="navbarText"
-    aria-expanded="false"
-    aria-label="Toggle navigation"
-  >
+<nav class="navbar navbar-expand-lg navbar navbar-dark bg-dark mb-3">
+  <a class="navbar-brand" href="#">THIẾT BỊ Y TẾ</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText"
+    aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="collapse navbar-collapse" id="navbarText">
@@ -22,6 +15,101 @@
     </ul>
   </div>
 </nav>
-<div *ngIf="isUserAuthenticated()" style="color: green">
-  <h2>Welcome to the Product Application</h2>
+<div *ngIf="isUserAuthenticated()" style="color: green" class="row">
+  <div class="col-md-4 mb-3 mt-3">
+    <div class="card">
+      <div class="card-body">
+        <div class="item-total">
+          <div class="title">Tổng phiếu nhập</div>
+          <div class="info">
+            <strong>{{ danhSach.tongPhieuNhap || 0| number: '1.0-0' }}</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4 mb-3 mt-3">
+    <div class="card">
+      <div class="card-body">
+        <div class="item-total">
+          <div class="title">Tổng phiếu xuất</div>
+          <div class="info">
+            <strong>{{ danhSach.tongPhieuXuat || 0| number: '1.0-0' }}</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4 mb-3 mt-3">
+    <div class="card">
+      <div class="card-body">
+        <div class="item-total">
+          <div class="title">Tổng phiếu sửa chữa</div>
+          <div class="info">
+            <strong>{{ danhSach.tongPhieuSuaChua || 0| number: '1.0-0' }}</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4 mb-3 mt-3">
+    <div class="card">
+      <div class="card-body">
+        <div class="item-total">
+          <div class="title">Tổng phiếu Bảo dưỡng</div>
+          <div class="info">
+            <strong>{{ danhSach.tongPhieuBaoDuong || 0| number: '1.0-0' }}</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4 mb-3 mt-3">
+    <div class="card">
+      <div class="card-body">
+        <div class="item-total">
+          <div class="title">Tổng phiếu thu hồi</div>
+          <div class="info">
+            <strong>{{ danhSach.tongPhieuThuHoi || 0| number: '1.0-0' }}</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4 mb-3 mt-3">
+    <div class="card">
+      <div class="card-body">
+        <div class="item-total">
+          <div class="title">Tổng phiếu bàn giao</div>
+          <div class="info">
+            <strong>{{ danhSach.tongPhieuBanGiao || 0| number: '1.0-0' }}</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 mb-3 mt-3">
+    <div class="card">
+      <div class="card-body">
+        <div class="item-total">
+          <div class="title">Tổng tiền nhập</div>
+          <div class="info">
+            <strong>{{ danhSach.tongTienNhap || 0| number: '1.0-0' }}</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 mb-3 mt-3">
+    <div class="card">
+      <div class="card-body">
+        <div class="item-total">
+          <div class="title">Tổng xuất</div>
+          <div class="info">
+            <strong>{{ danhSach.tongTienXuat || 0| number: '1.0-0' }}</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

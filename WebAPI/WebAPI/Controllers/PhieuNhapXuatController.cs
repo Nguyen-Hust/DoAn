@@ -384,6 +384,46 @@ namespace WebAPI.Controllers
             return items;
 
         }
+
+        [HttpGet]
+        [Route("get-total-phieu-nhap")]
+        public async Task<ThongKeDto> GetThongKeNhap()
+        {
+            var phieunhap = await _context.PhieuNhapXuat.Where(_ => _.LoaiPhieu == 1).ToListAsync();
+            var tongSo = 0;
+            var tongTien = 0;
+            foreach(var item in phieunhap)
+            {
+                tongSo = tongSo + (int)item.SoLuong;
+                tongTien = tongTien + (int)item.TongTien;
+            }
+            var result = new ThongKeDto()
+            {
+                TongSoLuong = tongSo,
+                TongSoTien = tongTien
+            };
+            return result;
+        }
+
+        [HttpGet]
+        [Route("get-total-phieu-xuat")]
+        public async Task<ThongKeDto> GetThongKeXuat()
+        {
+            var phieunhap = await _context.PhieuNhapXuat.Where(_ => _.LoaiPhieu == 2).ToListAsync();
+            var tongSo = 0;
+            var tongTien = 0;
+            foreach (var item in phieunhap)
+            {
+                tongSo = tongSo + (int)item.SoLuong;
+                tongTien = tongTien + (int)item.TongTien;
+            }
+            var result = new ThongKeDto()
+            {
+                TongSoLuong = tongSo,
+                TongSoTien = tongTien
+            };
+            return result;
+        }
     }
 }
 

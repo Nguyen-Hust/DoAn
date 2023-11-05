@@ -10,6 +10,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { LoaderService } from 'src/app/services/loader.service';
 import { finalize } from 'rxjs';
+import { ThongKeDto } from 'src/app/models/ThongKeDto';
 
 @Component({
   selector: 'app-bao-cao-nhap',
@@ -18,6 +19,7 @@ import { finalize } from 'rxjs';
 })
 export class BaoCaoNhapComponent implements OnInit {
   danhSach: PhieuNhapXuatDto[];
+  thongKe = new  ThongKeDto;
   form: FormGroup;
 
   id = 0;
@@ -68,7 +70,13 @@ export class BaoCaoNhapComponent implements OnInit {
       thongTinChiTietThietBiDtos: this.formbulider.array([])
     });
     this.getList();
+    this.getThongKe();
+  }
 
+  getThongKe() {
+    this.service.getThongKeNhap().subscribe(val => {
+      this.thongKe = val;
+    })
   }
 
   getList(pageIndex = 1) {

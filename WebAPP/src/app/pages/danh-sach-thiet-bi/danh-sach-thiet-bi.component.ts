@@ -9,6 +9,8 @@ import { PhieuNhapXuatService } from '../phieu-nhap-xuat/phieu-nhap-xuat.service
 import { NhanSuService } from '../nhan-su/nhan-su.service';
 import { finalize } from 'rxjs';
 import { LoaderService } from 'src/app/services/loader.service';
+import { NzDrawerService } from 'ng-zorro-antd/drawer';
+
 
 @Component({
   selector: 'app-danh-sach-thiet-bi',
@@ -38,7 +40,8 @@ export class DanhSachThietBiComponent implements OnInit {
     private nhanSuService: NhanSuService,
     private toastr: ToastrService,
     private modal: NzModalService,
-    private loadingService: LoaderService
+    private loadingService: LoaderService,
+    private drawerService: NzDrawerService,
   ) {}
   ngOnInit(): void {
     this.form = this.formbulider.group({
@@ -146,6 +149,11 @@ export class DanhSachThietBiComponent implements OnInit {
         this.isShowModal = false;
         this.getList();
       });
+  }
+
+
+  importExcel() {
+    console.log("test");
   }
 
 }

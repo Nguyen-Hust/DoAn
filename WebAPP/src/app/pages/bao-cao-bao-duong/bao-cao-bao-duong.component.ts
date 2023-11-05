@@ -7,6 +7,7 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 import { LoaderService } from 'src/app/services/loader.service';
 import { finalize } from 'rxjs';
 import { BaoCaoService } from '../bao-cao-nhap/bao-cao.service';
+import { ThongKeDto } from 'src/app/models/ThongKeDto';
 
 @Component({
   selector: 'app-bao-cao-bao-duong',
@@ -15,6 +16,7 @@ import { BaoCaoService } from '../bao-cao-nhap/bao-cao.service';
 })
 export class BaoCaoBaoDuongComponent implements OnInit  {
   danhSach: PhieuBaoDuongDto[];
+  thongKe = new ThongKeDto;
 
 
   id = 0;
@@ -49,6 +51,13 @@ export class BaoCaoBaoDuongComponent implements OnInit  {
     });
 
     this.getList();
+    this.getThongKe();
+  }
+
+  getThongKe() {
+    this.service.getThongKeBaoDuong().subscribe(val => {
+      this.thongKe = val;
+    })
   }
 
   getList(pageIndex = 1) {

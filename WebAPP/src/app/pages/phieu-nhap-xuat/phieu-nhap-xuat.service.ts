@@ -5,6 +5,7 @@ import { Observable } from "rxjs";
 import { ThietBiYTeDto } from "src/app/models/ThietBiYTeDto";
 import { NhanSuDto } from "src/app/models/NhanSuDto";
 import { PhieuNhapXuatDto } from "src/app/models/PhieuNhapXuatDto";
+import { ThongKeDto } from "src/app/models/ThongKeDto";
 
 @Injectable({
     providedIn: "root",
@@ -110,6 +111,31 @@ import { PhieuNhapXuatDto } from "src/app/models/PhieuNhapXuatDto";
         };
         return this.http.get<NhanSuDto[]>(
           this.url + "get-danh-sach-nhan-vien",
+          httpHeaders
+        );
+      }
+
+
+      getThongKeNhap(): Observable<ThongKeDto> {
+        const httpHeaders = {
+          headers: new HttpHeaders({
+            Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+          }),
+        };
+        return this.http.get<ThongKeDto>(
+          this.url + "get-total-phieu-nhap",
+          httpHeaders
+        );
+      }
+
+      getThongKeXuat(): Observable<ThongKeDto> {
+        const httpHeaders = {
+          headers: new HttpHeaders({
+            Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+          }),
+        };
+        return this.http.get<ThongKeDto>(
+          this.url + "get-total-phieu-xuat",
           httpHeaders
         );
       }
