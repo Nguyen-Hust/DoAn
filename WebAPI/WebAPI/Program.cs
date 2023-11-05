@@ -4,6 +4,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using WebAPI.Data;
+using WebAPI.Models.Mail;
+using WebAPI.Service;
 using ConfigurationManager = WebAPI.ConfigurationManager;
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -63,6 +65,9 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(ConfigurationManager.AppSetting["JWT:Secret"]))
     };
 });
+builder.Services.Configure<MailSettings>(builder.Configuration.GetSection(nameof(MailSettings)));
+builder.Services.AddTransient<ISendMailService, SendMailService>();
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())

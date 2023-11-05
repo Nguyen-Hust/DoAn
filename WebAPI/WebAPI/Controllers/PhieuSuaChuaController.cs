@@ -5,9 +5,11 @@ using System.Security.Claims;
 using WebAPI.Data;
 using WebAPI.Entities;
 using WebAPI.Enums;
+using WebAPI.Models.Mail;
 using WebAPI.Models.PhieuSuaChua;
 using WebAPI.Models.Shared;
 using WebAPI.Models.ThietBiYTe;
+using WebAPI.Service;
 
 namespace WebAPI.Controllers
 {
@@ -16,9 +18,11 @@ namespace WebAPI.Controllers
     public class PhieuSuaChuaController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-        public PhieuSuaChuaController(ApplicationDbContext context)
+        private readonly ISendMailService _sendMailService;
+        public PhieuSuaChuaController(ApplicationDbContext context, ISendMailService sendMailService)
         {
             _context = context;
+            _sendMailService = sendMailService;
         }
         [HttpPost]
         [Route("get-list")]
@@ -93,6 +97,25 @@ namespace WebAPI.Controllers
                     UserId = users[i].AccountId,
                 };
                 t.Add(notiUser);
+
+                try
+                {
+                    if (!string.IsNullOrEmpty(users[i].Email))
+                    {
+                        MailContent content = new MailContent
+                        {
+                            To = users[i].Email,
+                            Subject = "Sửa chữa thiết bị",
+                            Body = @$"<p>Dear <strong>{users[i].Ten}</strong></p>
+                                <p>Phiếu sửa chữa: <strong>{entity.Ma}</strong> được tạo mới</p>
+                                <p>Happy closing !!!</p>>"
+                        };
+
+                        await _sendMailService.SendMail(content);
+                    }
+                }
+                catch {}
+                
             }
             _context.ThongBaoNguoiDung.AddRange(t);
 
@@ -173,6 +196,23 @@ namespace WebAPI.Controllers
                         UserId = users[i].AccountId,
                     };
                     t.Add(notiUser);
+                    try
+                    {
+                        if (!string.IsNullOrEmpty(users[i].Email))
+                        {
+                            MailContent content = new MailContent
+                            {
+                                To = users[i].Email,
+                                Subject = "Sửa chữa thiết bị",
+                                Body = @$"<p>Dear <strong>{users[i].Ten}</strong></p>
+                                <p>Phiếu sửa chữa: <strong>{entity.Ma}</strong> được duyệt</p>
+                                <p>Happy closing !!!</p>>"
+                            };
+
+                            await _sendMailService.SendMail(content);
+                        }
+                    }
+                    catch { }
                 }
                 _context.ThongBaoNguoiDung.AddRange(t);
                 await _context.SaveChangesAsync();
@@ -202,7 +242,7 @@ namespace WebAPI.Controllers
                 var t = new List<ThongBaoNguoiDungEntity>();
                 var thongBao = new ThongBaoEntity
                 {
-                    Message = $"Phiếu sửa chữa: {entity.Ma} được hoàn thành sửa chữa",
+                    Message = $"Phiếu sửa chữa: {entity.Ma} đã hoàn thành sửa chữa",
                     Subject = "Sửa chữa thiết bị",
                     SendTime = DateTime.Now,
                     MetaData = "",
@@ -218,6 +258,23 @@ namespace WebAPI.Controllers
                         UserId = users[i].AccountId,
                     };
                     t.Add(notiUser);
+                    try
+                    {
+                        if (!string.IsNullOrEmpty(users[i].Email))
+                        {
+                            MailContent content = new MailContent
+                            {
+                                To = users[i].Email,
+                                Subject = "Sửa chữa thiết bị",
+                                Body = @$"<p>Dear <strong>{users[i].Ten}</strong></p>
+                                <p>Phiếu sửa chữa: <strong>{entity.Ma}</strong> đã hoàn thành sửa chữa</p>
+                                <p>Happy closing !!!</p>>"
+                            };
+
+                            await _sendMailService.SendMail(content);
+                        }
+                    }
+                    catch { }
                 }
                 _context.ThongBaoNguoiDung.AddRange(t);
                 await _context.SaveChangesAsync();
@@ -263,6 +320,23 @@ namespace WebAPI.Controllers
                         UserId = users[i].AccountId,
                     };
                     t.Add(notiUser);
+                    try
+                    {
+                        if (!string.IsNullOrEmpty(users[i].Email))
+                        {
+                            MailContent content = new MailContent
+                            {
+                                To = users[i].Email,
+                                Subject = "Sửa chữa thiết bị",
+                                Body = @$"<p>Dear <strong>{users[i].Ten}</strong></p>
+                                <p>Phiếu sửa chữa: <strong>{entity.Ma}</strong> bị từ chối</p>
+                                <p>Happy closing !!!</p>>"
+                            };
+
+                            await _sendMailService.SendMail(content);
+                        }
+                    }
+                    catch { }
                 }
                 _context.ThongBaoNguoiDung.AddRange(t);
                 await _context.SaveChangesAsync();

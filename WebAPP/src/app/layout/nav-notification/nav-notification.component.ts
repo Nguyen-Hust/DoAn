@@ -12,7 +12,9 @@ import { NotificationService } from "./notification.service";
   templateUrl: "./nav-notification.component.html",
   styles: [
     `
-      .dropdown-notification {
+      .noti-scroll {
+        height: 400px;
+        overflow-y: scroll;
       }
       .notify-item-nodata {
         min-height: 100px;
