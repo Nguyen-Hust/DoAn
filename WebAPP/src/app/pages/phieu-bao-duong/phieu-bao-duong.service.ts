@@ -34,6 +34,20 @@ export class PhieuBaoDuongService {
     );
   }
 
+  update(input: any): Observable<any> {
+    const httpHeaders = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+      }),
+    };
+    return this.http.post<any>(
+      this.url + "update?id=" + input.id,
+      input,
+      httpHeaders
+    );
+  }
+
   delete(id: number): Observable<number> {
     const httpHeaders = {
       headers: new HttpHeaders({

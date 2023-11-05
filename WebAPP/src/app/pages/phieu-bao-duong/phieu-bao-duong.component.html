@@ -76,13 +76,10 @@
           <span class="badge bg-secondary" *ngIf="data.trangThai == 0"
             >Chờ duyệt</span
           >
-          <span class="badge bg-danger" *ngIf="data.trangThai == 2"
-            >Từ chối</span
-          >
           <span class="badge bg-primary" *ngIf="data.trangThai == 1"
             >Duyệt phiếu</span
           >
-          <span class="badge bg-success" *ngIf="data.trangThai == 3"
+          <span class="badge bg-success" *ngIf="data.trangThai == 2"
             >Đã sửa xong</span
           >
         </td>
@@ -95,6 +92,16 @@
             (click)="xemChiTiet(data.id)"
           >
             <span nz-icon nzType="eye" nzTheme="outline"></span>
+          </button>
+          <button
+            nz-tooltip
+            type="button"
+            class="btn btn-info me-2"
+            nzTooltipTitle="Sửa"
+            (click)="openModalUpdate(data)"
+            *ngIf="data.trangThai == 0"
+          >
+            <span nz-icon nzType="edit" nzTheme="outline"></span>
           </button>
           <button
             nz-tooltip

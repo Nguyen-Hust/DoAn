@@ -1,0 +1,91 @@
+<span class="noti-list notification-list">
+  <nz-badge [nzCount]="totalCountUnRead">
+    <a
+      class="noti-content"
+      href="#"
+      role="button"
+      data-bs-toggle="dropdown"
+      data-bs-auto-close="outside"
+      aria-expanded="false"
+      (click)="getNotification()"
+    >
+      <svg
+        width="28"
+        height="28"
+        viewBox="0 0 28 28"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M9.74375 23.6156C10.725 24.863 12.2665 25.6668 14 25.6668C15.7335 25.6668 17.275 24.863 18.2563 23.6157C15.4308 23.9985 12.5692 23.9985 9.74375 23.6156Z"
+          fill="#1890FF"
+        />
+        <path
+          d="M21.874 10.5002V11.3216C21.874 12.3074 22.1553 13.2712 22.6826 14.0915L23.9746 16.1015C25.1547 17.9375 24.2538 20.4331 22.2012 21.0136C16.8318 22.5325 11.1682 22.5325 5.79876 21.0136C3.74622 20.4331 2.84529 17.9375 4.02542 16.1015L5.31743 14.0915C5.84467 13.2712 6.12602 12.3074 6.12602 11.3216V10.5002C6.12602 5.98984 9.65132 2.3335 14 2.3335C18.3487 2.3335 21.874 5.98984 21.874 10.5002Z"
+          fill="#1890FF"
+        />
+      </svg>
+    </a>
+    <div
+      class="dropdown-menu dropdown-menu-end dropdown-lg"
+      style="width: 320px"
+    >
+      <nz-spin [nzSpinning]="loading">
+        <!-- item-->
+        <div class="px-3 pt-2 noti-title">
+          <h5 class="m-0">
+            <span class="float-end">
+              <a
+                href="javascript:void(0);"
+                class="text-dark"
+                (click)="clearAll()"
+              >
+                <small>Read All</small>
+              </a> </span
+            >Notification
+          </h5>
+        </div>
+
+        <div class="noti-scroll" data-simplebar>
+          <div
+            class="notify-item notify-item-nodata active"
+            *ngIf="totalCount == 0"
+          >
+            <div class="text-center pt-4">
+              <span nz-icon nzType="notification" nzTheme="outline"></span>
+              <br />
+              No notifications yet
+            </div>
+          </div>
+
+          <ng-container
+            *ngFor="let notification of listNotification; index as i"
+          >
+            <div
+              href="javascript:void(0);"
+              class="notify-item {{ notification.isRead ? '' : 'active' }}"
+            >
+              <p class="notify-details">{{ notification.subject }}</p>
+              <p class="text-muted mb-0 user-msg">
+                <small>{{ notification.message }}</small>
+              </p>
+              <p style="font-weight: 500" class="mt-1">
+                <small>{{ notification.timeSince }} ago</small>
+              </p>
+            </div>
+          </ng-container>
+        </div>
+
+        <a
+          *ngIf="totalCount > listNotification.length"
+          href="javascript:void(0);"
+          (click)="seeMore()"
+          class="dropdown-item text-center text-primary notify-item notify-all"
+        >
+          View more
+          <i class="fe-arrow-right"></i>
+        </a>
+      </nz-spin>
+    </div>
+  </nz-badge>
+</span>

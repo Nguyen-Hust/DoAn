@@ -72,6 +72,30 @@ namespace WebAPI.Controllers
             await _context.SaveChangesAsync();
             entity.Ma = $"PSC_{entity.Id}";
             _context.PhieuSuaChua.Update(entity);
+
+            var users = _context.NhanSu.Where(_ => !string.IsNullOrEmpty(_.AccountId) && _.LaQuanLyThietBi == true).ToList();
+            var t = new List<ThongBaoNguoiDungEntity>();
+            var thongBao = new ThongBaoEntity
+            {
+                Message = $"Phiếu sửa chữa: {entity.Ma} được tạo mới",
+                Subject = "Sửa chữa thiết bị",
+                SendTime = DateTime.Now,
+                MetaData = "",
+            };
+            _context.ThongBao.Update(thongBao);
+            await _context.SaveChangesAsync();
+
+            for (int i = 0; i < users.Count; i++)
+            {
+                var notiUser = new ThongBaoNguoiDungEntity
+                {
+                    ThongBaoId = thongBao.Id,
+                    UserId = users[i].AccountId,
+                };
+                t.Add(notiUser);
+            }
+            _context.ThongBaoNguoiDung.AddRange(t);
+
             await _context.SaveChangesAsync();
             return input;
         }
@@ -128,6 +152,30 @@ namespace WebAPI.Controllers
                 entity.TrangThai = (int)TrangThaiPhieuSuaChuaEnum.Approve;
                 _context.PhieuSuaChua.Update(entity);
                 await _context.SaveChangesAsync();
+
+                var users = _context.NhanSu.Where(_ => !string.IsNullOrEmpty(_.AccountId) && _.Id == entity.NhanVienId).ToList();
+                var t = new List<ThongBaoNguoiDungEntity>();
+                var thongBao = new ThongBaoEntity
+                {
+                    Message = $"Phiếu sửa chữa: {entity.Ma} được duyệt",
+                    Subject = "Sửa chữa thiết bị",
+                    SendTime = DateTime.Now,
+                    MetaData = "",
+                };
+                _context.ThongBao.Update(thongBao);
+                await _context.SaveChangesAsync();
+
+                for (int i = 0; i < users.Count; i++)
+                {
+                    var notiUser = new ThongBaoNguoiDungEntity
+                    {
+                        ThongBaoId = thongBao.Id,
+                        UserId = users[i].AccountId,
+                    };
+                    t.Add(notiUser);
+                }
+                _context.ThongBaoNguoiDung.AddRange(t);
+                await _context.SaveChangesAsync();
             }
             else
             {
@@ -149,6 +197,30 @@ namespace WebAPI.Controllers
                 entity.TrangThai = (int)TrangThaiPhieuSuaChuaEnum.Completed;
                 _context.PhieuSuaChua.Update(entity);
                 await _context.SaveChangesAsync();
+
+                var users = _context.NhanSu.Where(_ => !string.IsNullOrEmpty(_.AccountId) && _.Id == entity.NhanVienId).ToList();
+                var t = new List<ThongBaoNguoiDungEntity>();
+                var thongBao = new ThongBaoEntity
+                {
+                    Message = $"Phiếu sửa chữa: {entity.Ma} được hoàn thành sửa chữa",
+                    Subject = "Sửa chữa thiết bị",
+                    SendTime = DateTime.Now,
+                    MetaData = "",
+                };
+                _context.ThongBao.Update(thongBao);
+                await _context.SaveChangesAsync();
+
+                for (int i = 0; i < users.Count; i++)
+                {
+                    var notiUser = new ThongBaoNguoiDungEntity
+                    {
+                        ThongBaoId = thongBao.Id,
+                        UserId = users[i].AccountId,
+                    };
+                    t.Add(notiUser);
+                }
+                _context.ThongBaoNguoiDung.AddRange(t);
+                await _context.SaveChangesAsync();
             }
             else
             {
@@ -169,6 +241,30 @@ namespace WebAPI.Controllers
             {
                 entity.TrangThai = (int)TrangThaiPhieuSuaChuaEnum.Deny;
                 _context.PhieuSuaChua.Update(entity);
+                await _context.SaveChangesAsync();
+
+                var users = _context.NhanSu.Where(_ => !string.IsNullOrEmpty(_.AccountId) && _.Id == entity.NhanVienId).ToList();
+                var t = new List<ThongBaoNguoiDungEntity>();
+                var thongBao = new ThongBaoEntity
+                {
+                    Message = $"Phiếu sửa chữa: {entity.Ma} bị từ chối",
+                    Subject = "Sửa chữa thiết bị",
+                    SendTime = DateTime.Now,
+                    MetaData = "",
+                };
+                _context.ThongBao.Update(thongBao);
+                await _context.SaveChangesAsync();
+
+                for (int i = 0; i < users.Count; i++)
+                {
+                    var notiUser = new ThongBaoNguoiDungEntity
+                    {
+                        ThongBaoId = thongBao.Id,
+                        UserId = users[i].AccountId,
+                    };
+                    t.Add(notiUser);
+                }
+                _context.ThongBaoNguoiDung.AddRange(t);
                 await _context.SaveChangesAsync();
             }
             else
