@@ -50,6 +50,33 @@ namespace WebAPI.Controllers
             result.TongTienXuat = tongTienXuat;
             return result;
         }
+
+        [HttpGet]
+        [Route("get-dashbaord-chart")]
+        public async Task<List<DashBoardChartDto>> GetDashBoardChart()
+        {
+            var loaiThietBI = await _context.LoaiThietBi.ToListAsync();
+            var thietBi = await _context.ThietBiYTe.ToListAsync();
+            var dto = from tb in thietBi
+                      join ltb in loaiThietBI on tb.LoaiTTBYT equals ltb.Ma
+                      select new ThietBiDto
+                      {
+                          Id = tb.Id,
+                          Ma = tb.Ma,
+                          MDRR = tb.MDRR,
+                          Ten = tb.Ten,
+                          LoaiTTBYT = tb.LoaiTTBYT,
+                          TenLoaiTTBYT = ltb.Ten
+                      };
+            var listData = dto.ToList();
+            var result = listData.GroupBy(x => new { x.LoaiTTBYT}).Select(x => new DashBoardChartDto
+            {
+                Category = x.FirstOrDefault().TenLoaiTTBYT,
+                Value = x.Count()
+            }).ToList();
+            return result;
+
+        }
     }
 }
 
