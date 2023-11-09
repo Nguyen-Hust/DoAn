@@ -30,6 +30,8 @@
     <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.3.0" />
     <PackageReference Include="EPPlus" Version="7.0.0" />
     <PackageReference Include="iTextSharp" Version="5.5.13.3" />
+    <PackageReference Include="NPOI" Version="2.6.2" />
+    <PackageReference Include="ExcelDataReader" Version="3.6.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -47,5 +49,11 @@
     <Folder Include="Models\ThongTinChiTietThietBi\" />
     <Folder Include="Models\ExportImport\" />
     <Folder Include="Models\DashBoard\" />
+    <Folder Include="wwwroot\" />
+    <Folder Include="wwwroot\uploads\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Remove="wwwroot\" />
+    <Content Remove="wwwroot\uploads\" />
   </ItemGroup>
 </Project>

@@ -38,10 +38,12 @@
     [nzData]="danhSach"
     #borderedTable
     nzBordered
+    [nzTotal]="total"
     [nzPageIndex]="pageIndex"
     [nzPageSize]="pageSize"
-    [nzTotal]="total"
-    (nzPageIndexChange)="getList($event)"
+    [nzFrontPagination]="false"
+    [nzPageSizeOptions]="[5, 10, 20, 30, 40]"
+     (nzQueryParams)="onQueryParamsChange($event)" nzShowSizeChanger
     [nzScroll]="{ x: '1500px' }"
   >
     <thead>

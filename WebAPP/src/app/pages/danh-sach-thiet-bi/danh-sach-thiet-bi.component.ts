@@ -7,9 +7,11 @@ import { ToastrService } from 'ngx-toastr';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { PhieuNhapXuatService } from '../phieu-nhap-xuat/phieu-nhap-xuat.service';
 import { NhanSuService } from '../nhan-su/nhan-su.service';
-import { finalize } from 'rxjs';
+import { finalize, takeUntil } from 'rxjs';
 import { LoaderService } from 'src/app/services/loader.service';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
+import { ImportExcelComponent } from './import-excel/import-excel/import-excel.component';
+import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
 
 @Component({
@@ -75,8 +77,7 @@ export class DanhSachThietBiComponent implements OnInit {
     this.getList();
   }
 
-  getList(pageIndex = 1) {
-    this.pageIndex = pageIndex;
+  getList() {
     this.loadingService.setLoading(true);
     var body = {
       filter: this.filter,
@@ -153,7 +154,30 @@ export class DanhSachThietBiComponent implements OnInit {
 
 
   importExcel() {
-    console.log("test");
+    const drawerRef = this.drawerService.create({
+      nzContent: ImportExcelComponent,
+      nzWrapClassName: 'drawer-upsert',
+      nzHeight: '100vh',
+      nzPlacement: 'bottom',
+      nzContentParams: {},
+    });
+    drawerRef.afterClose
+      .pipe()
+      .subscribe(result => {
+        if (result) {
+          
+        }
+      });
+
   }
+
+  onQueryParamsChange(data: NzTableQueryParams) {
+    if (this.pageIndex != data.pageIndex || this.pageSize != data.pageSize) {
+      this.pageIndex = data.pageIndex;
+      this.pageSize = data.pageSize;
+      this.getList();
+    }
+  }
+
 
 }

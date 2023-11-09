@@ -1,9 +1,13 @@
-﻿using System;
+﻿using System.Data;
+using System.Net;
+using ExcelDataReader;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NPOI.SS.Formula.Functions;
 using WebAPI.Data;
-using WebAPI.Models.PhongBan;
+using WebAPI.Entities;
 using WebAPI.Models.Shared;
 using WebAPI.Models.ThongTinChiTietThietBi;
 
@@ -14,10 +18,12 @@ namespace WebAPI.Controllers
     public class DanhSachThietBiController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-        public DanhSachThietBiController(ApplicationDbContext context)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        public DanhSachThietBiController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
 		{
             _context = context;
-		}
+            _webHostEnvironment = webHostEnvironment;
+        }
 
         [HttpPost]
         [Route("get-list")]
@@ -132,6 +138,80 @@ namespace WebAPI.Controllers
                 return null;
             }
         }
+
+
+        [Route("UploadExcel")]
+        [HttpPost]
+        public async Task<ActionResult> ExcelUpload(IFormFile files)
+        {
+           try
+           {
+                string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", files.Name);
+                using(Stream stream = new FileStream(path, FileMode.Create))
+                {
+                    files.CopyTo(stream);
+                    var filePath = SaveFile(files);
+                    var productRequests = ExcelHelper.Import<ThongTinThietBiReaderDto>(filePath);
+                    foreach (var _ in productRequests)
+                    {
+                        var entityThietBi = new ThongTinChiTietThietBiEntity()
+                        {
+                            Id = 0,
+                            Ma = _.Ma,
+                            ThietBiYTeId = _.ThietBiYTeId,
+                            NgayNhap = _.NgayNhap,
+                            XuatXu = _.XuatXu,
+                            NamSX = _.NamSX,
+                            HangSanXuat = _.HangSanXuat,
+                            TinhTrang = _.TinhTrang,
+                            KhoaId = _.KhoaId,
+                            NhanVienId = _.NhanVienId,
+                            Serial = _.Serial,
+                            Model = _.Model,
+                            GiaTien = _.GiaTien,
+                            ThoiGianBaoDuong = _.ThoiGianBaoDuong,
+                        };
+                        _context.ThongTinChiTietThietBi.Add(entityThietBi);
+                        await _context.SaveChangesAsync();
+                    }
+                    
+                }
+                return StatusCode(StatusCodes.Status201Created);
+           }catch(Exception )
+           {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+           }
+        }
+
+        private string SaveFile(IFormFile file)
+        {
+            if (file.Length == 0)
+            {
+                throw new BadHttpRequestException("File is empty.");
+            }
+
+            var extension = Path.GetExtension(file.FileName);
+
+            var webRootPath = _webHostEnvironment.WebRootPath;
+            if (string.IsNullOrWhiteSpace(webRootPath))
+            {
+                webRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+            }
+
+            var folderPath = Path.Combine(webRootPath, "uploads");
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+
+            var fileName = $"{Guid.NewGuid()}.{extension}";
+            var filePath = Path.Combine(folderPath, fileName);
+            using var stream = new FileStream(filePath, FileMode.Create);
+            file.CopyTo(stream);
+
+            return filePath;
+        }
+
     }
 }
 

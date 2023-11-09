@@ -55,4 +55,15 @@ export class DanhSachThietBiService {
       httpHeaders
     );
   }
+
+  UploadExcel(formData: FormData) {
+    const httpHeaders = {
+      headers: new HttpHeaders({
+        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+        ContentType: "multipart/form-data",
+        Accept: 'application/json'
+      }),
+    };
+    return this.http.post(this.url + 'UploadExcel', formData, httpHeaders)
+  }
 }

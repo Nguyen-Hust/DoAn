@@ -4,7 +4,6 @@ using MimeKit;
 using WebAPI.Data;
 using WebAPI.Models.Mail;
 using WebAPI.Service;
-using static iTextSharp.text.pdf.events.IndexEvents;
 
 namespace WebAPI.Business
 {
