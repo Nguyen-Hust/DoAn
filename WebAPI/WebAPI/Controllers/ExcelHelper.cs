@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Globalization;
+using System.Threading;
+using NPOI.SS.Formula.Functions;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
+using OfficeOpenXml;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace WebAPI.Controllers
 {
@@ -113,6 +117,54 @@ namespace WebAPI.Controllers
             {
                 return null;
             }
+        }
+
+
+        public static async Task<List<List<string>>> CommonReadValueImportExcel(IFormFile File, int SheetIndex, int StartRowIndex, int MaxOfColumns)
+        {
+            var ret = new List<List<string>>();
+            ExcelPackage.LicenseContext = LicenseContext.Commercial;
+            using var stream = new MemoryStream();
+            await File.CopyToAsync(stream);
+            using var package = new ExcelPackage(stream);
+            var worksheet = package.Workbook.Worksheets[0];
+            var rowCount = worksheet.Dimension.Rows;
+            for (var row = StartRowIndex; row <= rowCount; row++)
+            {
+                var values = GetValueRow(worksheet, row, MaxOfColumns);
+                if (values?.Any(x => !string.IsNullOrEmpty(x)) == true)
+                {
+                    ret.Add(values);
+                }
+            }
+            return ret;
+        }
+
+        private static List<string> GetValueRow(ExcelWorksheet worksheet, int row, int maxColumns)
+        {
+            var ret = new List<string>();
+            for (var cell = 1; cell <= maxColumns; cell++)
+            {
+                ret.Add(GetValueCell(worksheet, row, cell));
+            }
+            return ret;
+        }
+        private static string GetValueCell(ExcelWorksheet worksheet, int row, int cell)
+        {
+            try
+            {
+                var value = worksheet.Cells[row, cell]?.Value?.ToString()?.Trim();
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    return null;
+                }
+                return value;
+            }
+            catch
+            {
+                return null;
+            }
+
         }
 
     }

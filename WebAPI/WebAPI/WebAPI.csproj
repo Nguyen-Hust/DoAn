@@ -41,6 +41,7 @@
     <None Remove="Models\ThongTinChiTietThietBi\" />
     <None Remove="Models\ExportImport\" />
     <None Remove="Models\DashBoard\" />
+    <None Remove="Models\Dtos\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\PhongBan\" />
@@ -51,6 +52,7 @@
     <Folder Include="Models\DashBoard\" />
     <Folder Include="wwwroot\" />
     <Folder Include="wwwroot\uploads\" />
+    <Folder Include="Models\Dtos\" />
   </ItemGroup>
   <ItemGroup>
     <Content Remove="wwwroot\" />

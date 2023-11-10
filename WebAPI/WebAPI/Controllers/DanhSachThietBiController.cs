@@ -1,6 +1,9 @@
 ﻿using System.Data;
+using System.Globalization;
 using System.Net;
+using System.Text;
 using ExcelDataReader;
+using Hangfire.MemoryStorage.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using NPOI.SS.Formula.Functions;
 using WebAPI.Data;
 using WebAPI.Entities;
+using WebAPI.Models.Dtos;
 using WebAPI.Models.Shared;
 using WebAPI.Models.ThongTinChiTietThietBi;
 
@@ -139,79 +143,303 @@ namespace WebAPI.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("create-list")]
+        public async Task<CommonResultDto<bool>> CreateListAsync(List<ThongTinThietBiReaderDto> input)
+        {
+            try
+            {
+                foreach (var _ in input)
+                {
+                    var entityThietBi = new ThongTinChiTietThietBiEntity()
+                    {
+                        Id = 0,
+                        Ma = _.Ma,
+                        ThietBiYTeId = _.ThietBiYTeId,
+                        NgayNhap = _.NgayNhap,
+                        XuatXu = _.XuatXu,
+                        NamSX = _.NamSX,
+                        HangSanXuat = _.HangSanXuat,
+                        TinhTrang = _.TinhTrang,
+                        KhoaId = _.KhoaId > 0 ? _.KhoaId : null,
+                        NhanVienId = _.NhanVienId > 0 ? _.NhanVienId : null,
+                        Serial = _.Serial,
+                        Model = _.Model,
+                        GiaTien = _.GiaTien,
+                        ThoiGianBaoDuong = _.ThoiGianBaoDuong,
+                    };
+                    _context.ThongTinChiTietThietBi.Add(entityThietBi);
+                    await _context.SaveChangesAsync();
+                }
+                return new CommonResultDto<bool>(true);
+            }catch(Exception ex)
+            {
+                return new CommonResultDto<bool>("Đã có lỗi sảy ra");
+            }
+        }
+
 
         [Route("UploadExcel")]
         [HttpPost]
-        public async Task<ActionResult> ExcelUpload(IFormFile files)
+        public async Task<ReadFileExcelDto<ThongTinThietBiReaderDto>> ExcelUpload(IFormFile files)
         {
-           try
-           {
-                string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", files.Name);
-                using(Stream stream = new FileStream(path, FileMode.Create))
+            var ret = new ReadFileExcelDto<ThongTinThietBiReaderDto>();
+            var excelValues = await ExcelHelper.CommonReadValueImportExcel(files, 0, 3, 13);
+            CheckFileIsCorrectTemplate(excelValues);
+            excelValues.RemoveAt(0);
+            foreach (var values in excelValues)
+            {
+                var resultDto = await GetDtoAsync(values, ret);
+                if (resultDto == null) continue;
+                if (resultDto.IsValid)
                 {
-                    files.CopyTo(stream);
-                    var filePath = SaveFile(files);
-                    var productRequests = ExcelHelper.Import<ThongTinThietBiReaderDto>(filePath);
-                    foreach (var _ in productRequests)
-                    {
-                        var entityThietBi = new ThongTinChiTietThietBiEntity()
-                        {
-                            Id = 0,
-                            Ma = _.Ma,
-                            ThietBiYTeId = _.ThietBiYTeId,
-                            NgayNhap = _.NgayNhap,
-                            XuatXu = _.XuatXu,
-                            NamSX = _.NamSX,
-                            HangSanXuat = _.HangSanXuat,
-                            TinhTrang = _.TinhTrang,
-                            KhoaId = _.KhoaId,
-                            NhanVienId = _.NhanVienId,
-                            Serial = _.Serial,
-                            Model = _.Model,
-                            GiaTien = _.GiaTien,
-                            ThoiGianBaoDuong = _.ThoiGianBaoDuong,
-                        };
-                        _context.ThongTinChiTietThietBi.Add(entityThietBi);
-                        await _context.SaveChangesAsync();
-                    }
-                    
+                    ret.ValidDtos.Add(resultDto);
                 }
-                return StatusCode(StatusCodes.Status201Created);
-           }catch(Exception )
-           {
-                return StatusCode(StatusCodes.Status500InternalServerError);
-           }
+                else
+                {
+                    ret.InValidDtos.Add(resultDto);
+                }
+            }
+            return ret;
+
+            // try
+            //{
+            //     string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", files.Name);
+            //     using(Stream stream = new FileStream(path, FileMode.Create))
+            //     {
+            //         files.CopyTo(stream);
+            //         var filePath = SaveFile(files);
+            //         var productRequests = ExcelHelper.Import<ThongTinThietBiReaderDto>(filePath);
+            //         foreach (var _ in productRequests)
+            //         {
+            //             var entityThietBi = new ThongTinChiTietThietBiEntity()
+            //             {
+            //                 Id = 0,
+            //                 Ma = _.Ma,
+            //                 ThietBiYTeId = _.ThietBiYTeId,
+            //                 NgayNhap = _.NgayNhap,
+            //                 XuatXu = _.XuatXu,
+            //                 NamSX = _.NamSX,
+            //                 HangSanXuat = _.HangSanXuat,
+            //                 TinhTrang = _.TinhTrang,
+            //                 KhoaId = _.KhoaId,
+            //                 NhanVienId = _.NhanVienId,
+            //                 Serial = _.Serial,
+            //                 Model = _.Model,
+            //                 GiaTien = _.GiaTien,
+            //                 ThoiGianBaoDuong = _.ThoiGianBaoDuong,
+            //             };
+            //             _context.ThongTinChiTietThietBi.Add(entityThietBi);
+            //             await _context.SaveChangesAsync();
+            //         }
+
+            //     }
+            //     return StatusCode(StatusCodes.Status201Created);
+            //}catch(Exception )
+            //{
+            //     return StatusCode(StatusCodes.Status500InternalServerError);
+            //}
         }
 
-        private string SaveFile(IFormFile file)
+        //private string SaveFile(IFormFile file)
+        //{
+        //    if (file.Length == 0)
+        //    {
+        //        throw new BadHttpRequestException("File is empty.");
+        //    }
+
+        //    var extension = Path.GetExtension(file.FileName);
+
+        //    var webRootPath = _webHostEnvironment.WebRootPath;
+        //    if (string.IsNullOrWhiteSpace(webRootPath))
+        //    {
+        //        webRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+        //    }
+
+        //    var folderPath = Path.Combine(webRootPath, "uploads");
+        //    if (!Directory.Exists(folderPath))
+        //    {
+        //        Directory.CreateDirectory(folderPath);
+        //    }
+
+        //    var fileName = $"{Guid.NewGuid()}.{extension}";
+        //    var filePath = Path.Combine(folderPath, fileName);
+        //    using var stream = new FileStream(filePath, FileMode.Create);
+        //    file.CopyTo(stream);
+
+        //    return filePath;
+        //}
+
+        protected void CheckFileIsCorrectTemplate(List<List<string>> excelValues)
         {
-            if (file.Length == 0)
+            var error = new StringBuilder("File excel không đúng mẫu import.");
+            var titleRow = excelValues.FirstOrDefault();
+            var titleValids = new List<string>()
+                {
+                    "Mã chi tiết thiết bị (*)", "Mã thiết bị (*)", "Ngày nhập (*)",
+                };
+            var indexValids = new List<int>()
+                {
+                    0, 1, 2,
+                };
+            for (int i = 0; i < indexValids.Count(); i++)
             {
-                throw new BadHttpRequestException("File is empty.");
+                if (titleRow[indexValids[i]] != titleValids[i])
+                {
+                    throw new Exception(error.ToString());
+                }
             }
-
-            var extension = Path.GetExtension(file.FileName);
-
-            var webRootPath = _webHostEnvironment.WebRootPath;
-            if (string.IsNullOrWhiteSpace(webRootPath))
-            {
-                webRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
-            }
-
-            var folderPath = Path.Combine(webRootPath, "uploads");
-            if (!Directory.Exists(folderPath))
-            {
-                Directory.CreateDirectory(folderPath);
-            }
-
-            var fileName = $"{Guid.NewGuid()}.{extension}";
-            var filePath = Path.Combine(folderPath, fileName);
-            using var stream = new FileStream(filePath, FileMode.Create);
-            file.CopyTo(stream);
-
-            return filePath;
         }
 
+        private async Task<ReadFileExcelItemDto<ThongTinThietBiReaderDto>> GetDtoAsync(List<string> values, ReadFileExcelDto<ThongTinThietBiReaderDto> ret)
+        {
+            var arrValue = values.ToArray();
+            List<string> errors = new List<string>();
+            var dto = new ThongTinThietBiReaderDto()
+            {
+                XuatXu = arrValue[3],
+                NamSX = tryInt(arrValue[4]),
+                HangSanXuat = arrValue[5],
+                TinhTrang = tryInt(arrValue[6]),
+                KhoaId = await GetKhoa(arrValue[7]),
+                NhanVienId = await GetNhanVien(arrValue[8]),
+                Serial = arrValue[9],
+                Model = arrValue[10],
+                GiaTien = tryDecimal(arrValue[11]),
+                ThoiGianBaoDuong = tryInt(arrValue[12])
+            };
+
+            if (string.IsNullOrEmpty(arrValue[0]))
+            {
+                errors.Add("Mã chi tiết sản phẩm không được để trống");
+            }
+            else
+            {
+                var Ma = await CheckExistMaThietBi(arrValue[0]);
+                dto.Ma = arrValue[0];
+                if (Ma > 0)
+                {
+                    errors.Add("Mã chi tiết thiết bị không hợp lệ");
+                }
+            }
+
+            if (string.IsNullOrEmpty(arrValue[1]))
+            {
+                errors.Add("Mã thiết bị không được để trống");
+            }
+            else
+            {
+                var productUnit = await CheckMaThietBi(arrValue[1]);
+                dto.ThietBiYTeId = productUnit;
+                if (productUnit == 0)
+                {
+                    errors.Add("Mã thiết bị không hợp ");
+                }
+            }
+
+            if (string.IsNullOrEmpty(arrValue[2]))
+            {
+                errors.Add("Ngày nhập không được để trống");
+            }
+            else
+            {
+                var inputDate = ValidateDate(arrValue[2]);
+                dto.NgayNhap = (DateTime)inputDate;
+                if (!inputDate.HasValue)
+                {
+                    errors.Add("Ngày nhập không hợp lệ");
+                }
+            }
+
+            if (errors.Count() > 0)
+            {
+                return new ReadFileExcelItemDto<ThongTinThietBiReaderDto>()
+                {
+                    Data = dto,
+                    InvalidErrors = errors
+                };
+            }
+            return new ReadFileExcelItemDto<ThongTinThietBiReaderDto>()
+            {
+                Data = dto,
+            };
+        }
+
+        private async Task<int?> CheckExistMaThietBi(string code)
+        {
+            var listChiThietThietBi = await _context.ThongTinChiTietThietBi.ToListAsync();
+            var ExistMa = listChiThietThietBi.FirstOrDefault(x => x.Ma == code);
+            return ExistMa == null ? 0 : ExistMa.Id;
+        }
+
+        private async Task<int?> GetKhoa(string code)
+        {
+            try
+            {
+                var listKhoa = await _context.Khoa.ToListAsync();
+                var khoa = listKhoa.FirstOrDefault(x => x.Ma == code);
+                return khoa == null ? 0 : khoa.Id;
+            }catch(Exception ex)
+            {
+                return null;
+            }
+        }
+
+        private async Task<int?> GetNhanVien(string code)
+        {
+            try
+            {
+                var listNhanVien = await _context.NhanSu.ToListAsync();
+                var nhanVien = listNhanVien.FirstOrDefault(x => x.Ma == code);
+                return nhanVien == null ? 0 : nhanVien.Id;
+            }catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        private async Task<int> CheckMaThietBi(string code)
+        {
+            var listThietBi = await _context.ThietBiYTe.ToListAsync();
+            var codeConcept = listThietBi.FirstOrDefault(x => x.Ma == code);
+            return codeConcept == null ? 0 : codeConcept.Id;
+        }
+
+        private int? tryInt(string number)
+        {
+            if (Int32.TryParse(number, out int b))
+            {
+                return b;
+            }else
+            {
+                return null;
+            }
+        }
+
+        private decimal? tryDecimal(string number)
+        {
+            if (Decimal.TryParse(number, out decimal b))
+            {
+                return b;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        private DateTime? ValidateDate(string dateTime)
+        {
+            try
+            {
+                DateTime dt = DateTime.ParseExact(dateTime.Trim(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                return dt;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
     }
 }
 

@@ -66,4 +66,14 @@ export class DanhSachThietBiService {
     };
     return this.http.post(this.url + 'UploadExcel', formData, httpHeaders)
   }
+
+  createList(input: any[]): Observable<any> {
+    const httpHeaders = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+      }),
+    };
+    return this.http.post<any>(this.url + "create-list", input, httpHeaders);
+  }
 }
