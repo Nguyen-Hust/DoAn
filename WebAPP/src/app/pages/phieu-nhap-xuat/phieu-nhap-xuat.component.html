@@ -175,6 +175,9 @@
                     <th nzWidth="200px">
                         Thời gian bảo dưỡng
                     </th>
+                    <th nzWidth="200px">
+                        Đã xuất
+                    </th>
                     <th nzWidth="100px" nzAlign="center" *ngIf="isDetail == false">
                         Thao tác
                     </th>
@@ -228,6 +231,9 @@
                     <td>
                         <input nz-input [(ngModel)]="data.thoiGianBaoDuong" [disabled]="isDetail" nz-tooltip
                             style="width: 100%" />
+                    </td>
+                    <td>
+                        <nz-switch [(ngModel)]="data.daXuat"></nz-switch>
                     </td>
                     <td nzAlign="center" *ngIf="isDetail == false">
                         <button (click)="deleteDetail(i)" nz-button nzSize="small" style="margin-right: 10px"

@@ -9,6 +9,7 @@ import { PhieuNhapXuatDto, ThongTinChiTietThietBiDto } from 'src/app/models/Phie
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { LoaderService } from 'src/app/services/loader.service';
 import { NzI18nService, en_US } from 'ng-zorro-antd/i18n';
+import { DanhSachThietBiService } from '../danh-sach-thiet-bi/danh-sach-thiet-bi.service';
 
 @Component({
   selector: 'app-phieu-xuat',
@@ -32,6 +33,7 @@ export class PhieuXuatComponent {
   dsThietBi: any[] = [];
   dsNhanSu: any[] = [];
   dsKhoa: any[] = [];
+  listDanhSachChiTietThietBi: any[] = [];
 
   listChiTietThietBi: ThongTinChiTietThietBiDto[] = [] ;
   
@@ -42,7 +44,8 @@ export class PhieuXuatComponent {
     private toastr: ToastrService,
     private modal: NzModalService,
     private loadingService: LoaderService,
-    private i18n: NzI18nService
+    private i18n: NzI18nService,
+    private DSservice: DanhSachThietBiService,
   ) {}
   ngOnInit(): void {
     this.i18n.setLocale(en_US);
@@ -55,6 +58,9 @@ export class PhieuXuatComponent {
     this.nhanSuService.getAllKhoa().subscribe((val) => {
       this.dsKhoa = val;
     });
+    this.service.getDanhSachChiTietThietBi().subscribe(val => {
+      this.listDanhSachChiTietThietBi = val;
+    })
     this.form = this.formbulider.group({
       id: [0, [Validators.required]],
       ma: ['', [Validators.required]],
@@ -94,7 +100,10 @@ export class PhieuXuatComponent {
     this.reset();
     this.isShowModal = true;
     this.title = "Thêm mới phiếu xuất";
+    this.form.reset();
+    this.form.get('id')?.patchValue(0);
     this.form.get('loaiPhieu')?.patchValue(2); 
+    console.log(this.form.getRawValue());
   }
 
   getTenNhanSu(id) {
@@ -146,7 +155,8 @@ export class PhieuXuatComponent {
       serial: '',
       model: '',
       giaTien: null,
-      thoiGianBaoDuong: null
+      thoiGianBaoDuong: null,
+      daXuat: null,
     };
     this.listChiTietThietBi.push(item);
     this.listChiTietThietBi = [...this.listChiTietThietBi];
@@ -232,5 +242,26 @@ export class PhieuXuatComponent {
     })
 
     this.form.controls["tongTien"].patchValue(total);
+  }
+
+  onChange(input, index) {
+    this.DSservice.getById(input).subscribe(data => {
+      var dataInput = this.listChiTietThietBi[index];
+      dataInput.id =  data.id;
+      dataInput.ma = data.ma;
+      dataInput.thietBiYTeId = data.thietBiYTeId;
+      dataInput.ngayNhap = data.ngayNhap;
+      dataInput.xuatXu = data.xuatXu;
+      dataInput.namSX = data.namSX;
+      dataInput.hangSanXuat = data.hangSanXuat;
+      dataInput.tinhTrang = data.tinhTrang; 
+      dataInput.khoaId = data.khoaId;
+      dataInput.nhanVienId = data.nhanVienId;
+      dataInput.serial = data.serial;
+      dataInput.model = data.model;
+      dataInput.giaTien = data.giaTien;
+      dataInput.thoiGianBaoDuong = data.thoiGianBaoDuong;
+      dataInput.daXuat = null;
+    })
   }
 }

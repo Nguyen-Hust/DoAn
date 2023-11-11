@@ -147,7 +147,8 @@ export class PhieuNhapXuatComponent implements OnInit {
       serial: '',
       model: '',
       giaTien: null,
-      thoiGianBaoDuong: null
+      thoiGianBaoDuong: null,
+      daXuat: null,
     };
     this.listChiTietThietBi.push(item);
     this.listChiTietThietBi = [...this.listChiTietThietBi];

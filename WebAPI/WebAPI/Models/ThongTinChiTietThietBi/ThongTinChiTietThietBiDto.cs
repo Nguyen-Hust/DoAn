@@ -21,6 +21,7 @@ namespace WebAPI.Models.ThongTinChiTietThietBi
         public string Model { get; set; }
         public decimal? GiaTien { get; set; }
         public int? ThoiGianBaoDuong { get; set; }
+        public bool? DaXuat { get; set; }
     }
 }
 

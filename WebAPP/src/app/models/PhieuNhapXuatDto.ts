@@ -29,4 +29,5 @@ export class ThongTinChiTietThietBiDto {
     model: string;
     giaTien: number| null;
     thoiGianBaoDuong: number | null;
+    daXuat: boolean | null;
 }

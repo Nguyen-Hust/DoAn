@@ -4,7 +4,7 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { ThietBiYTeDto } from "src/app/models/ThietBiYTeDto";
 import { NhanSuDto } from "src/app/models/NhanSuDto";
-import { PhieuNhapXuatDto } from "src/app/models/PhieuNhapXuatDto";
+import { PhieuNhapXuatDto, ThongTinChiTietThietBiDto } from "src/app/models/PhieuNhapXuatDto";
 import { ThongKeDto } from "src/app/models/ThongKeDto";
 
 @Injectable({
@@ -136,6 +136,18 @@ import { ThongKeDto } from "src/app/models/ThongKeDto";
         };
         return this.http.get<ThongKeDto>(
           this.url + "get-total-phieu-xuat",
+          httpHeaders
+        );
+      }
+
+      getDanhSachChiTietThietBi(): Observable<ThongTinChiTietThietBiDto[]> {
+        const httpHeaders = {
+          headers: new HttpHeaders({
+            Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+          }),
+        };
+        return this.http.get<ThongTinChiTietThietBiDto[]>(
+          this.url + "get-danh-sach-chi-tiet-thiet-bi",
           httpHeaders
         );
       }

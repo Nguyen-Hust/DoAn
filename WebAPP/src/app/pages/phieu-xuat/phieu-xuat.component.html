@@ -138,6 +138,10 @@
                 <tr>
                     <th nzWidth="200px">
                         <span style="margin-right: 4px; color: #ff4d4f">*</span>
+                        Chi tiết thiết bị
+                    </th>
+                    <th nzWidth="200px">
+                        <span style="margin-right: 4px; color: #ff4d4f">*</span>
                         Mã thiết bị
                     </th>
                     <th nzWidth="200px">
@@ -174,6 +178,9 @@
                     <th nzWidth="200px">
                         Thời gian bảo dưỡng
                     </th>
+                    <th nzWidth="200px">
+                        Đã xuất
+                    </th>
                     <th nzWidth="100px" nzAlign="center" *ngIf="isDetail == false">
                         Thao tác
                     </th>
@@ -182,10 +189,16 @@
             <tbody>
                 <tr *ngFor="let data of assetTable.data; let i = index">
                     <td>
-                        <input nz-input [(ngModel)]="data.ma" [disabled]="isDetail" nz-tooltip style="width: 100%" />
+                        <nz-select [(ngModel)]="data.id" [disabled]="isDetail" nzPlaceHolder="Chọn thiết bị"
+                            style="width: 100%" (ngModelChange)="onChange($event, i)">
+                            <nz-option [nzValue]="tb.id" [nzLabel]="tb.ma" *ngFor="let tb of listDanhSachChiTietThietBi"></nz-option>
+                        </nz-select>
                     </td>
                     <td>
-                        <nz-select [(ngModel)]="data.thietBiYTeId" [disabled]="isDetail" nzPlaceHolder="Chọn thiết bị"
+                        <input nz-input [(ngModel)]="data.ma" [disabled]="true" nz-tooltip style="width: 100%" />
+                    </td>
+                    <td>
+                        <nz-select [(ngModel)]="data.thietBiYTeId" [nzDisabled]="true" nzPlaceHolder="Chọn thiết bị"
                             style="width: 100%">
                             <nz-option [nzValue]="tb.id" [nzLabel]="tb.ten" *ngFor="let tb of dsThietBi"></nz-option>
                         </nz-select>
@@ -194,21 +207,21 @@
                     <td>
                         <!-- <input type="date" class="form-control" [(ngModel)]="data.ngayNhap"
                             placeholder="Chọn ngày tạo phiếu" /> -->
-                            <nz-date-picker [(ngModel)]="data.ngayNhap" class="form-control" [nzFormat]="dateFormat"></nz-date-picker>
+                            <nz-date-picker [(ngModel)]="data.ngayNhap" class="form-control" [nzFormat]="dateFormat" nzDisabled></nz-date-picker>
                     </td>
                     <td>
-                        <input nz-input [(ngModel)]="data.xuatXu" [disabled]="isDetail" nz-tooltip
+                        <input nz-input [(ngModel)]="data.xuatXu" [disabled]="true" nz-tooltip
                             style="width: 100%" />
                     </td>
                     <td>
-                        <input nz-input [(ngModel)]="data.namSX" [disabled]="isDetail" nz-tooltip style="width: 100%" />
+                        <input nz-input [(ngModel)]="data.namSX" [disabled]="true" nz-tooltip style="width: 100%" />
                     </td>
                     <td>
-                        <input nz-input [(ngModel)]="data.hangSanXuat" [disabled]="isDetail" nz-tooltip
+                        <input nz-input [(ngModel)]="data.hangSanXuat" [disabled]="true" nz-tooltip
                             style="width: 100%" />
                     </td>
                     <td>
-                        <input nz-input [(ngModel)]="data.tinhTrang" [disabled]="isDetail" nz-tooltip
+                        <input nz-input [(ngModel)]="data.tinhTrang" [disabled]="true" nz-tooltip
                             style="width: 100%" />
                     </td>
                     <!-- <td>
@@ -224,19 +237,22 @@
                         </nz-select>
                     </td> -->
                     <td>
-                        <input nz-input [(ngModel)]="data.serial" [disabled]="isDetail" nz-tooltip
+                        <input nz-input [(ngModel)]="data.serial" [disabled]="true" nz-tooltip
                             style="width: 100%" />
                     </td>
                     <td>
-                        <input nz-input [(ngModel)]="data.model" [disabled]="isDetail" nz-tooltip style="width: 100%" />
+                        <input nz-input [(ngModel)]="data.model" [disabled]="true" nz-tooltip style="width: 100%" />
                     </td>
                     <td>
                         <input nz-input [(ngModel)]="data.giaTien" [disabled]="isDetail" nz-tooltip (blur)="onBlurMethod()"
                             style="width: 100%" />
                     </td>
                     <td>
-                        <input nz-input [(ngModel)]="data.thoiGianBaoDuong" [disabled]="isDetail" nz-tooltip
+                        <input nz-input [(ngModel)]="data.thoiGianBaoDuong" [disabled]="true" nz-tooltip
                             style="width: 100%" />
+                    </td>
+                    <td>
+                        <nz-switch [(ngModel)]="data.daXuat" [nzDisabled]="true"></nz-switch>
                     </td>
                     <td nzAlign="center" *ngIf="isDetail == false">
                         <button (click)="deleteDetail(i)" nz-button nzSize="small" style="margin-right: 10px"

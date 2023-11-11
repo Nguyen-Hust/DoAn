@@ -31,7 +31,8 @@ export class ImportExcelComponent implements OnInit {
     private service: DanhSachThietBiService,
     private nhanSuService: NhanSuService,
     private loadingService: LoaderService,
-    private notification: NzNotificationService
+    private notification: NzNotificationService,
+    private http: HttpClient
   ) {}
 
   ngOnInit(): void {

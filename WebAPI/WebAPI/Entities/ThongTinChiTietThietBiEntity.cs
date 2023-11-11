@@ -28,6 +28,7 @@ namespace WebAPI.Entities
         [Column(TypeName = "decimal(18,2)")]
         public decimal? GiaTien { get; set; }
         public int? ThoiGianBaoDuong { get; set; }
+        public bool? DaXuat { get; set; }
         public ThietBiYTeEntity ThietBiYTe { get; set; }
         public KhoaEntity Khoa { get; set; }
         public NhanSuEntity NhanVien { get; set; }
