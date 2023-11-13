@@ -3,7 +3,7 @@
     <input class="form-control" type="file" #fileInput />
   </div>
   <div class="col-md-6">
-    <button class="btn btn-primary" (click)="uploadFile();">Upload</button>
+    <button class="btn btn-primary" (click)="uploadFile()">Upload</button>
   </div>
 
   <div class="mt-5">
@@ -12,14 +12,12 @@
         nz-icon
         class="text-danger fw-bolder"
         nzType="double-right"
-        nzTheme="outline"></i>
-      Tải file mẫu 
-      <a href="/assets/templates/Import_Template_DSThietBi.xlsx" download>
-        Tại đây</a
-      >
+        nzTheme="outline"
+      ></i>
+      Tải file mẫu
+      <a href="/assets/Import_Template_DSThietBi.xlsx" download> Tại đây</a>
     </p>
   </div>
-
 </div>
 
 <ng-container *ngIf="showDataTable == true">
@@ -53,7 +51,7 @@
         <td class="text-center">{{ i + 1 }}</td>
         <td>{{ data?.ma }}</td>
         <td>{{ getTenThietBi(data?.thietBiYTeId) }}</td>
-        <td>{{ data?.ngayNhap  | date: 'dd/MM/yyyy'}}</td>
+        <td>{{ data?.ngayNhap | date : "dd/MM/yyyy" }}</td>
         <td>{{ data?.xuatXu }}</td>
         <td>{{ data?.namSX }}</td>
         <td>{{ data?.hangSanXuat }}</td>
@@ -69,7 +67,7 @@
   </nz-table>
 
   <div class="col-md-6">
-    <button class="btn btn-primary" (click)="import();">Save</button>
+    <button class="btn btn-primary" (click)="import()">Save</button>
   </div>
 </ng-container>
 
@@ -104,7 +102,7 @@
         <td class="text-center">{{ i + 1 }}</td>
         <td>{{ data?.ma }}</td>
         <td>{{ getTenThietBi(data?.thietBiYTeId) }}</td>
-        <td>{{ data?.ngayNhap  | date: 'dd/MM/yyyy'}}</td>
+        <td>{{ data?.ngayNhap | date : "dd/MM/yyyy" }}</td>
         <td>{{ data?.xuatXu }}</td>
         <td>{{ data?.namSX }}</td>
         <td>{{ data?.hangSanXuat }}</td>
@@ -119,7 +117,7 @@
     </tbody>
   </nz-table>
 
-  <div *ngFor="let data of dataError;">
-    <span style="color: red;">* {{data}}</span>
+  <div *ngFor="let data of dataError">
+    <span style="color: red">* {{ data }}</span>
   </div>
 </ng-container>
