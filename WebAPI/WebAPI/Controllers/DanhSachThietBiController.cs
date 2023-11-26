@@ -37,7 +37,7 @@ namespace WebAPI.Controllers
             if (phongBan.Count > 0)
             {
                 var totalCount = phongBan.Count;
-                var items = phongBan.Where(_ => string.IsNullOrEmpty(input.Filter) || _.Ma.Contains(input.Filter)).Skip(input.SkipCount ?? 0).Take(input.MaxResultCount ?? 1000)
+                var items = phongBan.Where(_ => string.IsNullOrEmpty(input.Filter) || _.Ma.Contains(input.Filter)).Where(x => x.NhanVienId == null).Skip(input.SkipCount ?? 0).Take(input.MaxResultCount ?? 1000)
                     .Select(_ => new ThongTinChiTietThietBiDto
                     {
                         Id = _.Id,

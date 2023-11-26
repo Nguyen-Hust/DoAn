@@ -33,6 +33,7 @@ import { BaoCaoSuaChuaComponent } from "../pages/bao-cao-sua-chua/bao-cao-sua-ch
 import { NavNotificationComponent } from "./nav-notification/nav-notification.component";
 import { NgApexchartsModule } from "ng-apexcharts";
 import { ImportExcelComponent } from "../pages/danh-sach-thiet-bi/import-excel/import-excel/import-excel.component";
+import { LichSuBanGiaoComponent } from "../pages/lich-su-ban-giao/lich-su-ban-giao/lich-su-ban-giao.component";
 
 const icons: IconDefinition[] = [
   StepBackwardOutline,
@@ -62,6 +63,7 @@ const icons: IconDefinition[] = [
     BaoCaoSuaChuaComponent,
     NavNotificationComponent,
     ImportExcelComponent,
+    LichSuBanGiaoComponent
   ],
   imports: [
     CommonModule,

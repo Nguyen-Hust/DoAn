@@ -1,0 +1,16 @@
+.filter-area {
+    padding: 15px;
+    background: white;
+    margin-bottom: 30px;
+}
+
+.filter-area .filter-label {
+    font-size: 14px;
+    color: #000;
+    font-weight: bold;
+}
+
+.label-form {
+    font-size: 16px;
+    font-weight: 600;
+}

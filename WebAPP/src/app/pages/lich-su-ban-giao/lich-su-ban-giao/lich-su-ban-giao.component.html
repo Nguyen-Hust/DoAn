@@ -1,0 +1,59 @@
+<h2>Lịch sủ bàn giao</h2>
+<div class="table-responsive">
+  <div class="filter-area">
+    <div nz-row [nzGutter]="16">
+      <div nz-col class="gutter-row" [nzSpan]="9">
+        <div class="form-group">
+          <label class="control-label" class="filter-label"
+            >Từ khóa tìm kiếm</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="filter"
+            placeholder="Nhập tên sản phẩm"
+          />
+        </div>
+      </div>
+      <div nz-col class="gutter-row" [nzSpan]="4" style="margin-top: 22px">
+        <button
+          type="button"
+          class="btn btn-info text-white"
+          (click)="getList()"
+        >
+          Tìm kiếm
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="d-flex justify-content-between mb-1 align-items-center">
+    <h3 style="font-weight: 500; font-size: 16px">Danh sách lịch sử</h3>
+  </div>
+  <nz-table
+    #basicTable
+    [nzData]="danhSach"
+    #borderedTable
+    nzBordered
+    [nzPageIndex]="pageIndex"
+    [nzPageSize]="pageSize"
+    [nzTotal]="total"
+    (nzPageIndexChange)="getList($event)"
+  >
+    <thead>
+      <tr>
+        <th class="text-center">#</th>
+        <th class="text-center">Ngày thực hiện</th>
+        <th class="text-center">Tên thiết bị</th>
+        <th class="text-center">Nhân viên</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of basicTable.data; index as i">
+        <td class="text-center">{{ i + 1 }}</td>
+        <td class="text-center">{{ data.ngayThucHien | date: 'dd/MM/yyyy' }}</td>
+        <td class="text-center">{{ data.chiTietThietBiId }}</td>
+        <td class="text-center">{{ getTenNhanSu(data.nhanVienId) }}</td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>

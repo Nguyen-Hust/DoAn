@@ -74,6 +74,15 @@ namespace WebAPI.Controllers
             foreach (var item in listThietBi)
             {
                 item.NhanVienId = input.NhanVienNhan;
+                var lichSu = new LichSuBanGiaoThuHoiEntity
+                {
+                    Id = 0,
+                    ChiTietThietBiId = item.Id,
+                    NhanVienId = input.NhanVienNhan,
+                    NgayThucHien = DateTime.Now
+                };
+                _context.LichSuBanGiaoThuHoi.Add(lichSu);
+
             }
             _context.UpdateRange(listThietBi);
             foreach (var item in input.DanhSachThietBi)
