@@ -79,13 +79,13 @@ export class ImportExcelComponent implements OnInit {
   }
 
   getTenThietBi(id) {
-    return (id != null || id != undefined) ? this.dsThietBi.find((_) => _.id == id).ten : "";
+    return (id != null && id != undefined && id >= 1) ? this.dsThietBi.find((_) => _.id == id).ten : "";
   }
   getKhoa(id) {
-    return (id != null || id != undefined) ? this.dsKhoa.find((_) => _.id == id).ten : "";
+    return (id != null && id != undefined && id >= 1) ? this.dsKhoa.find((_) => _.id == id).ten : "";
   }
   getNhanVien(id) {
-    return (id != null || id != undefined) ? this.dsNhanSu.find((_) => _.id == id).ten : "";
+    return (id != null && id != undefined && id >=  1) ? this.dsNhanSu.find((_) => _.id == id).ten : "";
   }
 
   import() {

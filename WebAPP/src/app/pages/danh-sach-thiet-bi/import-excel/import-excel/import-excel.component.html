@@ -21,6 +21,7 @@
 </div>
 
 <ng-container *ngIf="showDataTable == true">
+  <h2 style="margin-top: 20px;">Danh sách thiết bị hợp lệ</h2>
   <nz-table
     #basicTable
     [nzData]="datatable"
@@ -72,6 +73,7 @@
 </ng-container>
 
 <ng-container *ngIf="showError == true">
+  <h2 style="margin-top: 20px;">Danh sách thiết bị lỗi nhập vào</h2>
   <nz-table
     #basicTable
     [nzData]="dataErrorTable"
