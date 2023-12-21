@@ -75,14 +75,20 @@ builder.Services.AddTransient<ISendMailService, SendMailService>();
 
 builder.Services.AddHangfire(config => config.SetDataCompatibilityLevel(CompatibilityLevel.Version_170).UseSimpleAssemblyNameTypeSerializer().UseDefaultTypeSerializer().UseMemoryStorage());
 builder.Services.AddHangfireServer();
+builder.Services.AddAWSLambdaHosting(LambdaEventSource.RestApi);
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
+try
 {
-    var userManager = (UserManager<IdentityUser>)scope.ServiceProvider.GetService(typeof(UserManager<IdentityUser>));
-    ApplicationDbInitializer.SeedUsers(userManager);
+    using (var scope = app.Services.CreateScope())
+    {
+        var userManager = (UserManager<IdentityUser>)scope.ServiceProvider.GetService(typeof(UserManager<IdentityUser>));
+        ApplicationDbInitializer.SeedUsers(userManager);
+    }
 }
+catch {}
+
 
 if (app.Environment.IsDevelopment())
 {
@@ -96,10 +102,14 @@ app.UseHangfireDashboard("/dashboard");
 
 using (var scope = app.Services.CreateScope())
 {
-    var sendMailService = (ISendMailService)scope.ServiceProvider.GetService(typeof(ISendMailService));
-    var manager = new RecurringJobManager();
-    manager.AddOrUpdate("some-id", Job.FromExpression(() =>
-        sendMailService.SendMailThongBaoBaoDuong()), "15 0 * * 0");
+    try
+    {
+        var sendMailService = (ISendMailService)scope.ServiceProvider.GetService(typeof(ISendMailService));
+        var manager = new RecurringJobManager();
+        manager.AddOrUpdate("some-id", Job.FromExpression(() =>
+            sendMailService.SendMailThongBaoBaoDuong()), "15 0 * * 0");
+    }
+    catch {}
 
 }
 app.UseHttpsRedirection();

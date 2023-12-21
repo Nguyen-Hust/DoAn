@@ -1,4 +1,6 @@
-﻿namespace WebAPI.Models.PhieuThuHoi
+﻿using WebAPI.Models.ThongTinChiTietThietBi;
+
+namespace WebAPI.Models.PhieuThuHoi
 {
     public class PhieuThuHoiDto
     {
@@ -7,6 +9,7 @@
         public int? NhanVienId { get; set; }
         public DateTime? CreateTime { get; set; }
         public int? TongThietBi { get; set; }
-        public List<int> DanhSachThietBi { get; set; }
+        public List<int> DanhSachThietBiId { get; set; }
+        public List<ThongTinChiTietThietBiDto>? DanhSachThietBi { get; set; }
     }
 }

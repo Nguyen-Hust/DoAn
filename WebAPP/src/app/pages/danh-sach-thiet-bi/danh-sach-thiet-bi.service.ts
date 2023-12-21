@@ -7,10 +7,9 @@ import { ThongTinChiTietThietBiDto } from "src/app/models/PhieuNhapXuatDto";
 @Injectable({
   providedIn: "root",
 })
-
 export class DanhSachThietBiService {
   url = configurl.apiServer.url + "/api/DanhSachThietBi/";
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
   getList(body): Observable<any> {
     const httpHeaders = {
       headers: new HttpHeaders({
@@ -44,16 +43,13 @@ export class DanhSachThietBiService {
       httpHeaders
     );
   }
-  getById(id: number): Observable<ThongTinChiTietThietBiDto> {
+  getById(id: number): Observable<any> {
     const httpHeaders = {
       headers: new HttpHeaders({
         Authorization: `Bearer ${localStorage.getItem("jwt")}`,
       }),
     };
-    return this.http.get<ThongTinChiTietThietBiDto>(
-      this.url + "get-by-id?id=" + id,
-      httpHeaders
-    );
+    return this.http.get<any>(this.url + "get-by-id?id=" + id, httpHeaders);
   }
 
   UploadExcel(formData: FormData) {
@@ -61,10 +57,10 @@ export class DanhSachThietBiService {
       headers: new HttpHeaders({
         Authorization: `Bearer ${localStorage.getItem("jwt")}`,
         ContentType: "multipart/form-data",
-        Accept: 'application/json'
+        Accept: "application/json",
       }),
     };
-    return this.http.post(this.url + 'UploadExcel', formData, httpHeaders)
+    return this.http.post(this.url + "UploadExcel", formData, httpHeaders);
   }
 
   createList(input: any[]): Observable<any> {
@@ -75,5 +71,14 @@ export class DanhSachThietBiService {
       }),
     };
     return this.http.post<any>(this.url + "create-list", input, httpHeaders);
+  }
+
+  getAllMa(): Observable<any> {
+    const httpHeaders = {
+      headers: new HttpHeaders({
+        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+      }),
+    };
+    return this.http.get<any>(this.url + "get-all-ma", httpHeaders);
   }
 }

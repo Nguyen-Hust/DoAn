@@ -8,6 +8,8 @@ using WebAPI.Models.PhieuBanGiao;
 using WebAPI.Models.PhieuSuaChua;
 using WebAPI.Models.PhieuThuHoi;
 using WebAPI.Models.Shared;
+using WebAPI.Models.ThietBiYTe;
+using WebAPI.Models.ThongTinChiTietThietBi;
 
 namespace WebAPI.Controllers
 {
@@ -66,22 +68,20 @@ namespace WebAPI.Controllers
             _context.PhieuThuHoi.Add(entity);
             await _context.SaveChangesAsync();
             entity.Ma = $"PTH_{entity.Id}";
-            var listThietBi = _context.ThongTinChiTietThietBi.Where(_ => input.DanhSachThietBi.Contains(_.Id)).ToList();
+            var listThietBi = _context.ThongTinChiTietThietBi.Where(_ => input.DanhSachThietBiId.Contains(_.Id)).ToList();
             foreach (var item in listThietBi)
-            {
-                item.NhanVienId = null;
-            }
-            _context.UpdateRange(listThietBi);
-            foreach (var item in input.DanhSachThietBi)
             {
                 var chiTiet = new ChiTietPhieuThuHoiEntity
                 {
                     Id = input.Id,
                     PhieuThuHoiId = entity.Id,
-                    ChiTietThietBiId = item
+                    MaThietBi = item.Ma,
+                    NhanVienId = item.NhanVienId ?? 0
                 };
                 _context.ChiTietPhieuThuHoi.Add(chiTiet);
+                item.NhanVienId = null;
             }
+            _context.UpdateRange(listThietBi);
             await _context.SaveChangesAsync();
             return input;
         }
@@ -94,7 +94,7 @@ namespace WebAPI.Controllers
             return new PhieuThuHoiDto
             {
                 Id = entity.Id,
-                DanhSachThietBi = entity.ChiTietPhieuThuHoi.Select(_ => _.ChiTietThietBiId).ToList(),
+                DanhSachThietBi = entity.ChiTietPhieuThuHoi.Select(_ => new ThongTinChiTietThietBiDto { Ma = _.MaThietBi, NhanVienId = _.NhanVienId}).ToList(),
                 CreateTime = entity.CreateTime,
                 NhanVienId = entity.NhanVienId,
             };
@@ -106,7 +106,7 @@ namespace WebAPI.Controllers
         {
             var thietBiYTe = await _context.ThongTinChiTietThietBi.ToListAsync();
             var items = thietBiYTe
-                .Where(_ => _.NhanVienId.HasValue)
+                .Where(_ => _.NhanVienId.HasValue && _.DaXuat != true)
                 .Select(_ => new ThongTinChiTietThietBiSelectDto
                 {
                     Id = _.Id,

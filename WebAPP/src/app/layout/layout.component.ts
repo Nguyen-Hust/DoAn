@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Component } from "@angular/core";
 import { Router } from "@angular/router";
 import configurl from "../../assets/config/config.json";
+import { UserSessionService } from "./user-session.service";
 
 @Component({
   selector: "app-layout",
@@ -11,21 +12,14 @@ import configurl from "../../assets/config/config.json";
 export class LayoutComponent {
   userInfo: any;
   url = configurl.apiServer.url + "/api/authentication/";
-  isVisible = false;
 
-  constructor(private router: Router, private http: HttpClient) {
+  constructor(
+    private router: Router,
+    private http: HttpClient,
+    public userService: UserSessionService
+  ) {
     if (localStorage.getItem("jwt")) {
-      this.http
-        .get(this.url + "get-user-info", {
-          headers: new HttpHeaders({
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-          }),
-        })
-        .subscribe((response) => {
-          this.isVisible = true;
-          this.userInfo = response;
-        });
+      this.userService.getAccountBootstrap().subscribe();
     }
   }
   public logOut = () => {

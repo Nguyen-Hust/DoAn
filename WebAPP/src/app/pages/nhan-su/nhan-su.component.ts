@@ -119,6 +119,7 @@ export class NhanSuComponent implements OnInit {
     this.isShowModal = true;
     this.title = "Thêm mới";
     this.form.reset();
+    this.form.get("khoaId")?.setValue("");
     this.form.get("sdt")?.setValue("");
     this.form.get("diaChi")?.setValue("");
     this.form.get("id")?.setValue(0);
@@ -132,7 +133,9 @@ export class NhanSuComponent implements OnInit {
   openModalAccount(data) {
     this.formAccount.get("email")?.setValue(data.email);
     this.formAccount.get("nhanVienId")?.setValue(data.id);
-    this.formAccount.get("loaiAccount")?.setValue("user");
+    if (data.laQuanLyThietBi)
+      this.formAccount.get("loaiAccount")?.setValue("manager");
+    else this.formAccount.get("loaiAccount")?.setValue("user");
     this.isShowModalAccount = true;
   }
 

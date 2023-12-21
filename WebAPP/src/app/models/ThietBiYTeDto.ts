@@ -5,4 +5,6 @@ export class ThietBiYTeDto {
   mdrr: string;
   loaiTTBYT: string;
   soLuong: number;
+  daXuat: boolean | null;
+  nhanVienId: number | null;
 }

@@ -1,12 +1,18 @@
 <nz-layout class="layout">
   <nz-sider nzCollapsible nzWidth="200px">
-    <div class="logo">THIẾT BỊ Y TẾ</div>
+    <div class="logo"><img src="/assets/logo2.png" alt="logo" /></div>
     <ul nz-menu nzTheme="dark" nzMode="inline">
       <li nz-menu-item routerLink="">
         <span nz-icon nzType="home" nzTheme="outline"></span>
         <span>Home</span>
       </li>
-      <li nz-submenu nzIcon="shop" nzTitle="Quản lý thiết bị">
+      <li
+        nz-submenu
+        nzIcon="shop"
+        nzTitle="Quản lý thiết bị"
+        nzOpen
+        *ngIf="userService.user?.role == 'manager'"
+      >
         <ul>
           <li nz-menu-item routerLink="/thiet-bi-y-te">Thông tin thiết bị</li>
           <li nz-menu-item routerLink="/loai-thiet-bi">Loại trang thiết bị</li>
@@ -15,17 +21,62 @@
           </li>
         </ul>
       </li>
-      <li nz-submenu nzIcon="shop" nzTitle="Quản lý phiếu">
+      <li nz-submenu nzIcon="shop" nzTitle="Quản lý phiếu" nzOpen>
         <ul>
-          <li nz-menu-item routerLink="/phieu-ban-giao">Phiếu bàn giao</li>
-          <li nz-menu-item routerLink="/phieu-thu-hoi">Phiếu thu hồi</li>
-          <li nz-menu-item routerLink="/phieu-bao-duong">Phiếu bảo dưỡng</li>
-          <li nz-menu-item routerLink="/phieu-sua-chua">Phiếu sửa chữa</li>
-          <li nz-menu-item routerLink="/phieu-nhap">Phiếu nhập</li>
-          <li nz-menu-item routerLink="/phieu-xuat">Phiếu xuất</li>
+          <li
+            nz-menu-item
+            routerLink="/phieu-ban-giao"
+            *ngIf="userService.user?.role == 'manager'"
+          >
+            Phiếu bàn giao
+          </li>
+          <li
+            nz-menu-item
+            routerLink="/phieu-thu-hoi"
+            *ngIf="userService.user?.role == 'manager'"
+          >
+            Phiếu thu hồi
+          </li>
+          <li
+            nz-menu-item
+            routerLink="/phieu-bao-duong"
+            *ngIf="userService.user?.role == 'manager'"
+          >
+            Phiếu bảo dưỡng
+          </li>
+          <li
+            nz-menu-item
+            routerLink="/phieu-sua-chua"
+            *ngIf="
+              userService.user?.role == 'user' ||
+              userService.user?.role == 'manager'
+            "
+          >
+            Phiếu sửa chữa
+          </li>
+          <li
+            nz-menu-item
+            routerLink="/phieu-nhap"
+            *ngIf="userService.user?.role == 'manager'"
+          >
+            Phiếu nhập
+          </li>
+          <li
+            nz-menu-item
+            routerLink="/phieu-xuat"
+            *ngIf="userService.user?.role == 'manager'"
+          >
+            Phiếu xuất
+          </li>
         </ul>
       </li>
-      <li nz-submenu nzIcon="file" nzTitle="Báo cáo">
+      <li
+        nz-submenu
+        nzIcon="file"
+        nzTitle="Báo cáo"
+        nzOpen
+        *ngIf="userService.user?.role == 'manager'"
+      >
         <ul>
           <li nz-menu-item routerLink="/bao-cao-nhap">Báo cáo nhập</li>
           <li nz-menu-item routerLink="/bao-cao-xuat">Báo cáo xuất</li>
@@ -36,7 +87,13 @@
           <li nz-menu-item routerLink="/lich-su-ban-giao">Lịch sử bàn giao</li>
         </ul>
       </li>
-      <li nz-submenu nzIcon="setting" nzTitle="Quản trị viên">
+      <li
+        nz-submenu
+        nzIcon="setting"
+        nzTitle="Quản trị viên"
+        nzOpen
+        *ngIf="userService.user?.role == 'admin'"
+      >
         <ul>
           <li nz-menu-item routerLink="/phong-ban">Phòng Ban</li>
           <li nz-menu-item routerLink="/nhan-su">Nhân viên</li>
@@ -101,13 +158,13 @@
             <div class="modal-body">
               <dl class="row">
                 <dt class="col-sm-3">Mã</dt>
-                <dd class="col-sm-9">{{ userInfo?.ma }}</dd>
+                <dd class="col-sm-9">{{ userService.user?.ma }}</dd>
                 <dt class="col-sm-3">Tên</dt>
-                <dd class="col-sm-9">{{ userInfo?.ten }}</dd>
+                <dd class="col-sm-9">{{ userService.user?.ten }}</dd>
                 <dt class="col-sm-3">Email</dt>
-                <dd class="col-sm-9">{{ userInfo?.email }}</dd>
+                <dd class="col-sm-9">{{ userService.user?.email }}</dd>
                 <dt class="col-sm-3">Số điện thoại</dt>
-                <dd class="col-sm-9">{{ userInfo?.sdt }}</dd>
+                <dd class="col-sm-9">{{ userService.user?.sdt }}</dd>
               </dl>
             </div>
             <div class="modal-footer">
@@ -126,6 +183,9 @@
     <nz-content>
       <router-outlet></router-outlet>
     </nz-content>
-    <nz-footer>Ant Design ©2020 Implement By Angular</nz-footer>
+    <nz-footer
+      >Copyright © 2023 benhviennoitiet.vn. All Rights Reserved , Designed By:
+      Thành Đạt</nz-footer
+    >
   </nz-layout>
 </nz-layout>

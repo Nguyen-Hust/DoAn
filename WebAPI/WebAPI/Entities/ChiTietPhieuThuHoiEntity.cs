@@ -9,8 +9,8 @@ namespace WebAPI.Entities
         [Key]
         public int Id { get; set; }
         public int PhieuThuHoiId { get; set; }
-        public int ChiTietThietBiId { get; set; }
+        public string MaThietBi { get; set; }
+        public int NhanVienId { get; set; }
         public PhieuThuHoiEntity PhieuThuHoi { get; set; }
-        public ThongTinChiTietThietBiEntity ChiTietThietBi { get; set; }
     }
 }

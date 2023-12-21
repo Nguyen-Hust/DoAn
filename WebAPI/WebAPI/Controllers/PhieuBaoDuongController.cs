@@ -203,7 +203,7 @@ namespace WebAPI.Controllers
         {
             var thietBiYTe = await _context.ThongTinChiTietThietBi.ToListAsync();
             var items = thietBiYTe
-                .Where(_ => _.NgayNhap.AddMonths(_.ThoiGianBaoDuong??0) < DateTime.Now)
+                .Where(_ => _.NgayNhap.AddMonths(_.ThoiGianBaoDuong??0) < DateTime.Now && _.DaXuat != true)
                 .Select(_ => new ThongTinChiTietThietBiSelectDto
                 {
                     Id = _.Id,

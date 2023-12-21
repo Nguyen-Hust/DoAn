@@ -10,6 +10,7 @@ import { PhieuSuaChuaDto } from "src/app/models/PhieuSuaChuaDto";
 import { NhanSuService } from "../nhan-su/nhan-su.service";
 import { PhieuThuHoiDto } from "src/app/models/PhieuThuHoiDto";
 import { LoaderService } from "src/app/services/loader.service";
+import { DanhSachThietBiService } from "../danh-sach-thiet-bi/danh-sach-thiet-bi.service";
 
 @Component({
   selector: "app-phieu-thu-hoi",
@@ -40,16 +41,13 @@ export class PhieuThuHoiComponent implements OnInit {
     private formbulider: FormBuilder,
     private service: PhieuThuHoiService,
     private nhanSuService: NhanSuService,
+    private thietBiService: DanhSachThietBiService,
     private toastr: ToastrService,
     private modal: NzModalService,
     private loadingService: LoaderService
   ) {}
 
   ngOnInit() {
-    this.service.getDanhSachThietBi().subscribe((val) => {
-      this.dsThietBi = val;
-    });
-
     this.nhanSuService.getList({ filter: "" }).subscribe((val) => {
       this.dsNhanSu = val.items;
     });
@@ -87,6 +85,9 @@ export class PhieuThuHoiComponent implements OnInit {
     this.isShowModal = true;
     this.title = "Thêm mới";
     this.setOfCheckedId = new Set<number>();
+    this.service.getDanhSachThietBi().subscribe((val) => {
+      this.dsThietBi = val;
+    });
   }
 
   save() {
@@ -104,7 +105,7 @@ export class PhieuThuHoiComponent implements OnInit {
       .create({
         id: 0,
         ma: "",
-        danhSachThietBi: Array.from(this.setOfCheckedId),
+        danhSachThietBiId: Array.from(this.setOfCheckedId),
       })
       .pipe(
         finalize(() => {
@@ -128,7 +129,9 @@ export class PhieuThuHoiComponent implements OnInit {
         this.disabled = true;
         this.isShowModal = true;
         this.title = "Xem chi tiết";
-        this.setOfCheckedId = new Set<number>(val.danhSachThietBi);
+        this.thietBiService.getList({ filter: "" }).subscribe((val2) => {
+          this.dsThietBi = val.danhSachThietBi;
+        });
       });
   }
 

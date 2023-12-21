@@ -26,7 +26,7 @@ namespace WebAPI.Models.ExportImport
         public string XuatXu { get; set; }
         public int? NamSX { get; set; }
         public string HangSanXuat { get; set; }
-        public int? TinhTrang { get; set; }
+        public string? TinhTrang { get; set; }
         public string Serial { get; set; }
         public string Model { get; set; }
         public decimal? GiaTien { get; set; }

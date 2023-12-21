@@ -5,18 +5,36 @@
     <div nz-row [nzGutter]="16">
       <div nz-col class="gutter-row" [nzSpan]="6">
         <div class="form-group">
-          <label class="control-label" class="filter-label">Từ khóa tìm kiếm</label>
-          <input type="text" class="form-control" [(ngModel)]="filter" placeholder="Nhập mã phiếu" />
+          <label class="control-label" class="filter-label"
+            >Từ khóa tìm kiếm</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="filter"
+            placeholder="Nhập mã phiếu"
+          />
         </div>
       </div>
       <div nz-col class="gutter-row" [nzSpan]="4">
         <div class="form-group">
-          <label class="control-label" class="filter-label">Ngày tạo phiếu</label>
-          <input type="date" class="form-control" [(ngModel)]="date" placeholder="Chọn ngày tạo phiếu" />
+          <label class="control-label" class="filter-label"
+            >Ngày tạo phiếu</label
+          >
+          <input
+            type="date"
+            class="form-control"
+            [(ngModel)]="date"
+            placeholder="Chọn ngày tạo phiếu"
+          />
         </div>
       </div>
       <div nz-col class="gutter-row" [nzSpan]="4" style="margin-top: 22px">
-        <button type="button" class="btn btn-info text-white" (click)="getList()">
+        <button
+          type="button"
+          class="btn btn-info text-white"
+          (click)="getList()"
+        >
           Tìm kiếm
         </button>
       </div>
@@ -24,17 +42,30 @@
   </div>
   <div class="d-flex justify-content-between mb-1 align-items-center">
     <h3 style="font-weight: 500; font-size: 16px">Danh sách phiếu bảo dưỡng</h3>
-    <button nz-button nzType="default" style="display: flex; align-items: center;" (click)="exportExcel()">
+    <button
+      nz-button
+      nzType="default"
+      style="display: flex; align-items: center"
+      (click)="exportExcel()"
+    >
       <span nz-icon nzType="download" nzTheme="outline"></span>
       Export excel
     </button>
   </div>
-  <div class="card" style="padding: 20px;">
+  <div class="card" style="padding: 20px">
     <div class="font-16 p-b-10 color-text-title color-text-title mb-3">
-      Tổng Số lượng thiết bị: <b>{{thongKe.tongSoLuong || 0| number: '1.0-0' }}</b>
+      Tổng Số lượng thiết bị:
+      <b>{{ thongKe.tongSoLuong || 0 | number : "1.0-0" }}</b>
     </div>
-    <nz-table #basicTable [nzData]="danhSach" nzBordered [nzPageIndex]="pageIndex" [nzPageSize]="pageSize"
-      [nzTotal]="total" (nzPageIndexChange)="getList($event)">
+    <nz-table
+      #basicTable
+      [nzData]="danhSach"
+      nzBordered
+      [nzPageIndex]="pageIndex"
+      [nzPageSize]="pageSize"
+      [nzTotal]="total"
+      (nzPageIndexChange)="getList($event)"
+    >
       <thead>
         <tr>
           <th class="text-center">#</th>
@@ -53,10 +84,15 @@
           <td class="text-center">{{ data.createTime | date }}</td>
           <td class="text-center">{{ data.tongThietBi }}</td>
           <td class="text-center">
-            <span class="badge bg-secondary" *ngIf="data.trangThai == 0">Chờ duyệt</span>
-            <span class="badge bg-danger" *ngIf="data.trangThai == 2">Từ chối</span>
-            <span class="badge bg-primary" *ngIf="data.trangThai == 1">Duyệt phiếu</span>
-            <span class="badge bg-success" *ngIf="data.trangThai == 3">Đã sửa xong</span>
+            <span class="badge bg-secondary" *ngIf="data.trangThai == 0"
+              >Chờ duyệt</span
+            >
+            <span class="badge bg-primary" *ngIf="data.trangThai == 1"
+              >Duyệt phiếu</span
+            >
+            <span class="badge bg-success" *ngIf="data.trangThai == 2"
+              >Đã sửa xong</span
+            >
           </td>
         </tr>
       </tbody>

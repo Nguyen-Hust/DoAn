@@ -19,6 +19,8 @@ import { provideNzI18n, vi_VN } from "ng-zorro-antd/i18n";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { NzIconModule } from "ng-zorro-antd/icon";
 import { SpinnerComponent } from "./layout/spinner/spinner.component";
+import { ThongTinThietBiComponent } from "./pages/thong-tin-thiet-bi/thong-tin-thiet-bi.component";
+import { NgZorroAntdModule } from "./sharded/ng-zorro-antd.module";
 
 //all components routes
 const routes: Routes = [
@@ -39,6 +41,10 @@ const routes: Routes = [
     ],
     canActivate: [AuthGuard],
   },
+  {
+    path: "danh-sach-thiet-bi/:id",
+    component: ThongTinThietBiComponent,
+  },
   { path: "login", component: LoginComponent },
   { path: "**", redirectTo: "/dashboard", pathMatch: "full" },
 ];
@@ -49,7 +55,12 @@ export function tokenGetter() {
 }
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, SpinnerComponent],
+  declarations: [
+    AppComponent,
+    LoginComponent,
+    SpinnerComponent,
+    ThongTinThietBiComponent,
+  ],
   imports: [
     BrowserModule,
     HttpClientModule,
@@ -57,6 +68,7 @@ export function tokenGetter() {
     ReactiveFormsModule,
     BrowserAnimationsModule,
     NzIconModule,
+    NgZorroAntdModule,
     RouterModule.forRoot(routes),
     JwtModule.forRoot({
       config: {

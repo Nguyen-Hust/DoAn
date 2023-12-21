@@ -11,9 +11,11 @@ using WebAPI.Models.NhanVien;
 using WebAPI.Models.PhieuBaoDuong;
 using WebAPI.Models.PhieuNhapXuat;
 using WebAPI.Models.PhieuSuaChua;
+using WebAPI.Models.PhongBan;
 using WebAPI.Models.Shared;
 using WebAPI.Models.ThietBiYTe;
 using WebAPI.Models.ThongTinChiTietThietBi;
+using static iTextSharp.text.pdf.AcroFields;
 
 namespace WebAPI.Controllers
 {
@@ -136,12 +138,22 @@ namespace WebAPI.Controllers
 
         [HttpPost]
         [Route("create")]
-        public async Task<PhieuNhapXuatDto> CreateAsync(PhieuNhapXuatDto product)
+        public async Task<CommonResultDto<PhieuNhapXuatDto>> CreateAsync(PhieuNhapXuatDto product)
         {
             try
             {
                 string userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
                 var nhanVienId = _context.NhanSu.First(_ => _.AccountId == userId).Id;
+                var temp = _context.PhieuNhapXuat.FirstOrDefault(_ => _.Ma == product.Ma && _.LoaiPhieu == product.LoaiPhieu);
+                if (temp != null) return new CommonResultDto<PhieuNhapXuatDto>("Mã bị trùng");
+                if(product.LoaiPhieu == 1)
+                {
+                    foreach (var item in product.ThongTinChiTietThietBiDtos)
+                    {
+                        var temp2 = _context.ThongTinChiTietThietBi.FirstOrDefault(_ => _.Ma == item.Ma);
+                        if (temp2 != null) return new CommonResultDto<PhieuNhapXuatDto>($"Mã thiết bị: {item.Ma} bị trùng");
+                    }
+                }
                 var entity = new PhieuNhapXuatEntity
                 {
                     Id = product.Id,
@@ -168,7 +180,7 @@ namespace WebAPI.Controllers
                                 Id = item.Id,
                                 Ma = item.Ma,
                                 ThietBiYTeId = item.ThietBiYTeId,
-                                NgayNhap = item.NgayNhap,
+                                NgayNhap = product.NgayNhapXuat,
                                 XuatXu = item.XuatXu,
                                 NamSX = item.NamSX,
                                 HangSanXuat = item.HangSanXuat,
@@ -195,195 +207,30 @@ namespace WebAPI.Controllers
                         else
                         {
                             var entityThietBi = await _context.ThongTinChiTietThietBi.FindAsync(item.Id);
-                            var _ = item;
-                            entityThietBi.Ma = _.Ma;
-                            entityThietBi.NgayNhap = _.NgayNhap;
-                            entityThietBi.XuatXu = _.XuatXu;
-                            entityThietBi.NamSX = _.NamSX;
-                            entityThietBi.HangSanXuat = _.HangSanXuat;
-                            entityThietBi.TinhTrang = _.TinhTrang;
-                            entityThietBi.KhoaId = _.KhoaId;
-                            entityThietBi.NhanVienId = _.NhanVienId;
-                            entityThietBi.Serial = _.Serial;
-                            entityThietBi.Model = _.Model;
-                            entityThietBi.GiaTien = _.GiaTien;
-                            entityThietBi.ThoiGianBaoDuong = _.ThoiGianBaoDuong;
-                            entityThietBi.DaXuat = true;
-                            await _context.SaveChangesAsync();
-
-                            var entityChiTietPhieu = new ChiTietPhieuNhapXuatEntity
+                            if(entityThietBi != null)
                             {
-                                PhieuNhapXuatId = entity.Id,
-                                ChiTietThietBiId = entityThietBi.Id,
-                                GiaTien = item.GiaTien
-                            };
-                            _context.ChiTietPhieuNhapXuat.Add(entityChiTietPhieu);
+                                entityThietBi.DaXuat = true;
+                                await _context.SaveChangesAsync();
+
+                                var entityChiTietPhieu = new ChiTietPhieuNhapXuatEntity
+                                {
+                                    PhieuNhapXuatId = entity.Id,
+                                    ChiTietThietBiId = entityThietBi.Id,
+                                    GiaTien = item.GiaTien
+                                };
+                                _context.ChiTietPhieuNhapXuat.Add(entityChiTietPhieu);
+                            }
                         }
                     }
                 }
                 await _context.SaveChangesAsync();
-                return product;
+                return new CommonResultDto<PhieuNhapXuatDto>(product);
             }catch(Exception e)
             {
-                return null;
+                return new CommonResultDto<PhieuNhapXuatDto>(e.Message);
             }
         }
 
-        [HttpPost]
-        [Route("update")]
-        public async Task<CommonResultDto<PhieuNhapXuatDto>> Update(int id, PhieuNhapXuatDto product)
-        {
-            if (id != product.Id)
-            {
-                return new CommonResultDto<PhieuNhapXuatDto>("bad request");
-            }
-            var entity = await _context.PhieuNhapXuat.FindAsync(id);
-            if (entity == null)
-            {
-                return new CommonResultDto<PhieuNhapXuatDto>("Not found");
-            }
-            string userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
-            var nhanVienId = _context.NhanSu.First(_ => _.AccountId == userId).Id;
-            entity.Ma = product.Ma;
-            entity.NgayNhapXuat = product.NgayNhapXuat;
-            entity.NhaCungCap = product.NhaCungCap;
-            entity.NguoiDaiDien = product.NguoiDaiDien;
-            entity.NhanVienId = nhanVienId;
-            entity.SoLuong = product.SoLuong;
-            entity.TongTien = product.TongTien;
-            entity.GhiChu = product.GhiChu;
-            entity.LoaiPhieu = product.LoaiPhieu;
-            var temp = _context.ChiTietPhieuNhapXuat.Where(_ => _.PhieuNhapXuatId == id);
-            _context.ChiTietPhieuNhapXuat.RemoveRange(temp);
-            if (product.ThongTinChiTietThietBiDtos != null && product.ThongTinChiTietThietBiDtos.Count > 0)
-            {
-                foreach (var item in product.ThongTinChiTietThietBiDtos)
-                {
-                    if(product.LoaiPhieu == 1)
-                    {
-                        var etntitThongTinTB = await _context.ThongTinChiTietThietBi.FirstOrDefaultAsync(_ => _.Id == item.Id);
-                        if (etntitThongTinTB != null)
-                        {
-                            etntitThongTinTB.Ma = item.Ma;
-                            etntitThongTinTB.ThietBiYTeId = item.ThietBiYTeId;
-                            etntitThongTinTB.NgayNhap = item.NgayNhap;
-                            etntitThongTinTB.XuatXu = item.XuatXu;
-                            etntitThongTinTB.NamSX = item.NamSX;
-                            etntitThongTinTB.HangSanXuat = item.HangSanXuat;
-                            etntitThongTinTB.TinhTrang = item.TinhTrang;
-                            etntitThongTinTB.KhoaId = item.KhoaId;
-                            etntitThongTinTB.NhanVienId = item?.NhanVienId;
-                            etntitThongTinTB.Serial = item.Serial;
-                            etntitThongTinTB.Model = item.Model;
-                            etntitThongTinTB.GiaTien = item.GiaTien;
-                            etntitThongTinTB.ThoiGianBaoDuong = item.ThoiGianBaoDuong;
-                            etntitThongTinTB.DaXuat = item.DaXuat;
-
-                            var entityChiTietPhieu = new ChiTietPhieuNhapXuatEntity
-                            {
-                                PhieuNhapXuatId = entity.Id,
-                                ChiTietThietBiId = item.Id,
-                                GiaTien = item.GiaTien
-                            };
-                            _context.ChiTietPhieuNhapXuat.Add(entityChiTietPhieu);
-                        }
-                        else
-                        {
-                            var entityThietBi = new ThongTinChiTietThietBiEntity
-                            {
-                                Id = item.Id,
-                                Ma = item.Ma,
-                                ThietBiYTeId = item.ThietBiYTeId,
-                                NgayNhap = item.NgayNhap,
-                                XuatXu = item.XuatXu,
-                                NamSX = item.NamSX,
-                                HangSanXuat = item.HangSanXuat,
-                                TinhTrang = item.TinhTrang,
-                                KhoaId = item.KhoaId,
-                                NhanVienId = item?.NhanVienId,
-                                Serial = item.Serial,
-                                Model = item.Model,
-                                GiaTien = item.GiaTien,
-                                ThoiGianBaoDuong = item.ThoiGianBaoDuong,
-                                DaXuat = item.DaXuat
-                            };
-                            _context.ThongTinChiTietThietBi.Add(entityThietBi);
-                            await _context.SaveChangesAsync();
-
-                            var entityChiTietPhieu = new ChiTietPhieuNhapXuatEntity
-                            {
-                                PhieuNhapXuatId = entity.Id,
-                                ChiTietThietBiId = entityThietBi.Id,
-                                GiaTien = item.GiaTien
-                            };
-                            _context.ChiTietPhieuNhapXuat.Add(entityChiTietPhieu);
-                        }
-                    }else
-                    {
-                        var etntitThongTinTB = await _context.ThongTinChiTietThietBi.FirstOrDefaultAsync(_ => _.Id == item.Id);
-                        if (etntitThongTinTB != null)
-                        {
-                            etntitThongTinTB.Ma = item.Ma;
-                            etntitThongTinTB.ThietBiYTeId = item.ThietBiYTeId;
-                            etntitThongTinTB.NgayNhap = item.NgayNhap;
-                            etntitThongTinTB.XuatXu = item.XuatXu;
-                            etntitThongTinTB.NamSX = item.NamSX;
-                            etntitThongTinTB.HangSanXuat = item.HangSanXuat;
-                            etntitThongTinTB.TinhTrang = item.TinhTrang;
-                            etntitThongTinTB.KhoaId = item.KhoaId;
-                            etntitThongTinTB.NhanVienId = item?.NhanVienId;
-                            etntitThongTinTB.Serial = item.Serial;
-                            etntitThongTinTB.Model = item.Model;
-                            etntitThongTinTB.GiaTien = item.GiaTien;
-                            etntitThongTinTB.ThoiGianBaoDuong = item.ThoiGianBaoDuong;
-                            etntitThongTinTB.DaXuat = true;
-
-                            var entityChiTietPhieu = new ChiTietPhieuNhapXuatEntity
-                            {
-                                PhieuNhapXuatId = entity.Id,
-                                ChiTietThietBiId = item.Id,
-                                GiaTien = item.GiaTien
-                            };
-                            _context.ChiTietPhieuNhapXuat.Add(entityChiTietPhieu);
-                        }
-                        else
-                        {
-                            var entityThietBi = new ThongTinChiTietThietBiEntity
-                            {
-                                Id = item.Id,
-                                Ma = item.Ma,
-                                ThietBiYTeId = item.ThietBiYTeId,
-                                NgayNhap = item.NgayNhap,
-                                XuatXu = item.XuatXu,
-                                NamSX = item.NamSX,
-                                HangSanXuat = item.HangSanXuat,
-                                TinhTrang = item.TinhTrang,
-                                KhoaId = item.KhoaId,
-                                NhanVienId = item?.NhanVienId,
-                                Serial = item.Serial,
-                                Model = item.Model,
-                                GiaTien = item.GiaTien,
-                                ThoiGianBaoDuong = item.ThoiGianBaoDuong,
-                                DaXuat = true
-                            };
-                            _context.ThongTinChiTietThietBi.Add(entityThietBi);
-                            await _context.SaveChangesAsync();
-
-                            var entityChiTietPhieu = new ChiTietPhieuNhapXuatEntity
-                            {
-                                PhieuNhapXuatId = entity.Id,
-                                ChiTietThietBiId = entityThietBi.Id,
-                                GiaTien = item.GiaTien
-                            };
-                            _context.ChiTietPhieuNhapXuat.Add(entityChiTietPhieu);
-                        }
-                    }
-                }
-            }
-
-            await _context.SaveChangesAsync();
-            return new CommonResultDto<PhieuNhapXuatDto>(product);
-        }
 
         [HttpPost]
         [Route("delete")]
@@ -440,8 +287,8 @@ namespace WebAPI.Controllers
                         NhanVienId = thongTinThietBi?.NhanVienId,
                         Serial = thongTinThietBi.Serial,
                         Model = thongTinThietBi.Model,
-                        GiaTien = thongTinThietBi.GiaTien,
-                        ThoiGianBaoDuong = thongTinThietBi.ThoiGianBaoDuong,
+                        GiaTien = thongTinThietBi.GiaTien ?? 0,
+                        ThoiGianBaoDuong = thongTinThietBi.ThoiGianBaoDuong ?? 0,
                         DaXuat = thongTinThietBi.DaXuat
                     };
                     dto.ThongTinChiTietThietBiDtos.Add(thongTinThietBiDto);

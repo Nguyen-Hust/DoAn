@@ -129,6 +129,9 @@ export class PhieuBanGiaoComponent implements OnInit {
         this.getList();
         this.isShowModal = false;
         this.toastr.success("Data Saved Successfully");
+        this.service.getDanhSachThietBi().subscribe((val) => {
+          this.dsThietBi = val;
+        });
       });
   }
 

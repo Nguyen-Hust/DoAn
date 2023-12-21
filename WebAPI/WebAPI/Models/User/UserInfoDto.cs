@@ -9,5 +9,7 @@ namespace WebAPI.Models.User
         public int? KhoaId { get; set; }
         public string Email { get; set; }
         public string SDT { get; set; }
+        public string Role { get; set; }
+        public int? NhanVienId { get; set; }
     }
 }

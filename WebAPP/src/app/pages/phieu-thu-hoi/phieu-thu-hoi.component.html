@@ -83,7 +83,11 @@
   <ng-container *nzModalContent>
     <div class="form-group mt-3">
       <label class="control-label me-3 label-form" for="nhanVienNhan">
-        Danh sách thiết bị ngoài kho</label
+        {{
+          disabled
+            ? "Danh sách thiết bị thu hồi"
+            : "Danh sách thiết bị ngoài kho"
+        }}</label
       >
       <nz-table
         class="mt-2"
@@ -97,7 +101,7 @@
           <tr>
             <th
               [nzChecked]="checked"
-              [nzDisabled]="disabled"
+              *ngIf="!disabled"
               (nzCheckedChange)="onAllChecked($event)"
             ></th>
             <th>Mã</th>
@@ -107,7 +111,7 @@
         <tbody>
           <tr *ngFor="let data of rowSelectionTable.data">
             <td
-              [nzDisabled]="disabled"
+              *ngIf="!disabled"
               [nzChecked]="setOfCheckedId.has(data.id)"
               (nzCheckedChange)="onItemChecked(data.id, $event)"
             ></td>

@@ -13,7 +13,6 @@ import { NotificationService } from "./notification.service";
   styles: [
     `
       .noti-scroll {
-        height: 400px;
         overflow-y: scroll;
       }
       .notify-item-nodata {

@@ -34,6 +34,7 @@ import { NavNotificationComponent } from "./nav-notification/nav-notification.co
 import { NgApexchartsModule } from "ng-apexcharts";
 import { ImportExcelComponent } from "../pages/danh-sach-thiet-bi/import-excel/import-excel/import-excel.component";
 import { LichSuBanGiaoComponent } from "../pages/lich-su-ban-giao/lich-su-ban-giao/lich-su-ban-giao.component";
+import { ThongTinThietBiComponent } from "../pages/thong-tin-thiet-bi/thong-tin-thiet-bi.component";
 
 const icons: IconDefinition[] = [
   StepBackwardOutline,
@@ -63,7 +64,7 @@ const icons: IconDefinition[] = [
     BaoCaoSuaChuaComponent,
     NavNotificationComponent,
     ImportExcelComponent,
-    LichSuBanGiaoComponent
+    LichSuBanGiaoComponent,
   ],
   imports: [
     CommonModule,
@@ -74,7 +75,7 @@ const icons: IconDefinition[] = [
     RouterModule,
     NzIconModule.forChild(icons),
     HttpClientModule,
-    NgApexchartsModule
+    NgApexchartsModule,
   ],
   providers: [DatePipe],
 })

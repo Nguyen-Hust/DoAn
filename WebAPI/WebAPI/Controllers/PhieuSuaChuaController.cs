@@ -32,9 +32,12 @@ namespace WebAPI.Controllers
             if (phieuSuaChua.Count > 0)
             {
                 var totalCount = phieuSuaChua.Count;
+                string userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+                var nhanVien = _context.NhanSu.FirstOrDefault(_ => _.AccountId == userId);
                 var items = phieuSuaChua
                     .Where(_ => string.IsNullOrEmpty(input.Filter) || _.Ma.Contains(input.Filter))
                     .Where(_ => !input.Date.HasValue || input.Date.Value.Date == _.CreateTime.Value.Date)
+                    .Where(_ => nhanVien?.Id == _.NhanVienId || nhanVien?.LaQuanLyThietBi == true)
                     .Skip(input.SkipCount ?? 0).Take(input.MaxResultCount ?? 1000).Select(_ => new PhieuSuaChuaDto
                     {
                         Id = _.Id,
@@ -353,14 +356,13 @@ namespace WebAPI.Controllers
         public async Task<List<ThongTinChiTietThietBiSelectDto>> GetDanhSachThietBiAsync()
         {
             var thietBiYTe = await _context.ThongTinChiTietThietBi.ToListAsync();
-            string userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
-            var nhanVienId = _context.NhanSu.FirstOrDefault(_ => _.AccountId == userId)?.Id;
-            var items = thietBiYTe.Where(_ => _.NhanVienId == nhanVienId)
+            var items = thietBiYTe
                 .Select(_ => new ThongTinChiTietThietBiSelectDto
                 {
                     Id = _.Id,
                     Ma = _.Ma,
-                    NhanVienId = _.NhanVienId
+                    NhanVienId = _.NhanVienId,
+                    DaXuat = _.DaXuat
                 }).ToList();
             return items;
 

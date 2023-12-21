@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -7,6 +8,7 @@ using System.Text;
 using WebAPI.Data;
 using WebAPI.Models.Authentication;
 using WebAPI.Models.Shared;
+using WebAPI.Models.ThietBiYTe;
 using WebAPI.Models.User;
 
 namespace WebAPI.Controllers
@@ -32,6 +34,43 @@ namespace WebAPI.Controllers
             _configuration = configuration;
             _context = context;
         }
+
+        [HttpGet]
+        [Route("abcd")]
+        public string Get2()
+        {
+            return "TEst";
+        }
+
+        [HttpGet]
+        [Route("abc")]
+        public async Task<string> Get()
+        {
+            try
+            {
+                var thietBiYTe = await _context.ThietBiYTe.ToListAsync();
+                if (thietBiYTe.Count > 0)
+                {
+                    var totalCount = thietBiYTe.Count;
+                    var items = thietBiYTe.Select(_ => new ThietBiYTeDto
+                    {
+                        Id = _.Id,
+                        Ten = _.Ten,
+                        Ma = _.Ma,
+                        LoaiTTBYT = _.LoaiTTBYT,
+                        MDRR = _.MDRR,
+                        SoLuong = _.SoLuong,
+                    }).ToList();
+                    return "abc";
+                }
+                return "abc";
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+        }
+
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
@@ -78,6 +117,8 @@ namespace WebAPI.Controllers
                 Ma = nhanVien?.Ma,
                 SDT = nhanVien?.SDT,
                 Ten = nhanVien?.Ten,
+                Role = nhanVien == null ? "admin" : (nhanVien.LaQuanLyThietBi == true ? "manager" : "user"),
+                NhanVienId = nhanVien?.Id
             };
         }
 

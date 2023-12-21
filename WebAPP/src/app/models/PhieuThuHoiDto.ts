@@ -4,5 +4,6 @@ export class PhieuThuHoiDto {
   nhanVienId: number;
   createTime: Date | null;
   tongThietBi: number | null;
-  danhSachThietBi: number[];
+  danhSachThietBiId: number[];
+  danhSachThietBi: any[];
 }

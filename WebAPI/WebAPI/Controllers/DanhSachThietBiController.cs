@@ -37,7 +37,7 @@ namespace WebAPI.Controllers
             if (phongBan.Count > 0)
             {
                 var totalCount = phongBan.Count;
-                var items = phongBan.Where(_ => string.IsNullOrEmpty(input.Filter) || _.Ma.Contains(input.Filter)).Where(x => x.NhanVienId == null).Skip(input.SkipCount ?? 0).Take(input.MaxResultCount ?? 1000)
+                var items = phongBan.Where(_ => string.IsNullOrEmpty(input.Filter) || _.Ma.Contains(input.Filter)).Skip(input.SkipCount ?? 0).Take(input.MaxResultCount ?? 1000)
                     .Select(_ => new ThongTinChiTietThietBiDto
                     {
                         Id = _.Id,
@@ -52,8 +52,9 @@ namespace WebAPI.Controllers
                         NhanVienId = _.NhanVienId,
                         Serial = _.Serial,
                         Model = _.Model,
-                        GiaTien = _.GiaTien,
-                        ThoiGianBaoDuong = _.ThoiGianBaoDuong
+                        GiaTien = _.GiaTien ?? 0,
+                        ThoiGianBaoDuong = _.ThoiGianBaoDuong ?? 0,
+                        DaXuat = _.DaXuat
                     }).ToList();
                 return new PagedResultDto<ThongTinChiTietThietBiDto>
                 {
@@ -67,6 +68,13 @@ namespace WebAPI.Controllers
                 Items = new List<ThongTinChiTietThietBiDto>(),
                 TotalCount = 0
             };
+        }
+
+        [HttpGet]
+        [Route("get-all-ma")]
+        public List<string> GetAllMa()
+        {
+            return _context.ThongTinChiTietThietBi.Select(_ => _.Ma).ToList();
         }
 
         [HttpGet]
@@ -88,8 +96,8 @@ namespace WebAPI.Controllers
                 NhanVienId = _.NhanVienId,
                 Serial = _.Serial,
                 Model = _.Model,
-                GiaTien = _.GiaTien,
-                ThoiGianBaoDuong = _.ThoiGianBaoDuong
+                GiaTien = _.GiaTien ?? 0,
+                ThoiGianBaoDuong = _.ThoiGianBaoDuong ?? 0
             };
         }
 
@@ -124,7 +132,7 @@ namespace WebAPI.Controllers
                 }
                 var _ = thietBi;
                 entity.Ma = _.Ma;
-                entity.NgayNhap = _.NgayNhap;
+                entity.NgayNhap = _.NgayNhap??DateTime.Now;
                 entity.XuatXu = _.XuatXu;
                 entity.NamSX = _.NamSX;
                 entity.HangSanXuat = _.HangSanXuat;
@@ -157,14 +165,14 @@ namespace WebAPI.Controllers
                         Ma = _.Ma,
                         ThietBiYTeId = _.ThietBiYTeId,
                         NgayNhap = _.NgayNhap,
-                        XuatXu = _.XuatXu,
+                        XuatXu = _.XuatXu ?? "",
                         NamSX = _.NamSX,
-                        HangSanXuat = _.HangSanXuat,
+                        HangSanXuat = _.HangSanXuat ?? "",
                         TinhTrang = _.TinhTrang,
                         KhoaId = _.KhoaId > 0 ? _.KhoaId : null,
                         NhanVienId = _.NhanVienId > 0 ? _.NhanVienId : null,
-                        Serial = _.Serial,
-                        Model = _.Model,
+                        Serial = _.Serial ?? "",
+                        Model = _.Model ?? "",
                         GiaTien = _.GiaTien,
                         ThoiGianBaoDuong = _.ThoiGianBaoDuong,
                     };
@@ -201,74 +209,7 @@ namespace WebAPI.Controllers
                 }
             }
             return ret;
-
-            // try
-            //{
-            //     string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", files.Name);
-            //     using(Stream stream = new FileStream(path, FileMode.Create))
-            //     {
-            //         files.CopyTo(stream);
-            //         var filePath = SaveFile(files);
-            //         var productRequests = ExcelHelper.Import<ThongTinThietBiReaderDto>(filePath);
-            //         foreach (var _ in productRequests)
-            //         {
-            //             var entityThietBi = new ThongTinChiTietThietBiEntity()
-            //             {
-            //                 Id = 0,
-            //                 Ma = _.Ma,
-            //                 ThietBiYTeId = _.ThietBiYTeId,
-            //                 NgayNhap = _.NgayNhap,
-            //                 XuatXu = _.XuatXu,
-            //                 NamSX = _.NamSX,
-            //                 HangSanXuat = _.HangSanXuat,
-            //                 TinhTrang = _.TinhTrang,
-            //                 KhoaId = _.KhoaId,
-            //                 NhanVienId = _.NhanVienId,
-            //                 Serial = _.Serial,
-            //                 Model = _.Model,
-            //                 GiaTien = _.GiaTien,
-            //                 ThoiGianBaoDuong = _.ThoiGianBaoDuong,
-            //             };
-            //             _context.ThongTinChiTietThietBi.Add(entityThietBi);
-            //             await _context.SaveChangesAsync();
-            //         }
-
-            //     }
-            //     return StatusCode(StatusCodes.Status201Created);
-            //}catch(Exception )
-            //{
-            //     return StatusCode(StatusCodes.Status500InternalServerError);
-            //}
         }
-
-        //private string SaveFile(IFormFile file)
-        //{
-        //    if (file.Length == 0)
-        //    {
-        //        throw new BadHttpRequestException("File is empty.");
-        //    }
-
-        //    var extension = Path.GetExtension(file.FileName);
-
-        //    var webRootPath = _webHostEnvironment.WebRootPath;
-        //    if (string.IsNullOrWhiteSpace(webRootPath))
-        //    {
-        //        webRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
-        //    }
-
-        //    var folderPath = Path.Combine(webRootPath, "uploads");
-        //    if (!Directory.Exists(folderPath))
-        //    {
-        //        Directory.CreateDirectory(folderPath);
-        //    }
-
-        //    var fileName = $"{Guid.NewGuid()}.{extension}";
-        //    var filePath = Path.Combine(folderPath, fileName);
-        //    using var stream = new FileStream(filePath, FileMode.Create);
-        //    file.CopyTo(stream);
-
-        //    return filePath;
-        //}
 
         protected void CheckFileIsCorrectTemplate(List<List<string>> excelValues)
         {
@@ -300,7 +241,7 @@ namespace WebAPI.Controllers
                 XuatXu = arrValue[3],
                 NamSX = tryInt(arrValue[4]),
                 HangSanXuat = arrValue[5],
-                TinhTrang = tryInt(arrValue[6]),
+                TinhTrang = arrValue[6],
                 KhoaId = await GetKhoa(arrValue[7]),
                 NhanVienId = await GetNhanVien(arrValue[8]),
                 Serial = arrValue[9],

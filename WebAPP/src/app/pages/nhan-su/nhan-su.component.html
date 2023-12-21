@@ -64,7 +64,24 @@
         <td class="text-center">{{ data?.email }}</td>
         <td class="text-center">{{ getTenKhoa(data?.khoaId) }}</td>
         <td class="text-center">{{ data?.diaChi }}</td>
-        <td class="text-center">{{ data?.laQuanLyThietBi }}</td>
+        <td class="text-center">
+          <span
+            nz-icon
+            nzType="check-circle"
+            nzTheme="outline"
+            *ngIf="data?.laQuanLyThietBi"
+            class="text-success"
+            style="font-size: 20px"
+          ></span>
+          <span
+            nz-icon
+            nzType="close-circle"
+            nzTheme="outline"
+            *ngIf="data?.laQuanLyThietBi != true"
+            class="text-danger"
+            style="font-size: 20px"
+          ></span>
+        </td>
         <td class="text-center">
           <button
             type="button"
@@ -146,7 +163,7 @@
       <div class="form-group mt-3">
         <label class="control-label me-3 label-form" for="khoaId"> Khoa:</label>
         <select formControlName="khoaId" id="khoaId" class="form-select">
-          <option value="">Chọn khoa</option>
+          <option value="" disabled selected hidden>Chọn khoa</option>
           <option *ngFor="let item of listKhoa" [ngValue]="item.id">
             {{ item.ten }}
           </option>
@@ -231,19 +248,6 @@
           class="form-control"
           type="password"
         />
-      </div>
-      <div class="form-group mt-3">
-        <label class="control-label me-3 label-form" for="loaiAccount">
-          Loại tài khoản:</label
-        >
-        <select
-          formControlName="loaiAccount"
-          id="loaiAccount"
-          class="form-select"
-        >
-          <option [ngValue]="'user'">Người dùng</option>
-          <option [ngValue]="'manager'">Quản lý</option>
-        </select>
       </div>
     </form>
   </ng-container>

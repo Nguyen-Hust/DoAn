@@ -73,7 +73,9 @@ namespace WebAPI.Controllers
             var listThietBi = _context.ThongTinChiTietThietBi.Where(_ => input.DanhSachThietBi.Contains(_.Id)).ToList();
             foreach (var item in listThietBi)
             {
+                var nhanVien = _context.NhanSu.First(c => c.Id == input.NhanVienNhan);
                 item.NhanVienId = input.NhanVienNhan;
+                item.KhoaId = nhanVien.KhoaId;
                 var lichSu = new LichSuBanGiaoThuHoiEntity
                 {
                     Id = 0,
@@ -120,6 +122,7 @@ namespace WebAPI.Controllers
         {
             var thietBiYTe = await _context.ThongTinChiTietThietBi.ToListAsync();
             var items = thietBiYTe
+                .Where(_ => _.DaXuat != true)
                 .Select(_ => new ThongTinChiTietThietBiSelectDto
                 {
                     Id = _.Id,

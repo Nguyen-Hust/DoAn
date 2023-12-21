@@ -1,0 +1,46 @@
+<div class="container mt-3">
+  <div class="card">
+    <h5 class="card-title p-3">Thông tin chi tiết của thiết bị</h5>
+    <nz-descriptions
+      [nzBordered]="true"
+      [nzColumn]="{ xxl: 2, xl: 2, lg: 2, md: 1, sm: 1, xs: 1 }"
+    >
+      <nz-descriptions-item nzTitle="Mã">{{
+        thietbi?.ma
+      }}</nz-descriptions-item>
+      <nz-descriptions-item nzTitle="Ngày nhập">{{
+        thietbi?.ngayNhap | date : "dd/MM/yyyy"
+      }}</nz-descriptions-item>
+      <nz-descriptions-item nzTitle="Xuất xứ">{{
+        thietbi?.xuatXu
+      }}</nz-descriptions-item>
+      <nz-descriptions-item nzTitle="Năm sản xuất">{{
+        thietbi?.namSX
+      }}</nz-descriptions-item>
+      <nz-descriptions-item nzTitle="Hãng sản xuất">{{
+        thietbi?.hangSanXuat
+      }}</nz-descriptions-item>
+      <nz-descriptions-item nzTitle="Tình trạng">{{
+        thietbi?.tinhTrang
+      }}</nz-descriptions-item>
+      <nz-descriptions-item nzTitle="Khoa">{{
+        getKhoa(thietbi?.khoaId)
+      }}</nz-descriptions-item>
+      <nz-descriptions-item nzTitle="Nhân viên">{{
+        getNhanVien(thietbi?.nhanVienId)
+      }}</nz-descriptions-item>
+      <nz-descriptions-item nzTitle="Serial">{{
+        thietbi?.serial
+      }}</nz-descriptions-item>
+      <nz-descriptions-item nzTitle="Model">{{
+        thietbi?.model
+      }}</nz-descriptions-item>
+      <nz-descriptions-item nzTitle="Giá tiền">{{
+        thietbi?.giaTien
+      }}</nz-descriptions-item>
+      <nz-descriptions-item nzTitle="Thời gian bảo dưỡng"
+        >{{ thietbi?.thoiGianBaoDuong }} tháng</nz-descriptions-item
+      >
+    </nz-descriptions>
+  </div>
+</div>

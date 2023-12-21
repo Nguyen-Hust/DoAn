@@ -18,7 +18,7 @@ namespace WebAPI.Entities
         public int? NamSX { get; set; }
         [MaxLength(255)]
         public string HangSanXuat { get; set; }
-        public int? TinhTrang { get; set; }
+        public string? TinhTrang { get; set; }
         public int? KhoaId { get; set; }
         public int? NhanVienId { get; set; }
         [MaxLength(255)]

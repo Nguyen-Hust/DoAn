@@ -17,6 +17,7 @@ import { BaoCaoXuatComponent } from "../pages/bao-cao-xuat/bao-cao-xuat.componen
 import { BaoCaoBaoDuongComponent } from "../pages/bao-cao-bao-duong/bao-cao-bao-duong.component";
 import { BaoCaoSuaChuaComponent } from "../pages/bao-cao-sua-chua/bao-cao-sua-chua.component";
 import { LichSuBanGiaoComponent } from "../pages/lich-su-ban-giao/lich-su-ban-giao/lich-su-ban-giao.component";
+import { ThongTinThietBiComponent } from "../pages/thong-tin-thiet-bi/thong-tin-thiet-bi.component";
 
 @NgModule({
   imports: [
@@ -71,23 +72,23 @@ import { LichSuBanGiaoComponent } from "../pages/lich-su-ban-giao/lich-su-ban-gi
       },
       {
         path: "bao-cao-nhap",
-        component: BaoCaoNhapComponent
+        component: BaoCaoNhapComponent,
       },
       {
         path: "bao-cao-xuat",
-        component: BaoCaoXuatComponent
+        component: BaoCaoXuatComponent,
       },
       {
         path: "bao-cao-bao-duong",
-        component: BaoCaoBaoDuongComponent
-      }, 
+        component: BaoCaoBaoDuongComponent,
+      },
       {
         path: "bao-cao-sua-chua",
-        component: BaoCaoSuaChuaComponent
+        component: BaoCaoSuaChuaComponent,
       },
       {
         path: "lich-su-ban-giao",
-        component: LichSuBanGiaoComponent
+        component: LichSuBanGiaoComponent,
       },
     ]),
   ],

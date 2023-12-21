@@ -1,23 +1,16 @@
-<nav class="navbar navbar-expand-lg navbar navbar-dark bg-dark mb-3">
-  <a class="navbar-brand" href="#">THIẾT BỊ Y TẾ</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText"
-    aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarText">
-    <ul class="navbar-nav mr-auto">
-      <li *ngIf="isUserAuthenticated()" class="nav-item">
-        <a class="nav-link" routerLink="/product">Products</a>
-      </li>
-      <li *ngIf="isUserAuthenticated()" class="nav-item">
-        <a class="nav-link" (click)="logOut()">Logout</a>
-      </li>
-    </ul>
-  </div>
-</nav>
 <div *ngIf="isUserAuthenticated()" style="color: green" class="row">
-  <div class="col-lg-4" >
-    <div class="card" style="width: 100%; height: 350px; margin-top: 16px; display: flex; align-items: center; justify-content: center;">
+  <div class="col-lg-4">
+    <div
+      class="card"
+      style="
+        width: 100%;
+        height: 350px;
+        margin-top: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      "
+    >
       <div id="chart">
         <apx-chart
           [series]="chartOptions.series!"
@@ -36,7 +29,9 @@
             <div class="item-total">
               <div class="title">Tổng phiếu nhập</div>
               <div class="info">
-                <strong>{{ danhSach.tongPhieuNhap || 0| number: '1.0-0' }}</strong>
+                <strong>{{
+                  danhSach.tongPhieuNhap || 0 | number : "1.0-0"
+                }}</strong>
               </div>
             </div>
           </div>
@@ -48,7 +43,9 @@
             <div class="item-total">
               <div class="title">Tổng phiếu xuất</div>
               <div class="info">
-                <strong>{{ danhSach.tongPhieuXuat || 0| number: '1.0-0' }}</strong>
+                <strong>{{
+                  danhSach.tongPhieuXuat || 0 | number : "1.0-0"
+                }}</strong>
               </div>
             </div>
           </div>
@@ -60,7 +57,9 @@
             <div class="item-total">
               <div class="title">Tổng phiếu sửa chữa</div>
               <div class="info">
-                <strong>{{ danhSach.tongPhieuSuaChua || 0| number: '1.0-0' }}</strong>
+                <strong>{{
+                  danhSach.tongPhieuSuaChua || 0 | number : "1.0-0"
+                }}</strong>
               </div>
             </div>
           </div>
@@ -72,7 +71,9 @@
             <div class="item-total">
               <div class="title">Tổng phiếu Bảo dưỡng</div>
               <div class="info">
-                <strong>{{ danhSach.tongPhieuBaoDuong || 0| number: '1.0-0' }}</strong>
+                <strong>{{
+                  danhSach.tongPhieuBaoDuong || 0 | number : "1.0-0"
+                }}</strong>
               </div>
             </div>
           </div>
@@ -84,7 +85,9 @@
             <div class="item-total">
               <div class="title">Tổng phiếu thu hồi</div>
               <div class="info">
-                <strong>{{ danhSach.tongPhieuThuHoi || 0| number: '1.0-0' }}</strong>
+                <strong>{{
+                  danhSach.tongPhieuThuHoi || 0 | number : "1.0-0"
+                }}</strong>
               </div>
             </div>
           </div>
@@ -96,7 +99,9 @@
             <div class="item-total">
               <div class="title">Tổng phiếu bàn giao</div>
               <div class="info">
-                <strong>{{ danhSach.tongPhieuBanGiao || 0| number: '1.0-0' }}</strong>
+                <strong>{{
+                  danhSach.tongPhieuBanGiao || 0 | number : "1.0-0"
+                }}</strong>
               </div>
             </div>
           </div>
@@ -112,7 +117,7 @@
         <div class="item-total">
           <div class="title">Tổng tiền nhập</div>
           <div class="info">
-            <strong>{{ danhSach.tongTienNhap || 0| number: '1.0-0' }}</strong>
+            <strong>{{ danhSach.tongTienNhap || 0 | number : "1.0-0" }}</strong>
           </div>
         </div>
       </div>
@@ -124,7 +129,7 @@
         <div class="item-total">
           <div class="title">Tổng xuất</div>
           <div class="info">
-            <strong>{{ danhSach.tongTienXuat || 0| number: '1.0-0' }}</strong>
+            <strong>{{ danhSach.tongTienXuat || 0 | number : "1.0-0" }}</strong>
           </div>
         </div>
       </div>

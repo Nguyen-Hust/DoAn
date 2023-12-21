@@ -9,6 +9,7 @@ import { LoaiThietBiService } from "../loai-thiet-bi/loai-thiet-bi.service";
 import { PhieuSuaChuaDto } from "src/app/models/PhieuSuaChuaDto";
 import { NhanSuService } from "../nhan-su/nhan-su.service";
 import { LoaderService } from "src/app/services/loader.service";
+import { UserSessionService } from "src/app/layout/user-session.service";
 
 @Component({
   selector: "app-phieu-sua-chua",
@@ -30,6 +31,7 @@ export class PhieuSuaChuaComponent implements OnInit {
   total = 0;
 
   dsThietBi: any[] = [];
+  dsThietBiSuaChua: any[] = [];
   dsNhanSu: any[] = [];
 
   constructor(
@@ -38,7 +40,8 @@ export class PhieuSuaChuaComponent implements OnInit {
     private nhanSuService: NhanSuService,
     private toastr: ToastrService,
     private modal: NzModalService,
-    private loadingService: LoaderService
+    private loadingService: LoaderService,
+    public userService: UserSessionService
   ) {}
 
   ngOnInit() {
@@ -50,6 +53,10 @@ export class PhieuSuaChuaComponent implements OnInit {
 
     this.service.getDanhSachThietBi().subscribe((val) => {
       this.dsThietBi = val;
+      this.dsThietBiSuaChua = val.filter(
+        (_) =>
+          _.daXuat != true && this.userService.user?.nhanVienId == _.nhanVienId
+      );
     });
 
     this.nhanSuService.getList({ filter: "" }).subscribe((val) => {

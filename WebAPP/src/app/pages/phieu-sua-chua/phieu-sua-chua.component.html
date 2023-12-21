@@ -95,7 +95,7 @@
             class="btn btn-success text-white me-2"
             nzTooltipTitle="Xác nhận sửa xong"
             (click)="completed(data.id)"
-            *ngIf="data.trangThai == 1"
+            *ngIf="data.trangThai == 1 && userService.user?.role == 'manager'"
           >
             <span nz-icon nzType="check" nzTheme="outline"></span>
           </button>
@@ -105,7 +105,7 @@
             class="btn btn-primary text-white me-2"
             nzTooltipTitle="Duyệt"
             (click)="approve(data.id)"
-            *ngIf="data.trangThai == 0"
+            *ngIf="data.trangThai == 0 && userService.user?.role == 'manager'"
           >
             <span nz-icon nzType="forward" nzTheme="outline"></span>
           </button>
@@ -115,7 +115,7 @@
             class="btn btn-warning text-white me-2"
             nzTooltipTitle="Từ chối"
             (click)="deny(data.id)"
-            *ngIf="data.trangThai == 0"
+            *ngIf="data.trangThai == 0 && userService.user?.role == 'manager'"
           >
             <span nz-icon nzType="close" nzTheme="outline"></span>
           </button>
@@ -152,7 +152,7 @@
           class="form-control"
         >
           <option value="" disabled selected hidden>Chọn thiết bị</option>
-          <option *ngFor="let option of dsThietBi" [value]="option.id">
+          <option *ngFor="let option of dsThietBiSuaChua" [value]="option.id">
             {{ option.ma }}
           </option>
         </select>
