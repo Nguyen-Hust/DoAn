@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { NhanSuDto } from "src/app/models/NhanSuDto";
 import { NhanSuService } from "./nhan-su.service";
@@ -7,6 +7,7 @@ import { NzModalService } from "ng-zorro-antd/modal";
 import { finalize } from "rxjs";
 import { KhoaDto } from "src/app/models/KhoaDto";
 import { LoaderService } from "src/app/services/loader.service";
+import { NzTableQueryParams } from "ng-zorro-antd/table";
 
 @Component({
   selector: "app-nhan-su",
@@ -35,6 +36,7 @@ export class NhanSuComponent implements OnInit {
     private service: NhanSuService,
     private toastr: ToastrService,
     private modal: NzModalService,
+    private cdr: ChangeDetectorRef,
     private loadingService: LoaderService
   ) {}
 
@@ -67,8 +69,7 @@ export class NhanSuComponent implements OnInit {
     });
   }
 
-  getList(pageIndex = 1) {
-    this.pageIndex = pageIndex;
+  getList() {
     var body = {
       filter: this.filter,
       maxResultCount: this.pageSize,
@@ -81,7 +82,16 @@ export class NhanSuComponent implements OnInit {
       .subscribe((val) => {
         this.danhSach = val.items;
         this.total = val.totalCount;
+        this.cdr.markForCheck();
       });
+  }
+
+  onQueryParamsChange(data: NzTableQueryParams) {
+    if (this.pageIndex != data.pageIndex || this.pageSize != data.pageSize) {
+      this.pageIndex = data.pageIndex;
+      this.pageSize = data.pageSize;
+      this.getList();
+    }
   }
 
   delete(id: number, ten) {
@@ -235,7 +245,10 @@ export class NhanSuComponent implements OnInit {
   }
 
   getTenKhoa(id) {
-    var khoa = this.listKhoa.find((_) => _.id == id);
-    return khoa?.ten;
+    if(id != null || id != undefined) {
+      var khoa = this.listKhoa.find(_ => _.id == id);
+      return khoa?.ten;
+    }
+    return "";
   }
 }

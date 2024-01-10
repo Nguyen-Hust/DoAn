@@ -10,6 +10,7 @@ import { PhieuSuaChuaDto } from "src/app/models/PhieuSuaChuaDto";
 import { NhanSuService } from "../nhan-su/nhan-su.service";
 import { PhieuBaoDuongDto } from "src/app/models/PhieuBaoDuongDto";
 import { LoaderService } from "src/app/services/loader.service";
+import { NzTableQueryParams } from "ng-zorro-antd/table";
 
 @Component({
   selector: "app-phieu-bao-duong",
@@ -58,8 +59,7 @@ export class PhieuBaoDuongComponent implements OnInit {
     this.getList();
   }
 
-  getList(pageIndex = 1) {
-    this.pageIndex = pageIndex;
+  getList() {
     var body = {
       date: this.date,
       maxResultCount: this.pageSize,
@@ -74,6 +74,14 @@ export class PhieuBaoDuongComponent implements OnInit {
         this.danhSach = val.items;
         this.total = val.totalCount;
       });
+  }
+
+  onQueryParamsChange(data: NzTableQueryParams) {
+    if (this.pageIndex != data.pageIndex || this.pageSize != data.pageSize) {
+      this.pageIndex = data.pageIndex;
+      this.pageSize = data.pageSize;
+      this.getList();
+    }
   }
 
   getTenThietBi(id) {

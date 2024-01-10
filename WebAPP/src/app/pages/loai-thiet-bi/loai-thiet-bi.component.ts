@@ -6,6 +6,7 @@ import { ThietBiYTeDto } from "src/app/models/ThietBiYTeDto";
 import { LoaiThietBiService } from "./loai-thiet-bi.service";
 import { NzModalService } from "ng-zorro-antd/modal";
 import { LoaderService } from "src/app/services/loader.service";
+import { NzTableQueryParams } from "ng-zorro-antd/table";
 
 @Component({
   selector: "app-loai-thiet-bi",
@@ -42,8 +43,7 @@ export class LoaiThietBiComponent implements OnInit {
     this.getList();
   }
 
-  getList(pageIndex = 1) {
-    this.pageIndex = pageIndex;
+  getList() {
     var body = {
       filter: this.filter,
       maxResultCount: this.pageSize,
@@ -57,6 +57,14 @@ export class LoaiThietBiComponent implements OnInit {
         this.danhSach = val.items;
         this.total = val.totalCount;
       });
+  }
+
+  onQueryParamsChange(data: NzTableQueryParams) {
+    if (this.pageIndex != data.pageIndex || this.pageSize != data.pageSize) {
+      this.pageIndex = data.pageIndex;
+      this.pageSize = data.pageSize;
+      this.getList();
+    }
   }
 
   openModalCreate() {

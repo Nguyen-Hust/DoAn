@@ -8,6 +8,7 @@ import { LoaderService } from 'src/app/services/loader.service';
 import { finalize } from 'rxjs';
 import { BaoCaoService } from '../bao-cao-nhap/bao-cao.service';
 import { ThongKeDto } from 'src/app/models/ThongKeDto';
+import { NzTableQueryParams } from 'ng-zorro-antd/table';
 
 @Component({
   selector: 'app-bao-cao-bao-duong',
@@ -60,8 +61,7 @@ export class BaoCaoBaoDuongComponent implements OnInit  {
     })
   }
 
-  getList(pageIndex = 1) {
-    this.pageIndex = pageIndex;
+  getList() {
     var body = {
       date: this.date,
       maxResultCount: this.pageSize,
@@ -76,6 +76,14 @@ export class BaoCaoBaoDuongComponent implements OnInit  {
         this.danhSach = val.items;
         this.total = val.totalCount;
       });
+  }
+
+  onQueryParamsChange(data: NzTableQueryParams) {
+    if (this.pageIndex != data.pageIndex || this.pageSize != data.pageSize) {
+      this.pageIndex = data.pageIndex;
+      this.pageSize = data.pageSize;
+      this.getList();
+    }
   }
 
   getTenThietBi(id) {

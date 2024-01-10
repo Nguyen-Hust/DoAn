@@ -31,7 +31,6 @@ export class UserSessionService {
       })
       .pipe(
         tap((response) => {
-          console.log(response);
           this.setUser(response);
         })
       );

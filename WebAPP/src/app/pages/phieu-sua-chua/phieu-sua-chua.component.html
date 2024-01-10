@@ -52,7 +52,8 @@
     [nzPageIndex]="pageIndex"
     [nzPageSize]="pageSize"
     [nzTotal]="total"
-    (nzPageIndexChange)="getList($event)"
+    [nzFrontPagination]="false"
+    (nzQueryParams)="onQueryParamsChange($event)"
   >
     <thead>
       <tr>

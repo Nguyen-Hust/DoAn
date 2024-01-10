@@ -2,7 +2,11 @@
   <nz-sider nzCollapsible nzWidth="200px">
     <div class="logo"><img src="/assets/logo2.png" alt="logo" /></div>
     <ul nz-menu nzTheme="dark" nzMode="inline">
-      <li nz-menu-item routerLink="">
+      <li nz-menu-item routerLink="" 
+      *ngIf="
+              userService.user?.role == 'admin' ||
+              userService.user?.role == 'manager'
+            ">
         <span nz-icon nzType="home" nzTheme="outline"></span>
         <span>Home</span>
       </li>
@@ -84,7 +88,20 @@
             Báo cáo bảo dưỡng
           </li>
           <li nz-menu-item routerLink="/bao-cao-sua-chua">Báo cáo sửa chữa</li>
-          <li nz-menu-item routerLink="/lich-su-ban-giao">Lịch sử bàn giao</li>
+          <!-- <li nz-menu-item routerLink="/lich-su-ban-giao">Lịch sử bàn giao</li> -->
+        </ul>
+      </li>
+      <li
+        nz-submenu
+        nzIcon="shop"
+        nzTitle="Quản lý thiết bị"
+        nzOpen
+        *ngIf="userService.user?.role == 'user'"
+      >
+        <ul>
+          <li nz-menu-item routerLink="/lich-su-ban-giao">
+            Danh sách thiết bị
+          </li>
         </ul>
       </li>
       <li
@@ -184,8 +201,7 @@
       <router-outlet></router-outlet>
     </nz-content>
     <nz-footer
-      >Copyright © 2023 benhviennoitiet.vn. All Rights Reserved , Designed By:
-      Thành Đạt</nz-footer
+      >Copyright © 2023 benhviennoitiet.vn. All Rights Reserved</nz-footer
     >
   </nz-layout>
 </nz-layout>

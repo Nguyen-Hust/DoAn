@@ -33,14 +33,14 @@
     </button>
   </div>
   <nz-table
-    #basicTable
     [nzData]="danhSach"
     #borderedTable
     nzBordered
     [nzPageIndex]="pageIndex"
     [nzPageSize]="pageSize"
     [nzTotal]="total"
-    (nzPageIndexChange)="getList($event)"
+    [nzFrontPagination]="false"
+    (nzQueryParams)="onQueryParamsChange($event)"
   >
     <thead>
       <tr>
@@ -53,7 +53,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let data of basicTable.data; index as i">
+      <tr *ngFor="let data of borderedTable.data; index as i">
         <td class="text-center">{{ i + 1 }}</td>
         <td>{{ data?.ma }}</td>
         <td>{{ data?.ten }}</td>

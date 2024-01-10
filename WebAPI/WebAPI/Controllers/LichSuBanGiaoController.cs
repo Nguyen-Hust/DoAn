@@ -15,9 +15,9 @@ namespace WebAPI.Controllers
     {
         private readonly ApplicationDbContext _context;
         public LichSuBanGiaoController(ApplicationDbContext context)
-		{
+        {
             _context = context;
-		}
+        }
         [HttpPost]
         [Route("get-list")]
         public async Task<ActionResult<PagedResultDto<LichSuBanGiaoDto>>> GetList(SearchListDto input)
@@ -46,6 +46,26 @@ namespace WebAPI.Controllers
                 Items = new List<LichSuBanGiaoDto>(),
                 TotalCount = 0
             };
+        }
+
+        [HttpGet]
+        [Route("get-lich-su-by-thiet-bi")]
+        public async Task<List<LichSuBanGiaoDto>> GetListLichSuBanGiaoByThietBiAsync(int id)
+        {
+            var lichSuQuery = await _context.LichSuBanGiaoThuHoi.ToListAsync();
+            if(lichSuQuery.Count > 0)
+            {
+                var lichSu = lichSuQuery.Where(_ => _.ChiTietThietBiId == id)
+                 .Select(_ => new LichSuBanGiaoDto
+                 {
+                     Id = _.Id,
+                     NhanVienId = _.NhanVienId,
+                     ChiTietThietBiId = _.ChiTietThietBiId,
+                     NgayThucHien = _.NgayThucHien
+                 }).ToList();
+                return lichSu;
+            }
+            return new List<LichSuBanGiaoDto>();
         }
     }
 }
