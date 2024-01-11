@@ -79,7 +79,7 @@ export class PhongBanComponent implements OnInit {
   openModalUpdate(data) {
     this.getById(data.id);
     this.isShowModal = true;
-    this.title = `Sửa: ${data.name}`;
+    this.title = `Sửa: ${data.ten}`;
   }
 
   save() {

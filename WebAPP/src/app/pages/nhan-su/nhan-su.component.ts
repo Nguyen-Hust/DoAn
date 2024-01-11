@@ -137,7 +137,7 @@ export class NhanSuComponent implements OnInit {
   openModalUpdate(data) {
     this.getById(data.id);
     this.isShowModal = true;
-    this.title = `Sửa: ${data.name}`;
+    this.title = `Sửa: ${data.ten}`;
   }
 
   openModalAccount(data) {
