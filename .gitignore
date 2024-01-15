@@ -14,3 +14,5 @@ packages
 **/bin/*
 **/obj/*
 **/.vs/*
+**/dist/*
+**/PublishProfiles/* 

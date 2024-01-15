@@ -21,7 +21,16 @@
           </li>
         </ul>
       </li>
-      <li nz-submenu nzIcon="shop" nzTitle="Quản lý phiếu" nzOpen>
+      <li
+        nz-submenu
+        nzIcon="shop"
+        nzTitle="Quản lý phiếu"
+        nzOpen
+        *ngIf="
+          userService.user?.role == 'user' ||
+          userService.user?.role == 'manager'
+        "
+      >
         <ul>
           <li
             nz-menu-item
