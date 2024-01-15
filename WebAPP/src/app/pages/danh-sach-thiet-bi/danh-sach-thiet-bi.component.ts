@@ -21,6 +21,7 @@ import { NzTableQueryParams } from "ng-zorro-antd/table";
 import { formatDate } from "@angular/common";
 import { ActivatedRoute } from "@angular/router";
 import { DOCUMENT } from "@angular/common";
+import { LichSuBanGiaoService } from "../lich-su-ban-giao/lich-su-ban-giao/lich-su-ban-giao.service";
 
 @Component({
   selector: "app-danh-sach-thiet-bi",
@@ -43,9 +44,12 @@ export class DanhSachThietBiComponent implements OnInit {
   pageSize = 10;
   total = 0;
   dsThietBi: any[] = [];
+  dsLichSu: any[] = [];
   dsNhanSu: any[] = [];
   dsKhoa: any[] = [];
+  dsHistory : any[] = [];
   isVisibleQR = false;
+  isVisibleHistory = false;
 
   filteredOptions: string[] = [];
   options: string[] = [];
@@ -60,11 +64,11 @@ export class DanhSachThietBiComponent implements OnInit {
     private modal: NzModalService,
     private loadingService: LoaderService,
     private drawerService: NzDrawerService,
+    private historyBanGiaoService: LichSuBanGiaoService,
     private route: ActivatedRoute
   ) {}
   ngOnInit(): void {
     this.hostname = this.document.location.hostname;
-    console.log(this.document.location.hostname);
 
     this.form = this.formbulider.group({
       id: [0, [Validators.required]],
@@ -224,6 +228,16 @@ export class DanhSachThietBiComponent implements OnInit {
   openModalQR(data) {
     this.id = data.id;
     this.isVisibleQR = true;
+  }
+
+  openModalHistory(data) {
+    this.isVisibleHistory = true;
+    this.loadingService.setLoading(true);
+    this.historyBanGiaoService.getListByThietBi(data.id).pipe(finalize(() => {
+      this.loadingService.setLoading(false);
+    })).subscribe((result) => {
+      this.dsHistory = result;
+    });
   }
 
   downloadQR() {

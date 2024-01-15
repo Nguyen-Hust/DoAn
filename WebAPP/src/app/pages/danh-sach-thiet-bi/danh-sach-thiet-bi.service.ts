@@ -18,6 +18,15 @@ export class DanhSachThietBiService {
     };
     return this.http.post<any>(this.url + "get-list", body, httpHeaders);
   }
+
+  getListByUser(body): Observable<any> {
+    const httpHeaders = {
+      headers: new HttpHeaders({
+        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+      }),
+    };
+    return this.http.post<any>(this.url + "get-list-by-user", body, httpHeaders);
+  }
   update(input: any): Observable<ThongTinChiTietThietBiDto> {
     const httpHeaders = {
       headers: new HttpHeaders({

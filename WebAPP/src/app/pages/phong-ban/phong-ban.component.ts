@@ -6,6 +6,7 @@ import { NzModalService } from "ng-zorro-antd/modal";
 import { KhoaDto } from "src/app/models/KhoaDto";
 import { finalize } from "rxjs";
 import { LoaderService } from "src/app/services/loader.service";
+import { NzTableQueryParams } from "ng-zorro-antd/table";
 
 @Component({
   selector: "app-phong-ban",
@@ -43,8 +44,7 @@ export class PhongBanComponent implements OnInit {
     this.getList();
   }
 
-  getList(pageIndex = 1) {
-    this.pageIndex = pageIndex;
+  getList() {
     var body = {
       filter: this.filter,
       maxResultCount: this.pageSize,
@@ -60,6 +60,15 @@ export class PhongBanComponent implements OnInit {
       });
   }
 
+  onQueryParamsChange(data: NzTableQueryParams) {
+    if (this.pageIndex != data.pageIndex || this.pageSize != data.pageSize) {
+      this.pageIndex = data.pageIndex;
+      this.pageSize = data.pageSize;
+      this.getList();
+    }
+  }
+
+
   openModalCreate() {
     this.isShowModal = true;
     this.title = "Thêm mới";
@@ -70,7 +79,7 @@ export class PhongBanComponent implements OnInit {
   openModalUpdate(data) {
     this.getById(data.id);
     this.isShowModal = true;
-    this.title = `Sửa: ${data.name}`;
+    this.title = `Sửa: ${data.ten}`;
   }
 
   save() {

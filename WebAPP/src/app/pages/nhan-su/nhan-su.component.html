@@ -11,7 +11,7 @@
             type="text"
             class="form-control"
             [(ngModel)]="filter"
-            placeholder="Nhập tên sản phẩm"
+            placeholder="Nhập tên nhân viên"
           />
         </div>
       </div>
@@ -27,20 +27,20 @@
     </div>
   </div>
   <div class="d-flex justify-content-between mb-1 align-items-center">
-    <h3 style="font-weight: 500; font-size: 16px">Danh sách thiết bị y tế</h3>
+    <h3 style="font-weight: 500; font-size: 16px">Danh sách nhân viên</h3>
     <button type="button" class="btn btn-primary" (click)="openModalCreate()">
       Thêm mới
     </button>
   </div>
   <nz-table
-    #basicTable
     [nzData]="danhSach"
     #borderedTable
     nzBordered
     [nzPageIndex]="pageIndex"
     [nzPageSize]="pageSize"
     [nzTotal]="total"
-    (nzPageIndexChange)="getList($event)"
+    [nzFrontPagination]="false"
+    (nzQueryParams)="onQueryParamsChange($event)"
   >
     <thead>
       <tr>
@@ -51,12 +51,12 @@
         <th class="text-center">Email</th>
         <th class="text-center">Khoa</th>
         <th class="text-center">Địa chỉ</th>
-        <th class="text-center">Là quản lý thiết bị</th>
+        <th class="text-center">Là quản lý kho</th>
         <th class="text-center">Action</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let data of basicTable.data; index as i">
+      <tr *ngFor="let data of borderedTable.data; index as i">
         <td class="text-center">{{ i + 1 }}</td>
         <td>{{ data?.ma }}</td>
         <td>{{ data?.ten }}</td>
@@ -182,7 +182,7 @@
       </div>
       <div class="form-group mt-3">
         <label class="control-label me-3 label-form" for="laQuanLyThietBi">
-          Là quản lý thiết bị:</label
+          Là quản lý kho:</label
         >
         <input
           id="laQuanLyThietBi"

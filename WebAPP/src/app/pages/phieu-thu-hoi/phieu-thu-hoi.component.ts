@@ -11,6 +11,7 @@ import { NhanSuService } from "../nhan-su/nhan-su.service";
 import { PhieuThuHoiDto } from "src/app/models/PhieuThuHoiDto";
 import { LoaderService } from "src/app/services/loader.service";
 import { DanhSachThietBiService } from "../danh-sach-thiet-bi/danh-sach-thiet-bi.service";
+import { NzTableQueryParams } from "ng-zorro-antd/table";
 
 @Component({
   selector: "app-phieu-thu-hoi",
@@ -55,8 +56,7 @@ export class PhieuThuHoiComponent implements OnInit {
     this.getList();
   }
 
-  getList(pageIndex = 1) {
-    this.pageIndex = pageIndex;
+  getList() {
     var body = {
       filter: this.filter,
       maxResultCount: this.pageSize,
@@ -70,6 +70,14 @@ export class PhieuThuHoiComponent implements OnInit {
         this.danhSach = val.items;
         this.total = val.totalCount;
       });
+  }
+
+  onQueryParamsChange(data: NzTableQueryParams) {
+    if (this.pageIndex != data.pageIndex || this.pageSize != data.pageSize) {
+      this.pageIndex = data.pageIndex;
+      this.pageSize = data.pageSize;
+      this.getList();
+    }
   }
 
   getTenThietBi(id) {

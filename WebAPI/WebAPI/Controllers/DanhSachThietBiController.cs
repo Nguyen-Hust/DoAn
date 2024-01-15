@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using System.Globalization;
 using System.Net;
+using System.Security.Claims;
 using System.Text;
 using ExcelDataReader;
 using Hangfire.MemoryStorage.Dto;
@@ -38,6 +39,51 @@ namespace WebAPI.Controllers
             {
                 var totalCount = phongBan.Count;
                 var items = phongBan.Where(_ => string.IsNullOrEmpty(input.Filter) || _.Ma.Contains(input.Filter)).Skip(input.SkipCount ?? 0).Take(input.MaxResultCount ?? 1000)
+                    .Select(_ => new ThongTinChiTietThietBiDto
+                    {
+                        Id = _.Id,
+                        Ma = _.Ma,
+                        ThietBiYTeId = _.ThietBiYTeId,
+                        NgayNhap = _.NgayNhap,
+                        XuatXu = _.XuatXu,
+                        NamSX = _.NamSX,
+                        HangSanXuat = _.HangSanXuat,
+                        TinhTrang = _.TinhTrang,
+                        KhoaId = _.KhoaId,
+                        NhanVienId = _.NhanVienId,
+                        Serial = _.Serial,
+                        Model = _.Model,
+                        GiaTien = _.GiaTien ?? 0,
+                        ThoiGianBaoDuong = _.ThoiGianBaoDuong ?? 0,
+                        DaXuat = _.DaXuat
+                    }).ToList();
+                return new PagedResultDto<ThongTinChiTietThietBiDto>
+                {
+                    Items = items,
+                    TotalCount = totalCount
+                };
+
+            }
+            return new PagedResultDto<ThongTinChiTietThietBiDto>
+            {
+                Items = new List<ThongTinChiTietThietBiDto>(),
+                TotalCount = 0
+            };
+        }
+
+        [HttpPost]
+        [Route("get-list-by-user")]
+        public async Task<ActionResult<PagedResultDto<ThongTinChiTietThietBiDto>>> GetListByUse(SearchListDto input)
+        {
+            var phongBan = await _context.ThongTinChiTietThietBi.ToListAsync();
+            string userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            var nhanVienId = _context.NhanSu.First(_ => _.AccountId == userId).Id;
+            if (phongBan.Count > 0)
+            {
+                var totalCount = phongBan.Count;
+                var items = phongBan.Where(_ => string.IsNullOrEmpty(input.Filter) || _.Ma.Contains(input.Filter))
+                    .Where(x => x.NhanVienId == nhanVienId)
+                    .Skip(input.SkipCount ?? 0).Take(input.MaxResultCount ?? 1000)
                     .Select(_ => new ThongTinChiTietThietBiDto
                     {
                         Id = _.Id,
@@ -378,7 +424,7 @@ namespace WebAPI.Controllers
             }
             catch (Exception)
             {
-                return null;
+                return DateTime.Now;
             }
         }
     }

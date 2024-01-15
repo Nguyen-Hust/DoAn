@@ -9,13 +9,14 @@ import {
   ApexChart,
   ChartComponent
 } from "ng-apexcharts";
+import { UserSessionService } from 'src/app/layout/user-session.service';
 
 
 export type ChartOptions = {
-  series: ApexNonAxisChartSeries;
-  chart: ApexChart;
-  responsive: ApexResponsive[];
-  labels: string[];
+  series?: ApexNonAxisChartSeries | any;
+  chart?: ApexChart | any;
+  responsive?: ApexResponsive[] | any;
+  labels?: string[] | any;
 };
 
 @Component({
@@ -32,42 +33,47 @@ export class HomepageComponent implements OnInit {
   series = [];
   danhSach = new DoashBoardTotalDto;
   constructor(private jwtHelper: JwtHelperService, private router: Router,
+    public userService: UserSessionService,
     private service: HomePageService,) { }
 
 
   ngOnInit(): void {
-    this.service.getDashBoard().subscribe(val => {
-      this.danhSach = val;
-    })
-    this.service.getDashBoardChart().subscribe(data => {
-      const seriesArr: number[] = [];
-      const labelArr: string[] = [];
-      data.forEach(item => {
-        seriesArr.push(item.value);
-        labelArr.push(item.category);
-      });
-      this.chartOptions = {
-        series: seriesArr,
-        chart: {
-          width: 380,
-          type: "pie"
-        },
-        labels: labelArr,
-        responsive: [
-          {
-            breakpoint: 480,
-            options: {
-              chart: {
-                width: 200
-              },
-              legend: {
-                position: "center"
+    if(this.userService.user?.role == 'user') {
+      this.router.navigate(['/lich-su-ban-giao']);
+    }else {
+      this.service.getDashBoard().subscribe(val => {
+        this.danhSach = val;
+      })
+      this.service.getDashBoardChart().subscribe(data => {
+        const seriesArr: number[] = [];
+        const labelArr: string[] = [];
+        data.forEach(item => {
+          seriesArr.push(item.value);
+          labelArr.push(item.category);
+        });
+        this.chartOptions = {
+          series: seriesArr,
+          chart: {
+            width: 380,
+            type: "pie"
+          },
+          labels: labelArr,
+          responsive: [
+            {
+              breakpoint: 480,
+              options: {
+                chart: {
+                  width: 200
+                },
+                legend: {
+                  position: "center"
+                }
               }
             }
-          }
-        ]
-      };
-    })
+          ]
+        };
+      })
+    }
   }
 
   isUserAuthenticated() {

@@ -4,29 +4,14 @@
     <div nz-row [nzGutter]="16">
       <div nz-col class="gutter-row" [nzSpan]="9">
         <div class="form-group">
-          <label class="control-label" class="filter-label"
-            >Từ khóa tìm kiếm</label
-          >
-          <input
-            type="text"
-            class="form-control"
-            [(ngModel)]="filter"
-            placeholder="Nhập mã thiết bị"
-            (ngModelChange)="onChange($event)"
-            [nzAutocomplete]="auto"
-          />
-          <nz-autocomplete
-            [nzDataSource]="filteredOptions"
-            #auto
-          ></nz-autocomplete>
+          <label class="control-label" class="filter-label">Từ khóa tìm kiếm</label>
+          <input type="text" class="form-control" [(ngModel)]="filter" placeholder="Nhập mã thiết bị"
+            (ngModelChange)="onChange($event)" [nzAutocomplete]="auto" />
+          <nz-autocomplete [nzDataSource]="filteredOptions" #auto></nz-autocomplete>
         </div>
       </div>
       <div nz-col class="gutter-row" [nzSpan]="4" style="margin-top: 22px">
-        <button
-          type="button"
-          class="btn btn-info text-white"
-          (click)="getList()"
-        >
+        <button type="button" class="btn btn-info text-white" (click)="getList()">
           Tìm kiếm
         </button>
       </div>
@@ -34,30 +19,14 @@
   </div>
   <div class="d-flex justify-content-between mb-1 align-items-center">
     <h3 style="font-weight: 500; font-size: 16px">Danh sách thiết bị</h3>
-    <button
-      nz-button
-      nzType="default"
-      style="display: flex; align-items: center"
-      (click)="importExcel()"
-    >
+    <button nz-button nzType="default" style="display: flex; align-items: center" (click)="importExcel()">
       <span nz-icon nzType="download" nzTheme="outline"></span>
       Import excel
     </button>
   </div>
-  <nz-table
-    #basicTable
-    [nzData]="danhSach"
-    #borderedTable
-    nzBordered
-    [nzTotal]="total"
-    [nzPageIndex]="pageIndex"
-    [nzPageSize]="pageSize"
-    [nzFrontPagination]="false"
-    [nzPageSizeOptions]="[5, 10, 20, 30, 40]"
-    (nzQueryParams)="onQueryParamsChange($event)"
-    nzShowSizeChanger
-    [nzScroll]="{ x: '1500px' }"
-  >
+  <nz-table #basicTable [nzData]="danhSach" #borderedTable nzBordered [nzTotal]="total" [nzPageIndex]="pageIndex"
+    [nzPageSize]="pageSize" [nzFrontPagination]="false" [nzPageSizeOptions]="[5, 10, 20, 30, 40]"
+    (nzQueryParams)="onQueryParamsChange($event)" nzShowSizeChanger [nzScroll]="{ x: '1500px' }">
     <thead>
       <tr>
         <th class="text-center">STT</th>
@@ -93,46 +62,25 @@
         <td class="text-center">{{ data?.giaTien }}</td>
         <td class="text-center">{{ data?.thoiGianBaoDuong }}</td>
         <td class="text-center">
-          <span
-            nz-icon
-            nzType="check-circle"
-            nzTheme="outline"
-            *ngIf="data?.daXuat"
-            class="text-success"
-            style="font-size: 20px"
-          ></span>
-          <span
-            nz-icon
-            nzType="close-circle"
-            nzTheme="outline"
-            *ngIf="data?.daXuat != true"
-            class="text-danger"
-            style="font-size: 20px"
-          ></span>
+          <span nz-icon nzType="check-circle" nzTheme="outline" *ngIf="data?.daXuat" class="text-success"
+            style="font-size: 20px"></span>
+          <span nz-icon nzType="close-circle" nzTheme="outline" *ngIf="data?.daXuat != true" class="text-danger"
+            style="font-size: 20px"></span>
         </td>
         <td class="text-center">
-          <button
-            type="button"
-            class="btn btn-info text-white me-2"
-            nzTooltipTitle="Sửa"
-            (click)="openModalUpdate(data)"
-          >
+          <button type="button" class="btn btn-info text-white me-2" nzTooltipTitle="Sửa"
+            (click)="openModalUpdate(data)">
             <span nz-icon nzType="edit" nzTheme="outline"></span>
           </button>
-          <button
-            type="button"
-            class="btn btn-info text-white me-2"
-            nzTooltipTitle="Xem QR code"
-            (click)="openModalQR(data)"
-          >
+          <button type="button" class="btn btn-info text-white me-2" nzTooltipTitle="Xem QR code"
+            (click)="openModalQR(data)">
             <span nz-icon nzType="qrcode" nzTheme="outline"></span>
           </button>
-          <button
-            type="button"
-            class="btn btn-danger text-white"
-            nzTooltipTitle="Xóa"
-            (click)="delete(data.id)"
-          >
+          <button type="button" class="btn btn-info text-white me-2" nzTooltipTitle="Xem Lịch sử bàn giao"
+          (click)="openModalHistory(data)">
+            <span nz-icon nzType="history" nzTheme="outline"></span>
+          </button>
+          <button type="button" class="btn btn-danger text-white" nzTooltipTitle="Xóa" (click)="delete(data.id)">
             <span nz-icon nzType="delete" nzTheme="outline"></span>
           </button>
         </td>
@@ -141,123 +89,66 @@
   </nz-table>
 </div>
 
-<nz-modal
-  [nzVisible]="isShowModal"
-  [nzTitle]="title"
-  (nzOnCancel)="isShowModal = false"
-  [nzWidth]="700"
-  [nzStyle]="{ top: '20px' }"
-  [nzFooter]="modalFooter"
->
+<nz-modal [nzVisible]="isShowModal" [nzTitle]="title" (nzOnCancel)="isShowModal = false" [nzWidth]="700"
+  [nzStyle]="{ top: '20px' }" [nzFooter]="modalFooter">
   <ng-container *nzModalContent>
     <form [formGroup]="form" nz-row [nzGutter]="16">
       <div nz-col class="gutter-row form-group mt-3" [nzSpan]="12">
         <label class="control-label me-3 label-form" for="ma"> Mã: </label>
-        <input
-          id="ma"
-          formControlName="ma"
-          placeholder="Nhập mã phiếu"
-          class="form-control"
-        />
+        <input id="ma" formControlName="ma" placeholder="Nhập mã phiếu" class="form-control" />
       </div>
       <div nz-col class="gutter-row form-group mt-3" [nzSpan]="12">
         <label class="control-label me-3 label-form" for="ngayNhap">
           Ngày nhập:
         </label>
-        <input
-          type="date"
-          class="form-control"
-          formControlName="ngayNhap"
-          id="ngayNhap"
-          placeholder="Chọn ngày tạo phiếu"
-        />
+        <input type="date" class="form-control" formControlName="ngayNhap" id="ngayNhap"
+          placeholder="Chọn ngày tạo phiếu" />
       </div>
       <div nz-col class="gutter-row form-group mt-3" [nzSpan]="12">
         <label class="control-label me-3 label-form" for="xuatXu">
           Xuất sứ:
         </label>
-        <input
-          id="xuatXu"
-          formControlName="xuatXu"
-          placeholder="Nhập xuất sứ"
-          class="form-control"
-        />
+        <input id="xuatXu" formControlName="xuatXu" placeholder="Nhập xuất sứ" class="form-control" />
       </div>
       <div nz-col class="gutter-row form-group mt-3" [nzSpan]="12">
         <label class="control-label me-3 label-form" for="namSX">
           Năm sản xuất:
         </label>
-        <input
-          id="namSX"
-          formControlName="namSX"
-          placeholder="Nhập năm sản xuất"
-          class="form-control"
-        />
+        <input id="namSX" formControlName="namSX" placeholder="Nhập năm sản xuất" class="form-control" />
       </div>
       <div nz-col class="gutter-row form-group mt-3" [nzSpan]="12">
         <label class="control-label me-3 label-form" for="hangSanXuat">
           Hãng sản xuất:
         </label>
-        <input
-          id="hangSanXuat"
-          formControlName="hangSanXuat"
-          placeholder="Nhập hãng sản xuất"
-          class="form-control"
-        />
+        <input id="hangSanXuat" formControlName="hangSanXuat" placeholder="Nhập hãng sản xuất" class="form-control" />
       </div>
 
       <div nz-col class="gutter-row form-group mt-3" [nzSpan]="12">
         <label class="control-label me-3 label-form" for="tinhTrang">
           Tình trạng:
         </label>
-        <input
-          id="tinhTrang"
-          formControlName="tinhTrang"
-          placeholder="Nhập tình trạng"
-          class="form-control"
-        />
+        <input id="tinhTrang" formControlName="tinhTrang" placeholder="Nhập tình trạng" class="form-control" />
       </div>
       <div nz-col class="gutter-row form-group mt-3" [nzSpan]="12">
         <label class="control-label me-3 label-form" for="serial">
           Serial
         </label>
-        <input
-          id="serial"
-          formControlName="serial"
-          placeholder="Nhập serial"
-          class="form-control"
-        />
+        <input id="serial" formControlName="serial" placeholder="Nhập serial" class="form-control" />
       </div>
       <div nz-col class="gutter-row form-group mt-3" [nzSpan]="12">
         <label class="control-label me-3 label-form" for="model"> Model </label>
-        <input
-          id="model"
-          formControlName="model"
-          placeholder="Nhập model"
-          class="form-control"
-        />
+        <input id="model" formControlName="model" placeholder="Nhập model" class="form-control" />
       </div>
       <div nz-col class="gutter-row form-group mt-3" [nzSpan]="12">
         <label class="control-label me-3 label-form" for="giaTien">
-          Giá tiền:</label
-        >
-        <input
-          id="giaTien"
-          formControlName="giaTien"
-          placeholder="Nhập Giá tiền"
-          class="form-control"
-        />
+          Giá tiền:</label>
+        <input id="giaTien" formControlName="giaTien" placeholder="Nhập Giá tiền" class="form-control" />
       </div>
       <div nz-col class="gutter-row form-group mt-3" [nzSpan]="12">
         <label class="control-label me-3 label-form" for="thoiGianBaoDuong">
-          Thời gian bảo dưỡng:</label
-        >
-        <input
-          id="thoiGianBaoDuong"
-          formControlName="thoiGianBaoDuong"
-          placeholder="Nhập Thời gian bảo dưỡng"
-          class="form-control"
-        />
+          Thời gian bảo dưỡng:</label>
+        <input id="thoiGianBaoDuong" formControlName="thoiGianBaoDuong" placeholder="Nhập Thời gian bảo dưỡng"
+          class="form-control" />
       </div>
     </form>
   </ng-container>
@@ -265,29 +156,17 @@
     <button nz-button nzType="default" (click)="isShowModal = false">
       Đóng
     </button>
-    <button
-      nz-button
-      nzType="primary"
-      [nzLoading]="isConfirmLoading"
-      (click)="save()"
-    >
+    <button nz-button nzType="primary" [nzLoading]="isConfirmLoading" (click)="save()">
       Lưu
     </button>
   </ng-template>
 </nz-modal>
-<nz-modal
-  [(nzVisible)]="isVisibleQR"
-  (nzOnCancel)="isVisibleQR = false"
-  [nzTitle]="modalTitleQR"
-  [nzContent]="modalContentQR"
-  [nzFooter]="modalFooterQR"
->
+<nz-modal [(nzVisible)]="isVisibleQR" (nzOnCancel)="isVisibleQR = false" [nzTitle]="modalTitleQR"
+  [nzContent]="modalContentQR" [nzFooter]="modalFooterQR">
   <ng-template #modalTitleQR>QR code</ng-template>
   <ng-template #modalContentQR>
     <div id="download">
-      <nz-qrcode
-        nzValue="http://{{ hostname }}/danh-sach-thiet-bi/{{ id }}"
-      ></nz-qrcode>
+      <nz-qrcode nzValue="http://{{ hostname }}/danh-sach-thiet-bi/{{ id }}"></nz-qrcode>
       <a #download></a>
     </div>
   </ng-template>
@@ -296,5 +175,33 @@
       Đóng
     </button>
     <button nz-button nzType="primary" (click)="downloadQR()">Tải qr</button>
+  </ng-template>
+</nz-modal>
+
+<nz-modal [(nzVisible)]="isVisibleHistory" (nzOnCancel)="isVisibleHistory = false" [nzTitle]="modalTitleHistory"
+  [nzContent]="modalContentHistory" [nzFooter]="modalFooterHistory">
+  <ng-template #modalTitleHistory>Lịch sử bàn giao</ng-template>
+  <ng-template #modalContentHistory>
+    <nz-table #historyTable [nzData]="dsHistory" [nzShowPagination]="false" nzBordered>
+      <thead>
+        <tr>
+          <th>STT</th>
+          <th>Nhân viên</th>
+          <th>Ngày bàn giao</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of historyTable.data; index as i">
+          <td class="text-center">{{ i + 1 }}</td>
+          <td>{{getNhanVien(data.nhanVienId)}}</td>
+          <td>{{ data?.ngayThucHien | date : "dd/MM/yyyy" }}</td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </ng-template>
+  <ng-template #modalFooterHistory>
+    <button nz-button nzType="default" (click)="isVisibleHistory = false">
+      Đóng
+    </button>
   </ng-template>
 </nz-modal>
